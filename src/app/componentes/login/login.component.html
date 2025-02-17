@@ -1,0 +1,39 @@
+<div class="container mt-5 d-flex flex-column align-items-center">
+    <div class="card p-4 shadow-lg" style="max-width: 400px; width: 100%; border-radius: 10px; background-color: var(--color-secundario);">
+      <h2 class="text-center mb-4">Login</h2>
+      <form (ngSubmit)="login()">
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input 
+            type="email" 
+            [(ngModel)]="email" 
+            name="email" 
+            id="email" 
+            class="form-control" 
+            required>
+        </div>
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <input 
+            type="password" 
+            [(ngModel)]="password" 
+            name="password" 
+            id="password" 
+            class="form-control" 
+            required>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Login</button>
+      </form>
+      
+      <!-- Mensaje de error -->
+      <div *ngIf="errorMessage" class="alert alert-danger mt-3">
+        {{ errorMessage }}
+      </div>
+      
+      <div class="text-center mt-3">
+        <span>¿No estás registrado?</span>
+        <a href="/register" class="text-decoration-none fw-bold text-primary"> Regístrate aquí</a>
+      </div>
+    </div>
+  </div>
+  

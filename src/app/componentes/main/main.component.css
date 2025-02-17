@@ -1,0 +1,49 @@
+/* Carousel: separación y transiciones para imágenes y controles */
+.carousel {
+  margin-top: 70px; /* Ajusta este valor según la altura de tu menú */
+  padding-bottom: 20px; /* Espacio inferior para separar del siguiente contenido */
+  width: 100%;
+}
+
+/* Aseguramos que las imágenes del carousel mantengan una buena altura y agregamos efectos */
+.carousel-item img {
+  height: 100vh;
+  object-fit: cover;
+  transition: transform 0.5s ease, filter 0.5s ease;
+}
+
+.carousel-item img:hover {
+  transform: scale(1.05);       /* Sutil zoom al pasar el mouse */
+  filter: brightness(0.95);      /* Leve oscurecimiento para efecto de realce */
+}
+
+
+/* Estilos para los textos y cards */
+.card-title {
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.card-title:hover {
+  color: var(--color-hover);  /* Cambia de color al hacer hover para un efecto interactivo */
+}
+
+.card-text {
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+/* Sección "Nuestra Historia" con espacio inferior */
+.historia-section {
+  padding-bottom: 50px; /* Ajusta este valor según lo necesites */
+}
+
+/* Efecto de hover en la card de "Nuestra Historia" */
+.historia-section .card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.historia-section .card:hover {
+  transform: translateY(-5px); /* Levanta la card sutilmente */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Sombra más marcada para resaltar */
+}

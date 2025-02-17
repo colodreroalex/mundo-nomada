@@ -1,0 +1,50 @@
+:host {
+    display: block;
+  }
+  
+  .logo {
+    width: 80px;   /* Ajusta el tamaño que prefieras */
+    height: auto;  /* Mantiene la proporción de la imagen */
+  }
+  
+  /* Personalización del navbar usando la guía de colores */
+  .custom-navbar {
+    background-color: var(--color-secundario) !important; /* Usa el fondo claro de tu guía */
+    border-bottom: 2px solid var(--color-primario); /* Línea inferior en color primario */
+  }
+  
+  .navbar-brand {
+    color: var(--color-primario) !important; /* Texto en color primario */
+    font-weight: bold;
+    font-size: 1.5rem; /* Tamaño base de la fuente */
+    transition: color 0.3s ease, font-size 0.3s ease;
+  }
+  
+  .navbar-brand:hover {
+    color: var(--color-hover) !important;
+    font-size: 1.7rem; /* Tamaño aumentado al pasar el mouse */
+  }
+  
+  
+  /* Estilos para los enlaces del menú */
+  .navbar-nav .nav-link {
+    color: var(--color-primario) !important;
+    transition: color 0.3s ease, font-size 0.3s ease;
+  }
+  
+  .navbar-nav .nav-link:hover {
+    color: var(--color-hover) !important;
+    font-size: 1.2rem
+  }
+  
+  /* Estilos para los iconos (carrito y perfil) */
+  .navbar .d-flex a {
+    color: var(--color-primario) !important;
+    transition: color 0.3s ease, font-size 0.3s ease;
+  }
+  
+  .navbar .d-flex a:hover {
+    color: var(--color-hover) !important;
+    font-size: 1.7rem
+  }
+  

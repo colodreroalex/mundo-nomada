@@ -1,0 +1,36 @@
+<!-- filepath: /c:/Users/garci/Desktop/Angular/mundo-nomada/src/app/componentes/add-product/add-product.component.html -->
+<div class="container mt-4">
+  <h2>Añadir Nuevo Producto</h2>
+  <form>
+    <div class="mb-3">
+      <label for="nombre" class="form-label">Nombre del Producto</label>
+      <input type="text" name="nombre" [(ngModel)]="prod.nombre" id="nombre" class="form-control"
+        placeholder="Escriba el nombre del producto" required>
+    </div>
+    <div class="mb-3">
+      <label for="descripcion" class="form-label">Descripción del Producto</label>
+      <input type="text" name="descripcion" [(ngModel)]="prod.descripcion" id="descripcion" class="form-control"
+        placeholder="Escriba la descripción" required>
+    </div>
+    <div class="mb-3">
+      <label for="precio" class="form-label">Precio</label>
+      <input type="number" name="precio" [(ngModel)]="prod.precio" id="precio" class="form-control"
+        placeholder="Escriba el precio" required>
+    </div>
+    <div class="mb-3">
+      <label for="stock" class="form-label">Stock</label>
+      <input type="number" name="stock" [(ngModel)]="prod.stock" id="stock" class="form-control"
+        placeholder="Ingrese el stock disponible" required>
+    </div>
+    <div class="mb-3">
+      <label for="categoriaID" class="form-label">Categoría</label>
+      <select name="categoriaID" [(ngModel)]="prod.categoriaID" id="categoriaID" class="form-control" required>
+        <option *ngFor="let categoria of categorias" [value]="categoria.CategoriaID">
+          {{ categoria.Nombre }}
+        </option>
+      </select>
+    </div>
+    
+    <button type="submit" class="btn btn-primary" (click)="addProduct()">Guardar</button>
+  </form>
+</div>

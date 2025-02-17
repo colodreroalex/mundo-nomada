@@ -1,0 +1,15 @@
+.btn-primary {
+    background-color: var(--color-primario);
+    border: none;
+    transition: all 0.3s ease;
+}
+.btn-primary:hover {
+    background-color: var(--color-hover);
+    transform: scale(1.05);
+}
+.card {
+    transition: all 0.3s ease;
+}
+.card:hover {
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.15);
+}

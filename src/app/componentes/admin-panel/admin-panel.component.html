@@ -1,0 +1,42 @@
+<div class="container mt-5">
+  <h1 class="card-title text-center mb-4" style="color: var(--color-primario);">Admin Panel</h1>
+
+
+    <!-- SECCION DE PRODUCTOS -->
+    <div class="card p-4 shadow-sm" style="background-color: var(--color-secundario);">
+      <h2 class="card-title text-center mb-4" style="color: var(--color-primario);">
+        Productos
+      </h2>
+      <div class="d-flex justify-content-around flex-wrap">
+        <button class="btn btn-custom m-2" [routerLink]="['/addProduct']">
+          Agregar Producto
+        </button>
+        <button class="btn btn-custom m-2" [routerLink]="['/deleteProduct']">
+          Eliminar Producto
+        </button>
+        <button class="btn btn-custom m-2" [routerLink]="['/modificarProduct']">
+          Modificar Producto
+        </button>
+        
+        <button class="btn btn-custom m-2" [routerLink]="['/mostrarProductos']">
+          Mostrar Productos
+        </button>
+      </div>
+    </div>
+
+    <br><br>
+
+    <!-- SECCION DE CATEGORIAS -->
+    <div class="card p-4 shadow-sm" style="background-color: var(--color-secundario);">
+      <h2 class="card-title text-center mb-4" style="color: var(--color-primario);">
+        Categorias
+      </h2>
+      <div class="d-flex justify-content-around flex-wrap">
+        <button class="btn btn-custom m-2" [routerLink]="['/addCategoria']">
+          Agregar Categoría
+        </button>
+      </div>
+    </div>
+
+  </div>
+  

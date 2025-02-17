@@ -1,0 +1,79 @@
+/* Contenedor principal */
+.container {
+    background-color: var(--color-secundario);
+    color: var(--color-texto);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 50px; /* Espaciado inferior agregado */
+  }
+  
+  
+  /* Encabezado */
+  .container h1 {
+    color: var(--color-primario);
+    margin-bottom: 20px;
+  }
+  
+  /* Tabla */
+  .table {
+    background-color: #fff;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  
+  /* Encabezado de tabla */
+  .table thead.table-dark {
+    background-color: var(--color-primario);
+    color: var(--color-secundario);
+  }
+  
+  /* Botón de selección en la tabla */
+  .btn-primary {
+    background-color: var(--color-primario);
+    border-color: var(--color-primario);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+  }
+  
+  .btn-primary:hover {
+    background-color: var(--color-hover);
+    border-color: var(--color-hover);
+  }
+  
+  /* Card del formulario */
+  .card {
+    background-color: var(--color-secundario);
+    border: 1px solid var(--color-primario);
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Títulos y labels dentro de la card */
+  .card-title,
+  .card .form-label {
+    color: var(--color-primario);
+  }
+  
+  /* Inputs del formulario */
+  .form-control {
+    border: 1px solid var(--color-primario);
+    border-radius: 4px;
+  }
+  
+  .form-control:focus {
+    border-color: var(--color-hover);
+    box-shadow: 0 0 5px rgba(121, 21, 21, 0.2);
+  }
+  
+  /* Botón de modificar */
+  .btn-warning {
+    background-color: var(--color-primario);
+    border-color: var(--color-primario);
+    color: var(--color-secundario);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+  }
+  
+  .btn-warning:hover {
+    background-color: var(--color-hover);
+    border-color: var(--color-hover);
+    color: var(--color-secundario);
+  }

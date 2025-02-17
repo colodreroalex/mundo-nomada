@@ -1,0 +1,70 @@
+:host {
+    display: block;
+  }
+  
+  /* Contenedor principal: se le da un fondo claro, padding y sombra para resaltar */
+  .container.my-5 {
+    background-color: var(--color-secundario); /* #f7f7f7 */
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Encabezado principal: utiliza el color primario */
+  h2 {
+    color: var(--color-primario); /* #791515 */
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Indicadores y alertas: se resalta con un borde lateral usando el color primario */
+  .alert {
+    border-left: 5px solid var(--color-primario);
+  }
+  
+  /* Tarjetas de producto */
+  .card {
+    background-color: var(--color-secundario);
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .card .card-body {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Títulos de la tarjeta con el color primario */
+  .card-title {
+    color: var(--color-primario);
+    font-weight: 600;
+  }
+  
+  /* Texto descriptivo en color de texto predeterminado */
+  .card-text {
+    color: var(--color-texto);
+  }
+  
+  /* Precio con énfasis, se conserva la herencia de estilos */
+  .card-text.fw-bold {
+    margin-top: auto;
+  }
+  
+  /* Botón en el footer de la tarjeta: 
+     Se sobreescribe el estilo de btn-success para usar el color primario */
+  .card-footer .btn.btn-success {
+    background-color: var(--color-primario);
+    border: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .card-footer .btn.btn-success:hover {
+    background-color: var(--color-hover); /* Asegúrate de definir esta variable globalmente, por ejemplo, #9a1a1a */
+  }
+  
+  /* Spinner: opcionalmente, forzamos el color primario */
+  .spinner-border.text-primary {
+    color: var(--color-primario) !important;
+  }
+  

@@ -1,0 +1,65 @@
+/* Estilos generales para el componente de contacto */
+.container {
+  max-width: 960px;
+  background-color: var(--color-secundario); /* Fondo claro */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 90px; 
+}
+
+h2,
+h4 {
+  margin-top: 20px;
+  color: var(--color-primario); /* Encabezados en color primario */
+}
+
+/* Personalización del formulario */
+form {
+  margin-top: 20px;
+  background-color: var(--color-secundario); /* Mantiene el fondo claro */
+  padding: 20px;
+  border-radius: 8px;
+  /* Opcional: puedes agregar un borde sutil con el color primario
+     border: 1px solid var(--color-primario); */
+}
+
+/* Opcional: Realzar la sombra de los elementos */
+.shadow-sm {
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Asegura que el iframe del mapa tenga bordes redondeados */
+iframe {
+  border-radius: 8px;
+}
+
+/* Sección izquierda (por ejemplo, datos de contacto) */
+.left-section {
+  margin-right: 30px;
+}
+
+/* Opcional: Estilos para inputs y botones dentro del formulario */
+input,
+textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  background-color: var(--color-primario);
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: var(--color-hover);
+}
