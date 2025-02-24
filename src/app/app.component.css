@@ -1,0 +1,10 @@
+.app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Ocupa al menos la altura total del viewport */
+  }
+  
+  .main-content {
+    flex: 1; /* Se expande para ocupar el espacio disponible */
+  }
+  

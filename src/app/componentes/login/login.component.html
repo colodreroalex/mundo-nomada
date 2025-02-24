@@ -22,8 +22,19 @@
             class="form-control" 
             required>
         </div>
+        <!-- Checkbox para "Remember Me" -->
+        <div class="mb-3 form-check">
+          <input 
+            type="checkbox" 
+            class="form-check-input" 
+            id="rememberMe" 
+            [(ngModel)]="rememberMe" 
+            name="rememberMe">
+          <label class="form-check-label" for="rememberMe">Remember Me</label>
+        </div>
         <button type="submit" class="btn btn-primary w-100">Login</button>
       </form>
+      
       
       <!-- Mensaje de error -->
       <div *ngIf="errorMessage" class="alert alert-danger mt-3">

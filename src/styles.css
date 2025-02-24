@@ -4,6 +4,7 @@
     padding: 0;
     box-sizing: border-box;
   }
+
   
   /* Variables CSS para la paleta de colores */
   :root {
@@ -19,6 +20,7 @@
     background-color: var(--color-secundario);
     color: var(--color-texto);
     line-height: 1.6;
+    padding-top: 74px;
   }
   
   /* Estilos globales para enlaces */

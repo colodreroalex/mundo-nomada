@@ -16,14 +16,15 @@ export class AuthService {
     this.checkSession(); // Al iniciar la aplicación se verifica la sesión
   }
 
-  login(email: string, password: string): Observable<User> {
-    return this.http.post<User>(`${this.apiUrl}login.php`, { email, password }, { withCredentials: true })
+  login(email: string, password: string, rememberMe: boolean): Observable<User> {
+    return this.http.post<User>(`${this.apiUrl}login.php`, { email, password, rememberMe }, { withCredentials: true })
       .pipe(
         tap(response => {
           this.currentUserSubject.next(response);
         })
       );
   }
+  
 
   register(name: string, email: string, password: string): Observable<any> {
     return this.http.post(`${this.apiUrl}register.php`, { name, email, password }, { withCredentials: true });

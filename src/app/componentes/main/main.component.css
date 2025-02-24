@@ -1,21 +1,33 @@
 /* Carousel: separación y transiciones para imágenes y controles */
-.carousel {
-  margin-top: 70px; /* Ajusta este valor según la altura de tu menú */
-  padding-bottom: 20px; /* Espacio inferior para separar del siguiente contenido */
-  width: 100%;
+/* 1. Resetear márgenes y padding generales */
+html, body {
+  margin: 0;
+  padding: 0;
 }
 
-/* Aseguramos que las imágenes del carousel mantengan una buena altura y agregamos efectos */
+/* 2. Aseguramos que el contenedor del carrusel ocupe todo el ancho de la pantalla */
+.carousel {
+  margin-top: 20px; /* Ajusta según la altura de tu menú */
+  padding-bottom: 20px; /* Espacio inferior */
+  width: 100vw;
+  /* Centrar el carrusel en el viewport */
+  margin-left: calc((100vw - 100%)/ -2);
+}
+
+/* 3. Forzamos que las imágenes ocupen todo el ancho y alto deseado */
 .carousel-item img {
-  height: 100vh;
+  width: 100vw;  /* Ancho completo del viewport */
+  height: 150vh; /* Altura completa del viewport */
   object-fit: cover;
   transition: transform 0.5s ease, filter 0.5s ease;
 }
 
+/* Efecto hover para las imágenes */
 .carousel-item img:hover {
-  transform: scale(1.05);       /* Sutil zoom al pasar el mouse */
-  filter: brightness(0.95);      /* Leve oscurecimiento para efecto de realce */
+  transform: scale(1.05);
+  filter: brightness(0.95);
 }
+
 
 
 /* Estilos para los textos y cards */

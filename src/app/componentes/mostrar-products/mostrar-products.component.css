@@ -5,10 +5,12 @@
   /* Contenedor principal: se le da un fondo claro, padding y sombra para resaltar */
   .container.my-5 {
     background-color: var(--color-secundario); /* #f7f7f7 */
-    padding: 2rem;
+    padding: 5rem;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
+
+  
   
   /* Encabezado principal: utiliza el color primario */
   h2 {

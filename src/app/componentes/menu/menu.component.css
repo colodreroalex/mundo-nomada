@@ -1,17 +1,30 @@
-:host {
-    display: block;
-  }
+
   
+
+
   .logo {
     width: 80px;   /* Ajusta el tamaño que prefieras */
     height: auto;  /* Mantiene la proporción de la imagen */
+    transition: transform 0.3s ease; /* Transición suave para el zoom */
   }
+  
+  .logo:hover {
+    transform: scale(1.2); /* Amplía el logo un 10% al hacer hover */
+  }
+  
   
   /* Personalización del navbar usando la guía de colores */
   .custom-navbar {
-    background-color: var(--color-secundario) !important; /* Usa el fondo claro de tu guía */
-    border-bottom: 2px solid var(--color-primario); /* Línea inferior en color primario */
+    background-color: var(--color-secundario) !important;
+    border-bottom: 2px solid var(--color-primario);
+    position: fixed;   /* Fija el navbar en la pantalla */
+    top: 0;            /* Lo ubica en la parte superior */
+    left: 0;           /* Alinea a la izquierda */
+    width: 100%;       /* Ocupa todo el ancho de la ventana */
+    z-index: 1000;     /* Se asegura de que quede sobre otros elementos */
+    
   }
+  
   
   .navbar-brand {
     color: var(--color-primario) !important; /* Texto en color primario */

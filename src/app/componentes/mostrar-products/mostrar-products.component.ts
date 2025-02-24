@@ -2,16 +2,18 @@ import { Component } from '@angular/core';
 import { Producto } from '../../../models/Producto';
 import { ProductosService } from '../../services/productos.service';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-mostrar-products',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './mostrar-products.component.html',
-  styleUrl: './mostrar-products.component.css'
+  styleUrls: ['./mostrar-products.component.css']
 })
 export class MostrarProductsComponent {
   products: Producto[] = [];
+  filterName: string = '';
   loading: boolean = false;
   error: string = '';
 
@@ -34,5 +36,15 @@ export class MostrarProductsComponent {
         this.loading = false;
       }
     });
+  }
+
+  // Getter para devolver los productos filtrados según el nombre
+  get filteredProducts(): Producto[] {
+    if (!this.filterName) {
+      return this.products;
+    }
+    return this.products.filter(producto =>
+      producto.nombre.toLowerCase().includes(this.filterName.toLowerCase())
+    );
   }
 }

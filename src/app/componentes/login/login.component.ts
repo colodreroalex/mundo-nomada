@@ -13,16 +13,17 @@ import { Router } from '@angular/router';
 export class LoginComponent {
   email: string = '';
   password: string = '';
+  rememberMe: boolean = false;
   errorMessage: string = ''; // Propiedad para el mensaje de error
 
   constructor(private authService: AuthService, private router: Router) {}
 
   login() {
     console.log("Password enviado:", this.password, this.password.length);
-    this.authService.login(this.email, this.password).subscribe({
+    // Se envían email, password y rememberMe al servicio
+    this.authService.login(this.email, this.password, this.rememberMe).subscribe({
       next: (response) => {
         console.log('Login successful', response);
-        // Manejar la respuesta del login
         if (this.authService.isAdmin()){
           this.router.navigate(['/adminPanel']);
         } else {
