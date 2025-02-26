@@ -1,8 +1,12 @@
 import { Component } from '@angular/core';
 import { Producto } from '../../../models/Producto';
 import { ProductosService } from '../../services/productos.service';
+import { CarritoService } from '../../services/carrito.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { User } from '../../../models/Users';
+import { AuthService } from '../../services/auth.service';
+import { Carrito } from '../../../models/Carrito';
 
 @Component({
   selector: 'app-mostrar-products',
@@ -16,11 +20,17 @@ export class MostrarProductsComponent {
   filterName: string = '';
   loading: boolean = false;
   error: string = '';
+  currentUser: User | null = null;
 
-  constructor(private productosService: ProductosService) {}
+  constructor(
+    private productosService: ProductosService,
+    private carritoService: CarritoService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.loadProducts();
+    this.currentUser = this.authService.getCurrentUser();
   }
 
   loadProducts(): void {
@@ -36,6 +46,46 @@ export class MostrarProductsComponent {
         this.loading = false;
       }
     });
+  }
+
+  // addToCart(producto: Producto): void {
+  //   if (this.currentUser) {
+  //     const carritoItem = { id: 0, user_id: this.currentUser.id, producto_id: producto.ProductoID, cantidad: 1 };
+  //     this.carritoService.addToCart(carritoItem).subscribe({
+  //       next: (res) => {
+  //         alert('Producto añadido al carrito');
+  //       },
+  //       error: (err) => {
+  //         console.error(err);
+  //         alert('Ocurrió un error al añadir el producto al carrito');
+  //       }
+  //     });
+  //   } else {
+  //     alert('Debes iniciar sesión para añadir productos al carrito');
+  //   }
+  // }
+  addToCart(producto: Producto): void {
+    if (this.currentUser) {
+      // Crea el objeto Carrito. Nota: el backend usará "producto_id" y "cantidad"
+      const carritoItem: Carrito = new Carrito(
+        0, // El ID lo genera la base de datos
+        this.currentUser.id,
+        producto.ProductoID,
+        1,
+        producto // Se pasa el objeto completo para mapear la información
+      );
+      this.carritoService.addToCart(carritoItem).subscribe({
+        next: (res) => {
+          alert('Producto añadido o actualizado en el carrito');
+        },
+        error: (err) => {
+          console.error(err);
+          alert('Ocurrió un error al añadir el producto al carrito');
+        }
+      });
+    } else {
+      alert('Debes iniciar sesión para añadir productos al carrito');
+    }
   }
 
   // Getter para devolver los productos filtrados según el nombre

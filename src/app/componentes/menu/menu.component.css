@@ -1,63 +1,89 @@
+a:focus {
+  outline: none;
+  box-shadow: none;
+}
 
-  
 
 
-  .logo {
-    width: 80px;   /* Ajusta el tamaño que prefieras */
-    height: auto;  /* Mantiene la proporción de la imagen */
-    transition: transform 0.3s ease; /* Transición suave para el zoom */
-  }
-  
-  .logo:hover {
-    transform: scale(1.2); /* Amplía el logo un 10% al hacer hover */
-  }
-  
-  
-  /* Personalización del navbar usando la guía de colores */
-  .custom-navbar {
-    background-color: var(--color-secundario) !important;
-    border-bottom: 2px solid var(--color-primario);
-    position: fixed;   /* Fija el navbar en la pantalla */
-    top: 0;            /* Lo ubica en la parte superior */
-    left: 0;           /* Alinea a la izquierda */
-    width: 100%;       /* Ocupa todo el ancho de la ventana */
-    z-index: 1000;     /* Se asegura de que quede sobre otros elementos */
-    
-  }
-  
-  
-  .navbar-brand {
-    color: var(--color-primario) !important; /* Texto en color primario */
-    font-weight: bold;
-    font-size: 1.5rem; /* Tamaño base de la fuente */
-    transition: color 0.3s ease, font-size 0.3s ease;
-  }
-  
-  .navbar-brand:hover {
-    color: var(--color-hover) !important;
-    font-size: 1.7rem; /* Tamaño aumentado al pasar el mouse */
-  }
-  
-  
-  /* Estilos para los enlaces del menú */
-  .navbar-nav .nav-link {
-    color: var(--color-primario) !important;
-    transition: color 0.3s ease, font-size 0.3s ease;
-  }
-  
-  .navbar-nav .nav-link:hover {
-    color: var(--color-hover) !important;
-    font-size: 1.2rem
-  }
-  
-  /* Estilos para los iconos (carrito y perfil) */
-  .navbar .d-flex a {
-    color: var(--color-primario) !important;
-    transition: color 0.3s ease, font-size 0.3s ease;
-  }
-  
-  .navbar .d-flex a:hover {
-    color: var(--color-hover) !important;
-    font-size: 1.7rem
-  }
-  
+.logo {
+  width: 80px;
+  /* Ajusta el tamaño que prefieras */
+  height: auto;
+  /* Mantiene la proporción de la imagen */
+  transition: transform 0.3s ease;
+  /* Transición suave para el zoom */
+}
+
+.logo:hover {
+  transform: scale(1.2);
+  /* Amplía el logo un 10% al hacer hover */
+}
+
+
+/* Personalización del navbar usando la guía de colores */
+.custom-navbar {
+  background-color: var(--color-secundario) !important;
+  border-bottom: 2px solid var(--color-primario);
+  position: fixed;
+  /* Fija el navbar en la pantalla */
+  top: 0;
+  /* Lo ubica en la parte superior */
+  left: 0;
+  /* Alinea a la izquierda */
+  width: 100%;
+  /* Ocupa todo el ancho de la ventana */
+  z-index: 1000;
+  /* Se asegura de que quede sobre otros elementos */
+
+}
+
+
+.navbar-brand {
+  color: var(--color-primario) !important;
+  /* Texto en color primario */
+  font-weight: bold;
+  transition: color 0.3s ease, font-size 0.3s ease;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.navbar-brand:hover {
+  color: var(--color-hover) !important;
+}
+
+.navbar-brand:hover .logo {
+  transform: scale(1.2);
+}
+
+.navbar-brand span {
+  transition: color 0.3s ease,
+    text-shadow 0.3s ease;
+}
+
+.navbar-brand:hover span {
+  color: var(--color-hover) !important;
+}
+
+
+/* Estilos para los enlaces del menú */
+.navbar-nav .nav-link {
+  color: var(--color-primario) !important;
+  transition: color 0.3s ease, font-size 0.3s ease;
+
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.navbar-nav .nav-link:hover {
+  color: var(--color-hover) !important;
+  font-size: 1.2rem
+}
+
+/* Estilos para los iconos (carrito y perfil) */
+.navbar .d-flex a {
+  color: var(--color-primario) !important;
+  transition: color 0.3s ease, font-size 0.3s ease;
+}
+
+.navbar .d-flex a:hover {
+  color: var(--color-hover) !important;
+  font-size: 1.2rem
+}

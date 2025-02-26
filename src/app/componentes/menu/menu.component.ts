@@ -13,6 +13,7 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./menu.component.css']
 })
 export class MenuComponent {
+  isCollapsed: boolean = true;
   currentUser: User | null = null;
 
   constructor(private authService: AuthService, private router: Router) {
@@ -20,6 +21,10 @@ export class MenuComponent {
     this.authService.getCurrentUserObservable().subscribe(user => {
       this.currentUser = user;
     });
+  }
+
+  toggleCollapse() {
+    this.isCollapsed = !this.isCollapsed;
   }
 
   logout(): void {

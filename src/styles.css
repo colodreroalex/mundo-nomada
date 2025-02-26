@@ -1,125 +1,132 @@
 /* Reseteo global */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-  
-  /* Variables CSS para la paleta de colores */
-  :root {
-    --color-primario: #791515;   /* Rojo oscuro del logo */
-    --color-secundario: #f7f7f7;   /* Fondo claro */
-    --color-texto: #333333;        /* Color de texto predeterminado */
-    --color-hover: #9a1a1a;        /* Color de hover derivado del primario */
-  }
-  
-  /* Fuente y fondo global */
-  body {
-    font-family: 'Poppins', sans-serif !important;
-    background-color: var(--color-secundario);
-    color: var(--color-texto);
-    line-height: 1.6;
-    padding-top: 74px;
-  }
-  
-  /* Estilos globales para enlaces */
-  a {
-    color: var(--color-primario);
-    text-decoration: none;
-    transition: color 0.3s ease;
-  }
-  
-  a:hover,
-  a:focus {
-    color: var(--color-hover);
-  }
-  
-  /* Clases utilitarias para fondos y textos personalizadas */
-  .bg-primario {
-    background-color: var(--color-primario) !important;
-  }
-  
-  .bg-secundario {
-    background-color: var(--color-secundario) !important;
-  }
-  
-  .text-primario {
-    color: var(--color-primario) !important;
-  }
-  
-  .text-secundario {
-    color: var(--color-secundario) !important;
-  }
-  
-  /* Contenedores - Se respetan las clases de Bootstrap (.container y .container-fluid) */
-  .container,
-  .container-fluid {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 15px;
-  }
-  
-  /* Estilos para imágenes (para mantener la responsividad) */
-  img {
-    max-width: 100%;
-    height: auto;
-    display: block;
-  }
-  
-  /* Botón personalizado de ejemplo */
-  .btn-custom {
-    background-color: var(--color-primario);
-    border: none;
-    color: #fff;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
-  }
-  
-  .btn-custom:hover {
-    background-color: var(--color-hover);
-  }
-  
-  /* Tablas, formularios y otros elementos básicos */
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  th,
-  td {
-    padding: 0.75rem;
-    text-align: left;
-    border-top: 1px solid #dee2e6;
-  }
-  
-  input,
-  textarea,
-  select,
-  button {
-    font-family: inherit;
-    font-size: 1rem;
-  }
-  
-  /* Ajustes de enfoque para mayor accesibilidad */
-  button:focus,
-  a:focus,
-  input:focus,
-  textarea:focus,
-  select:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(121, 21, 21, 0.2);
-  }
-  
-  /* Nota para cada componente:
+
+/* Variables CSS para la paleta de colores */
+:root {
+  --color-primario: #791515;
+  /* Rojo oscuro del logo */
+  --color-secundario: #f7f7f7;
+  /* Fondo claro */
+  --color-texto: #333333;
+  /* Color de texto predeterminado */
+  --color-hover: #9a1a1a;
+  /* Color de hover derivado del primario */
+}
+
+/* Fuente y fondo global */
+body {
+  font-family: 'Poppins', sans-serif !important;
+  background-color: var(--color-secundario);
+  color: var(--color-texto);
+  line-height: 1.6;
+  padding-top: 74px;
+}
+
+/* Estilos globales para enlaces */
+a {
+  color: var(--color-primario);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover,
+a:focus {
+  color: var(--color-hover);
+}
+
+/* Clases utilitarias para fondos y textos personalizadas */
+.bg-primario {
+  background-color: var(--color-primario) !important;
+}
+
+.bg-secundario {
+  background-color: var(--color-secundario) !important;
+}
+
+.text-primario {
+  color: var(--color-primario) !important;
+}
+
+.text-secundario {
+  color: var(--color-secundario) !important;
+}
+
+/* Contenedores - Se respetan las clases de Bootstrap (.container y .container-fluid) */
+.container,
+.container-fluid {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+/* Estilos para imágenes (para mantener la responsividad) */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Botón personalizado de ejemplo */
+.btn-custom {
+  background-color: var(--color-primario);
+  border: none;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-custom:hover {
+  background-color: var(--color-hover);
+}
+
+/* Tablas, formularios y otros elementos básicos */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 0.75rem;
+  text-align: left;
+  border-top: 1px solid #dee2e6;
+}
+
+input,
+textarea,
+select,
+button {
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+/* Ajustes de enfoque para mayor accesibilidad */
+button:focus,
+a:focus,
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(121, 21, 21, 0.2);
+}
+
+.footer-logo span.text-muted {
+  color: var(--color-primario) !important;
+}
+
+/* Nota para cada componente:
      Cada componente puede seguir utilizando sus propios estilos (en sus respectivos archivos CSS)
      y utilizar estas variables (por ejemplo, var(--color-primario)) para mantener la coherencia de la paleta.
      Bootstrap seguirá proveyendo las utilidades y clases de layout responsivo.
   */
-  
-  /* Importante: 
+
+/* Importante: 
      Asegúrate de que Bootstrap esté correctamente importado en tu proyecto (por ejemplo, en angular.json o mediante @import)
      para que sus clases sigan funcionando y complementando estos estilos globales.
   */
-  

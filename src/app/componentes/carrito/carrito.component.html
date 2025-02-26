@@ -1,0 +1,53 @@
+<div class="container my-5">
+  <h2 class="mb-4 text-center">Carrito de Compras</h2>
+
+  <!-- Indicador de carga -->
+  <div *ngIf="loading" class="d-flex justify-content-center my-4">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+  </div>
+
+  <!-- Mensaje de error -->
+  <div *ngIf="error" class="alert alert-danger text-center" role="alert">
+    {{ error }}
+  </div>
+
+  <!-- Mostrar productos del carrito si existen -->
+  <div *ngIf="carrito && carrito.length > 0; else noProducts">
+    <div class="row">
+      <div class="col-md-4 mb-4" *ngFor="let item of carrito">
+        <div class="card h-100 shadow-sm">
+          <img [src]="item.producto?.imagen" class="card-img-top" alt="{{ item.producto?.nombre }}">
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">{{ item.producto?.nombre }}</h5>
+            <p class="card-text text-muted">{{ item.producto?.descripcion }}</p>
+            <p class="card-text">Precio: {{ item.producto?.precio | currency:'EUR' }}</p>
+            <!-- Controles para actualizar la cantidad -->
+            <div class="d-flex align-items-center mb-2">
+              <button class="btn btn-secondary" (click)="decrement(item)">-</button>
+              <span class="mx-2">{{ item.cantidad }}</span>
+              <button class="btn btn-secondary" (click)="increment(item)">+</button>
+            </div>
+            <button class="btn btn-danger mt-auto" (click)="removeItem(item)">Eliminar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Seccion para mostrar el total del carrito -->
+    <div class="card mt-4 shadow-sm border-primary">
+      <div class="card-body d-flex justify-content-between align-items-center">
+        <span class="fw-bold">Total</span>
+        <span class="fs-4 text-primary">{{ total | currency:'EUR' }}</span>
+      </div>
+    </div>
+    
+  </div>
+
+  <!-- Mensaje cuando no hay productos -->
+  <ng-template #noProducts>
+    <div class="alert alert-warning text-center" role="alert">
+      No hay productos en el carrito.
+    </div>
+  </ng-template>
+</div>

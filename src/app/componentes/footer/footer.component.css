@@ -17,6 +17,9 @@ footer {
     padding: 0 15px;
 }
 
+
+
+
 .footer-logo img {
     height: 40px;
     width: auto;
@@ -29,11 +32,13 @@ footer {
 }
 
 .footer-links a {
-    color: #6c757d;
+    color: var(--color-primario);
     text-decoration: none;
     font-size: 18px;
 }
 
 .footer-links a:hover {
-    color: #343a40;
+    color: var(--color-hover);
 }
+
+

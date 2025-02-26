@@ -1,20 +1,37 @@
-/* Carousel: separación y transiciones para imágenes y controles */
-/* 1. Resetear márgenes y padding generales */
+/* Resetear márgenes y padding generales */
 html, body {
   margin: 0;
   padding: 0;
 }
 
-/* 2. Aseguramos que el contenedor del carrusel ocupe todo el ancho de la pantalla */
+/* Estilos para la invitación */
+.invitation {
+  text-align: center;
+  margin: 20px 0;
+  font-size: 1.2rem;
+  color: var(--color-primario);
+}
+
+.toggle-btn {
+  cursor: pointer;
+  font-size: 3rem;
+  color: var(--color-primario);
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.toggle-btn:hover {
+  color: var(--color-hover);
+  transform: scale(1.1);
+}
+
+/* Carousel: separación y transiciones para imágenes y controles */
 .carousel {
   margin-top: 20px; /* Ajusta según la altura de tu menú */
   padding-bottom: 20px; /* Espacio inferior */
   width: 100vw;
-  /* Centrar el carrusel en el viewport */
   margin-left: calc((100vw - 100%)/ -2);
 }
 
-/* 3. Forzamos que las imágenes ocupen todo el ancho y alto deseado */
 .carousel-item img {
   width: 100vw;  /* Ancho completo del viewport */
   height: 150vh; /* Altura completa del viewport */
@@ -22,13 +39,10 @@ html, body {
   transition: transform 0.5s ease, filter 0.5s ease;
 }
 
-/* Efecto hover para las imágenes */
 .carousel-item img:hover {
   transform: scale(1.05);
   filter: brightness(0.95);
 }
-
-
 
 /* Estilos para los textos y cards */
 .card-title {
@@ -37,7 +51,7 @@ html, body {
 }
 
 .card-title:hover {
-  color: var(--color-hover);  /* Cambia de color al hacer hover para un efecto interactivo */
+  color: var(--color-hover);
 }
 
 .card-text {
@@ -45,17 +59,16 @@ html, body {
   line-height: 1.6;
 }
 
-/* Sección "Nuestra Historia" con espacio inferior */
+/* Sección "Nuestra Historia" */
 .historia-section {
   padding-bottom: 50px; /* Ajusta este valor según lo necesites */
 }
 
-/* Efecto de hover en la card de "Nuestra Historia" */
 .historia-section .card {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .historia-section .card:hover {
-  transform: translateY(-5px); /* Levanta la card sutilmente */
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Sombra más marcada para resaltar */
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }

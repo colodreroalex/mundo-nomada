@@ -1,9 +1,9 @@
 <div class="container mt-5 d-flex flex-column align-items-center">
   <div class="card p-4 shadow-lg" style="max-width: 400px; width: 100%; border-radius: 10px; background-color: var(--color-secundario);">
-    <h2 class="text-center mb-4" style="color: var(--color-texto);">Register</h2>
+    <h2 class="text-center mb-4" style="color: var(--color-texto);">Crea una cuenta</h2>
     <form (ngSubmit)="register()">
       <div class="mb-3">
-        <label for="name" class="form-label" style="color: var(--color-texto);">Name</label>
+        <label for="name" class="form-label" style="color: var(--color-texto);">Nombre</label>
         <input type="text" [(ngModel)]="name" name="name" id="name" class="form-control" required>
       </div>
       <div class="mb-3">
@@ -11,10 +11,10 @@
         <input type="email" [(ngModel)]="email" name="email" id="email" class="form-control" required>
       </div>
       <div class="mb-3">
-        <label for="password" class="form-label" style="color: var(--color-texto);">Password</label>
+        <label for="password" class="form-label" style="color: var(--color-texto);">Contraseña</label>
         <input type="password" [(ngModel)]="password" name="password" id="password" class="form-control" required>
       </div>
-      <button type="submit" class="btn btn-primary w-100">Register</button>
+      <button type="submit" class="btn btn-primary w-100">Confirmar</button>
     </form>
   </div>
 </div>

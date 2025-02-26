@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -14,17 +15,18 @@ export class RegisterComponent {
   email: string = '';
   password: string = '';
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   register() {
     this.authService.register(this.name, this.email, this.password).subscribe({
       next: (response) => {
-        console.log('Registration successful', response);
-        // Manejar la respuesta del registro
+        console.log('Registro exitoso', response);
+        alert('Te has registrado exitosamente! Por favor, inicia sesión.');
+        this.router.navigate(['/login']);
       },
       error: (error) => {
-        console.error('Registration failed', error);
-        // Manejar el error del registro
+        console.error('Registro fallido', error);
+        alert('Error en el registro. Por favor, intenta nuevamente.');
       }
     });
   }

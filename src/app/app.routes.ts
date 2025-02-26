@@ -10,11 +10,13 @@ import { ModificarProductComponent } from './componentes/modificar-product/modif
 import { LoginComponent } from './componentes/login/login.component';
 import { RegisterComponent } from './componentes/register/register.component';
 import { AuthGuard } from './services/auth.guard';
+import { CarritoComponent } from './componentes/carrito/carrito.component';
 
 export const routes: Routes = [
  {path: 'addProduct', component: AddProductComponent , canActivate: [AuthGuard], data: { role: 'admin' }},
  {path: 'addCategoria', component: AddCategoriaComponent, canActivate: [AuthGuard], data: { role: 'admin' }},
  {path: 'mostrarProductos', component: MostrarProductsComponent},
+ {path: 'mostrarProductos/:categoriaId',component: MostrarProductsComponent},
  {path: 'contacto', component: ContactoComponent},
  {path: 'adminPanel', component: AdminPanelComponent, canActivate: [AuthGuard], data: { role: 'admin' }},
  {path: 'main', component: MainComponent},
@@ -22,6 +24,7 @@ export const routes: Routes = [
  {path: 'modificarProduct', component: ModificarProductComponent, canActivate: [AuthGuard], data: { role: 'admin' }},
  { path: 'login', component: LoginComponent },
  { path: 'register', component: RegisterComponent },
+ {path:'carrito', component: CarritoComponent},
  {path: '', redirectTo: 'main', pathMatch: 'full'},
  {path: '**', redirectTo: 'main', pathMatch: 'full'},
 ];

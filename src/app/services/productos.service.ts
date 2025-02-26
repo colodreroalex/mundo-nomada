@@ -24,6 +24,13 @@ export class ProductosService {
     );
   }
 
+  // productos.service.ts
+  getProductsByCategory(categoryId: number): Observable<Producto[]> {
+    return this.http.get<Producto[]>(
+      `${this.url}/getProductosByCategoria.php?categoriaId=${categoryId}`
+    );
+  }
+
   // Modificar un producto
   modificarProducto(producto: Producto): Observable<any> {
     return this.http.post(

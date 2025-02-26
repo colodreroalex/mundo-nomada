@@ -10,19 +10,19 @@
       [(ngModel)]="filterName"
     >
   </div>
-  
+
   <!-- Indicador de carga -->
   <div *ngIf="loading" class="d-flex justify-content-center my-4">
     <div class="spinner-border text-primary" role="status">
       <span class="visually-hidden">Cargando...</span>
     </div>
   </div>
-  
+
   <!-- Mensaje de error -->
   <div *ngIf="error" class="alert alert-danger text-center" role="alert">
     {{ error }}
   </div>
-  
+
   <!-- Mostrar productos filtrados si existen -->
   <div *ngIf="filteredProducts && filteredProducts.length > 0; else noProducts">
     <div class="row">
@@ -38,19 +38,19 @@
             <h5 class="card-title">{{ producto.nombre }}</h5>
             <p class="card-text text-muted">{{ producto.descripcion }}</p>
             <p class="card-text fw-bold mt-auto">
-              {{ producto.precio | currency:'USD' }}
+              {{ producto.precio | currency:'EUR' }}
             </p>
           </div>
           <div class="card-footer bg-transparent border-0">
-            <button class="btn btn-success w-100">
+            <button *ngIf="currentUser" class="btn btn-success w-100" (click)="addToCart(producto)">
               <i class="bi bi-cart-plus"></i> Añadir al carrito
             </button>
-          </div>
+          </div>          
         </div>
       </div>
     </div>
   </div>
-  
+
   <!-- Mensaje cuando no hay productos -->
   <ng-template #noProducts>
     <div class="alert alert-warning text-center" role="alert">
