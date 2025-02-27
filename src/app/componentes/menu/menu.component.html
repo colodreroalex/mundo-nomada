@@ -30,9 +30,29 @@
         <li class="nav-item">
           <a class="nav-link" routerLink="/main">Home</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/mostrarProductos">Catálogo</a>
+
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            id="catalogoDropdown"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false">
+            Catálogo
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="catalogoDropdown">
+            <li *ngFor="let categoria of categorias">
+              <a 
+                class="dropdown-item" 
+                [routerLink]="['/mostrarProductos', categoria.CategoriaID]">
+                {{ categoria.Nombre }}
+              </a>
+            </li>
+          </ul>
         </li>
+        
+
         <li class="nav-item">
           <a class="nav-link" routerLink="/contacto">Contacto</a>
         </li>

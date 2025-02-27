@@ -27,7 +27,7 @@ export class ProductosService {
   // productos.service.ts
   getProductsByCategory(categoryId: number): Observable<Producto[]> {
     return this.http.get<Producto[]>(
-      `${this.url}/getProductosByCategoria.php?categoriaId=${categoryId}`
+      `${this.url}getProductosByCategoria.php?categoriaID=${categoryId}`
     );
   }
 

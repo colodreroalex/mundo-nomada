@@ -12,10 +12,17 @@ export class CategoriasService {
   constructor(private http: HttpClient) {}
 
   getCategorias(): Observable<Categoria[]> {
-    return this.http.get<Categoria[]>(`${this.url}/getCategorias.php/list`);
+    return this.http.get<Categoria[]>(`${this.url}getCategorias.php/list`);
   }
 
   addCategoria(categoria: Categoria): Observable<any> {
     return this.http.post(`${this.url}addCategoria.php`, categoria);
   }
+
+  eliminarCategoria(categoriaID: number): Observable<any> {
+    return this.http.post(
+      `${this.url}deleteCategoria.php`, { CategoriaID: categoriaID }
+    );
+  }
+
 }
