@@ -52,14 +52,16 @@ export class MenuComponent implements OnInit {
   }
 
   logout(): void {
-    this.authService.logout().subscribe({
-      next: () => {
-        // Redirigir al usuario a la página de login tras cerrar sesión
-        this.router.navigate(['/login']);
-      },
-      error: (error) => {
-        console.error('Error al cerrar sesión', error);
-      }
-    });
+    if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
+      this.authService.logout().subscribe({
+        next: () => {
+          // Redirigir al usuario a la página de login tras cerrar sesión
+          this.router.navigate(['/login']);
+        },
+        error: (error) => {
+          console.error('Error al cerrar sesión', error);
+        }
+      });
+    }
   }
 }

@@ -27,25 +27,21 @@
   <div *ngIf="filteredProducts && filteredProducts.length > 0; else noProducts">
     <div class="row">
       <div class="col-md-4 mb-4" *ngFor="let producto of filteredProducts">
-        <div class="card h-100 shadow-sm">
-          <!-- Mostrar imagen con el mismo estilo -->
+        <!-- Card completa clicable -->
+        <div class="card h-100 shadow-sm" (click)="verDetalleProducto(producto)">
           <img *ngIf="producto.imagen" 
                [src]="producto.imagen" 
                alt="{{ producto.nombre }}" 
                class="card-img-top" 
-               style="height: 200px; object-fit: cover;">
+               style="height: 400px; object-fit: cover;">
           <div class="card-body d-flex flex-column">
             <h5 class="card-title">{{ producto.nombre }}</h5>
-            <p class="card-text text-muted">{{ producto.descripcion }}</p>
             <p class="card-text fw-bold mt-auto">
               {{ producto.precio | currency:'EUR' }}
             </p>
           </div>
-          <div class="card-footer bg-transparent border-0">
-            <button *ngIf="currentUser" class="btn btn-success w-100" (click)="addToCart(producto)">
-              <i class="bi bi-cart-plus"></i> Añadir al carrito
-            </button>
-          </div>          
+          <!-- Footer de la card -->
+          <!-- Aqui iba un div  con un ngIf CURRENT USER y boton para añadir al carrito -->
         </div>
       </div>
     </div>

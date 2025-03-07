@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Producto } from '../../models/Producto';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -49,6 +49,17 @@ export class ProductosService {
       `${this.url}seleccionar.php?ProductoID=${producto.ProductoID}`
     );
   }
+
+  // Para el componente DetalleProductoComponent (de momento solo se usa ahi)
+  seleccionarPorID(productoID: number): Observable<Producto> {
+    return this.http
+      .get<Producto[]>(`${this.url}seleccionar.php?ProductoID=${productoID}`)
+      .pipe(
+        // La respuesta es un array con un solo elemento, así que tomamos [0]
+        map((productos: Producto[]) => productos[0])
+      );
+  }
+  
 
   // Eliminar un producto por ID
   eliminarProducto(productoID: number): Observable<any> {

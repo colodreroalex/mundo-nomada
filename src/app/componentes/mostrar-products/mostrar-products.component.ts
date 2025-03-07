@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router'; // <-- Importar Router
 import { Producto } from '../../../models/Producto';
 import { ProductosService } from '../../services/productos.service';
 import { CarritoService } from '../../services/carrito.service';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { User } from '../../../models/Users';
 import { AuthService } from '../../services/auth.service';
 import { Carrito } from '../../../models/Carrito';
-import { ActivatedRoute } from '@angular/router';
+import { User } from '../../../models/Users';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-mostrar-products',
@@ -28,14 +28,10 @@ export class MostrarProductsComponent {
     private productosService: ProductosService,
     private carritoService: CarritoService,
     private authService: AuthService, 
-    private route: ActivatedRoute
-
+    private route: ActivatedRoute,
+    private router: Router   // <-- Inyectamos el Router
   ) {}
 
-  // ngOnInit(): void {
-  //   this.loadProducts();
-  //   this.currentUser = this.authService.getCurrentUser();
-  // }
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       if (params['categoriaID']) {
@@ -48,22 +44,6 @@ export class MostrarProductsComponent {
     });
     this.currentUser = this.authService.getCurrentUser();
   }
-  
-
-  // loadProducts(): void {
-  //   this.loading = true;
-  //   this.productosService.recuperarTodos().subscribe({
-  //     next: (data) => {
-  //       this.products = data;
-  //       this.loading = false;
-  //     },
-  //     error: (err) => {
-  //       console.error(err);
-  //       this.error = 'Ocurrió un error al cargar los productos';
-  //       this.loading = false;
-  //     }
-  //   });
-  // }
 
   loadProducts(): void {
     this.loading = true;
@@ -80,7 +60,6 @@ export class MostrarProductsComponent {
           this.loading = false;
         }
       });
-      
     } else {
       // Se cargan todos los productos
       this.productosService.recuperarTodos().subscribe({
@@ -96,42 +75,47 @@ export class MostrarProductsComponent {
       });
     }
   }
- 
-  addToCart(producto: Producto): void {
-    if (this.currentUser) {
-      // Crea el objeto Carrito. Nota: el backend usará "producto_id" y "cantidad"
-      const carritoItem: Carrito = new Carrito(
-        0, // El ID lo genera la base de datos
-        this.currentUser.id,
-        producto.ProductoID,
-        1,
-        producto // Se pasa el objeto completo para mapear la información
-      );
-      this.carritoService.addToCart(carritoItem).subscribe({
-        next: (res) => {
-          alert('Producto añadido o actualizado en el carrito');
-        },
-        error: (err) => {
-          console.error(err);
-          alert('Ocurrió un error al añadir el producto al carrito');
-        }
-      });
-    } else {
-      alert('Debes iniciar sesión para añadir productos al carrito');
-    }
+
+  // Método para ver el detalle del producto al hacer clic en la tarjeta
+  verDetalleProducto(producto: Producto): void {
+    // Supongamos que tu ruta de detalle es '/producto/:id'
+    // Ajusta el nombre de la ruta según tu routing
+    this.router.navigate(['/producto', producto.ProductoID]);
   }
 
-  // Getter para devolver los productos filtrados según el nombre
-  // get filteredProducts(): Producto[] {
-  //   if (!this.filterName) {
-  //     return this.products;
-  //   }
-  //   return this.products.filter(producto =>
-  //     producto.nombre.toLowerCase().includes(this.filterName.toLowerCase())
-  //   );
-  // }
-  // Getter para devolver los productos filtrados por nombre y categoría
-  // Si aún deseas filtrar por nombre localmente, puedes mantener este getter
+  // Método para añadir el producto al carrito
+  // Si no hay usuario logueado, redirige a login
+  addToCart(event: Event, producto: Producto): void {
+    // Evitar que el click en el botón se propague al contenedor (card)
+    event.stopPropagation();
+
+    if (!this.currentUser) {
+      // Redirigir a login si no hay usuario
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    // Si hay usuario logueado, añade el producto al carrito
+    const carritoItem: Carrito = new Carrito(
+      0, // El ID lo genera la base de datos
+      this.currentUser.id,
+      producto.ProductoID,
+      1,
+      producto
+    );
+
+    this.carritoService.addToCart(carritoItem).subscribe({
+      next: () => {
+        alert('Producto añadido o actualizado en el carrito');
+      },
+      error: (err) => {
+        console.error(err);
+        alert('Ocurrió un error al añadir el producto al carrito');
+      }
+    });
+  }
+
+  // Getter para devolver los productos filtrados por nombre
   get filteredProducts(): Producto[] {
     if (!this.filterName) {
       return this.products;

@@ -1,0 +1,48 @@
+.detalle-producto-container {
+    background-color: var(--color-secundario);
+    color: var(--color-texto);
+    padding: 2rem 0;
+  }
+  
+  .producto-imagen {
+    max-height: 500px;
+    max-width: fit-content;
+    width: 100%;
+    object-fit: cover;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .producto-nombre {
+    color: var(--color-primario);
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  
+  .producto-precio {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+  }
+  
+  .producto-stock {
+    margin-bottom: 1rem;
+  }
+  
+  .producto-descripcion {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+  
+  .btn-agregar-carrito {
+    background-color: var(--color-primario);
+    color: #fff;
+    border: none;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn-agregar-carrito:hover {
+    background-color: var(--color-hover);
+  }
+  

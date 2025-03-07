@@ -12,6 +12,7 @@ import { RegisterComponent } from './componentes/register/register.component';
 import { AuthGuard } from './services/auth.guard';
 import { CarritoComponent } from './componentes/carrito/carrito.component';
 import { DeleteCategoriaComponent } from './componentes/delete-categoria/delete-categoria.component';
+import { DetalleProductoComponent } from './componentes/detalle-producto/detalle-producto.component';
 
 export const routes: Routes = [
  {path: 'addProduct', component: AddProductComponent , canActivate: [AuthGuard], data: { role: 'admin' }},
@@ -27,6 +28,7 @@ export const routes: Routes = [
  { path: 'login', component: LoginComponent },
  { path: 'register', component: RegisterComponent },
  {path:'carrito', component: CarritoComponent},
+ { path: 'producto/:id', component: DetalleProductoComponent },
  {path: '', redirectTo: 'main', pathMatch: 'full'},
  {path: '**', redirectTo: 'main', pathMatch: 'full'},
 ];
