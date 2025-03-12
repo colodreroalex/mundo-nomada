@@ -1,0 +1,36 @@
+<div class="container my-5">
+    <h2 class="mb-4 text-center">Checkout</h2>
+  
+    <!-- Notificaciones y errores -->
+    <div *ngIf="error" class="alert alert-danger text-center">
+      {{ error }}
+    </div>
+    <div *ngIf="loading" class="d-flex justify-content-center my-4">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
+    </div>
+  
+    <!-- Resumen del carrito -->
+    <div *ngIf="!loading && carrito && carrito.length > 0">
+      <div class="mb-3">
+        <h4>Resumen de tu compra</h4>
+        <ul class="list-group">
+          <li class="list-group-item" *ngFor="let item of carrito">
+            {{ item.producto?.nombre }} - Cantidad: {{ item.cantidad }} - Precio:
+            {{ item.producto?.precio | currency:'EUR' }}
+          </li>
+        </ul>
+        <div class="mt-3 text-end">
+          <strong>Total: {{ total | currency:'EUR' }}</strong>
+        </div>
+      </div>
+  
+      <!-- Contenedor para el botón de PayPal -->
+      <div id="paypal-button-container"></div>
+    </div>
+  
+    <div *ngIf="!loading && carrito.length === 0" class="alert alert-warning text-center">
+      No hay productos en el carrito.
+    </div>
+  </div>

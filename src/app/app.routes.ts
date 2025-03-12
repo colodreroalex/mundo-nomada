@@ -13,6 +13,7 @@ import { AuthGuard } from './services/auth.guard';
 import { CarritoComponent } from './componentes/carrito/carrito.component';
 import { DeleteCategoriaComponent } from './componentes/delete-categoria/delete-categoria.component';
 import { DetalleProductoComponent } from './componentes/detalle-producto/detalle-producto.component';
+import { CheckoutComponent } from './componentes/checkout/checkout.component';
 
 export const routes: Routes = [
  {path: 'addProduct', component: AddProductComponent , canActivate: [AuthGuard], data: { role: 'admin' }},
@@ -25,6 +26,7 @@ export const routes: Routes = [
  {path: 'deleteProduct', component: DeleteProductComponent, canActivate: [AuthGuard], data: { role: 'admin' }},
  {path: 'deleteCategoria', component: DeleteCategoriaComponent, canActivate: [AuthGuard], data: { role: 'admin' }},
  {path: 'modificarProduct', component: ModificarProductComponent, canActivate: [AuthGuard], data: { role: 'admin' }},
+ {path: 'checkout', component: CheckoutComponent},
  { path: 'login', component: LoginComponent },
  { path: 'register', component: RegisterComponent },
  {path:'carrito', component: CarritoComponent},

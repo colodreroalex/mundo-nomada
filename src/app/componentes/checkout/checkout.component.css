@@ -1,0 +1,85 @@
+/* Contenedor principal */
+.container {
+    max-width: 960px;
+    background-color: var(--color-secundario); /* Fondo claro */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 90px;
+  }
+  
+  /* Encabezados */
+  h2, h4 {
+    margin-top: 20px;
+    color: var(--color-primario); /* Encabezados en color primario */
+  }
+  
+  /* Resumen del carrito */
+  .list-group-item {
+    background-color: var(--color-secundario);
+    border: 1px solid var(--color-primario);
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+  
+  .list-group-item strong {
+    color: var(--color-primario);
+  }
+  
+  /* Total */
+  .text-end strong {
+    color: var(--color-primario);
+    font-size: 1.5rem;
+  }
+  
+  /* Contenedor del botón de PayPal */
+  #paypal-button-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center; /* Centra el botón horizontalmente */
+  }
+  
+  /* Notificaciones y errores */
+  .alert {
+    border-left: 5px solid var(--color-primario);
+    border-radius: 4px;
+  }
+  
+  /* Indicador de carga */
+  .spinner-border.text-primary {
+    color: var(--color-primario) !important;
+  }
+  
+  /* Botones */
+  button {
+    background-color: var(--color-primario);
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: var(--color-hover);
+  }
+  
+  /* Inputs y textarea */
+  input, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  input:focus, textarea:focus {
+    border-color: var(--color-primario);
+    box-shadow: 0 0 5px rgba(121, 21, 21, 0.2);
+  }
+  
+  /* Asegura que el iframe del mapa tenga bordes redondeados */
+  iframe {
+    border-radius: 8px;
+  }

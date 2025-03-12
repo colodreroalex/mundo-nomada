@@ -1,43 +1,76 @@
-
 <div class="container mt-4">
   <h2>Añadir Nuevo Producto</h2>
-  <form>
-    <!-- Campos existentes para nombre, descripción, precio, stock y categoría -->
+
+  <!-- Bloque para notificaciones -->
+  <div *ngIf="notification" class="alert alert-{{ notification.type }} text-center" role="alert">
+    {{ notification.message }}
+  </div>
+
+  <!-- Se agrega el template reference para el formulario -->
+  <form #productForm="ngForm" (ngSubmit)="addProduct(productForm)" novalidate>
+    <!-- Nombre del Producto -->
     <div class="mb-3">
       <label for="nombre" class="form-label">Nombre del Producto</label>
       <input type="text" name="nombre" [(ngModel)]="prod.nombre" id="nombre" class="form-control"
-        placeholder="Escriba el nombre del producto" required>
+        placeholder="Escriba el nombre del producto" required #nombre="ngModel">
+      <div *ngIf="nombre.invalid && (nombre.touched || productForm.submitted)" class="text-danger">
+        El nombre es obligatorio.
+      </div>
     </div>
+
+    <!-- Descripción del Producto -->
     <div class="mb-3">
       <label for="descripcion" class="form-label">Descripción del Producto</label>
       <input type="text" name="descripcion" [(ngModel)]="prod.descripcion" id="descripcion" class="form-control"
-        placeholder="Escriba la descripción" required>
+        placeholder="Escriba la descripción" required #descripcion="ngModel">
+      <div *ngIf="descripcion.invalid && (descripcion.touched || productForm.submitted)" class="text-danger">
+        La descripción es obligatoria.
+      </div>
     </div>
+
+    <!-- Precio -->
     <div class="mb-3">
       <label for="precio" class="form-label">Precio</label>
       <input type="number" name="precio" [(ngModel)]="prod.precio" id="precio" class="form-control"
-        placeholder="Escriba el precio" required>
+        placeholder="Escriba el precio" required min="0.01" #precio="ngModel">
+      <div *ngIf="precio.invalid && (precio.touched || productForm.submitted)" class="text-danger">
+        <div *ngIf="precio.errors?.['required']">El precio es obligatorio.</div>
+        <div *ngIf="precio.errors?.['min']">El precio debe ser mayor que 0.</div>
+      </div>
     </div>
+
+    <!-- Stock -->
     <div class="mb-3">
       <label for="stock" class="form-label">Stock</label>
       <input type="number" name="stock" [(ngModel)]="prod.stock" id="stock" class="form-control"
-        placeholder="Ingrese el stock disponible" required>
+        placeholder="Ingrese el stock disponible" required min="0" #stock="ngModel">
+      <div *ngIf="stock.invalid && (stock.touched || productForm.submitted)" class="text-danger">
+        <div *ngIf="stock.errors?.['required']">El stock es obligatorio.</div>
+        <div *ngIf="stock.errors?.['min']">El stock no puede ser negativo.</div>
+      </div>
     </div>
+
+    <!-- Categoría -->
     <div class="mb-3">
       <label for="categoriaID" class="form-label">Categoría</label>
-      <select name="categoriaID" [(ngModel)]="prod.categoriaID" id="categoriaID" class="form-control" required>
+      <select name="categoriaID" [(ngModel)]="prod.categoriaID" id="categoriaID" class="form-control" required #categoriaID="ngModel">
+        <option value="">Seleccione una categoría</option>
         <option *ngFor="let categoria of categorias" [value]="categoria.CategoriaID">
           {{ categoria.Nombre }}
         </option>
       </select>
+      <div *ngIf="categoriaID.invalid && (categoriaID.touched || productForm.submitted)" class="text-danger">
+        La categoría es obligatoria.
+      </div>
     </div>
-    <!-- Nuevo campo para imagen -->
+
+    <!-- Imagen del Producto -->
     <div class="mb-3">
       <label for="imagen" class="form-label">Imagen del Producto</label>
       <input type="file" name="imagen" id="imagen" class="form-control" accept="image/*" (change)="onFileChange($event)">
+      <!-- Si deseas validar que se seleccione un archivo, podrías agregar una variable booleana y mostrar un mensaje aquí -->
     </div>
-    
-    <button type="submit" class="btn btn-primary save-button" (click)="addProduct()">Guardar</button>
 
+    <button type="submit" class="btn btn-primary save-button">Guardar</button>
   </form>
 </div>

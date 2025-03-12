@@ -1,15 +1,20 @@
 <div class="container mt-4">
-    <h2>Añadir Nueva Categoría</h2>
-    <form (ngSubmit)="addCategoria()">
-      <div class="mb-3">
-        <label>Nombre de la Categoría</label>
-        <input type="text" [(ngModel)]="categoria.Nombre" name="nombre" class="form-control" required>
-      </div>
-      <div class="mb-3">
-        <label>Descripción</label>
-        <textarea [(ngModel)]="categoria.Descripcion" name="descripcion" class="form-control" required></textarea>
-      </div>
-      <button type="submit" class="btn btn-primary">Guardar</button>
-    </form>
+  <h2>Añadir Nueva Categoría</h2>
+  
+  <!-- Bloque para notificaciones -->
+  <div *ngIf="notification" class="alert alert-{{ notification.type }} text-center" role="alert">
+    {{ notification.message }}
   </div>
   
+  <form (ngSubmit)="addCategoria()">
+    <div class="mb-3">
+      <label>Nombre de la Categoría</label>
+      <input type="text" [(ngModel)]="categoria.Nombre" name="nombre" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label>Descripción</label>
+      <textarea [(ngModel)]="categoria.Descripcion" name="descripcion" class="form-control" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Guardar</button>
+  </form>
+</div>

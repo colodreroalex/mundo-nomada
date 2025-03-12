@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ProductosService } from '../../services/productos.service';
 import { CategoriasService } from '../../services/categorias.service';
 import { Producto } from '../../../models/Producto';
 import { Categoria } from '../../../models/Categoria';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-product',
@@ -16,10 +17,12 @@ import { Categoria } from '../../../models/Categoria';
 export class AddProductComponent implements OnInit {
   prod: Producto = new Producto(0, '', 0, '', 0, 0, '');
   categorias: Categoria[] = [];
+  notification: { message: string; type: string } | null = null;
 
   constructor(
     private productosService: ProductosService,
-    private categoriasService: CategoriasService
+    private categoriasService: CategoriasService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -31,7 +34,6 @@ export class AddProductComponent implements OnInit {
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
-        // reader.result convierte la imagen a base64 , pero se debe hacer un cast a string para que no de error
         this.prod.imagen = reader.result as string;
       };
       reader.readAsDataURL(file);
@@ -44,13 +46,33 @@ export class AddProductComponent implements OnInit {
     });
   }
 
-  addProduct() {
+  addProduct(form: NgForm) {
+    // Verifica si el formulario es válido antes de enviar
+    if (form.invalid) {
+      this.notification = { message: 'Por favor, corrige los errores en el formulario.', type: 'warning' };
+      setTimeout(() => this.notification = null, 2000);
+      return;
+    }
+    
     console.log(this.prod);
-    this.productosService.addProduct(this.prod).subscribe((datos: any) => {
-      if (datos['resultado'] == 'OK') {
-        alert(datos['mensaje']);
-        window.location.href = '/agregarProducto';
+    this.productosService.addProduct(this.prod).subscribe(
+      (datos: any) => {
+        if (datos['resultado'] === 'OK') {
+          this.notification = { message: datos['mensaje'], type: 'success' };
+          setTimeout(() => {
+            this.notification = null;
+            this.router.navigate(['/agregarProducto']);
+          }, 1000);
+        } else {
+          this.notification = { message: datos['mensaje'], type: 'warning' };
+          setTimeout(() => this.notification = null, 1000);
+        }
+      },
+      (error: any) => {
+        console.error(error);
+        this.notification = { message: 'Error al agregar el producto. Intenta nuevamente.', type: 'danger' };
+        setTimeout(() => this.notification = null, 1000);
       }
-    });
+    );
   }
 }

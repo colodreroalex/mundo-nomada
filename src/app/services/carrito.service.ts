@@ -70,4 +70,10 @@ export class CarritoService {
     );
   }
 
+  finalizePurchase(cart: Carrito[]): Observable<any> {
+    // Se envía el carrito completo para procesar la compra
+    return this.http.post<any>(`${this.url}finalizePurchase.php`, { cart });
+  }
+  
+
 }

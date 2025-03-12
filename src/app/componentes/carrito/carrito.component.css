@@ -1,6 +1,57 @@
 .card-img-top {
     width: 100%;
-    height: 200px; /* Ajusta la altura a tu preferencia */
+    height: 400px; /* Ajusta la altura a tu preferencia */
     object-fit: cover;
   }
   
+  /* Contenedor de la tarjeta */
+.card {
+  border: none;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Efecto al pasar el cursor sobre la tarjeta */
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilo para la imagen de la tarjeta */
+.card-img-top {
+  width: 100%;
+  height: 250px; /* Ajusta la altura según necesites */
+  object-fit: cover;
+}
+
+/* Espaciado y tipografía del contenido */
+.card-body {
+  padding: 1.25rem;
+}
+
+.card-title {
+  font-size: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.card-text {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+/* Estilo para los controles de cantidad */
+.d-flex.align-items-center {
+  justify-content: center;
+}
+
+.btn {
+  min-width: 40px;
+  transition: background-color 0.3s ease;
+}
+
+/* Opcional: Efecto de hover para los botones */
+.btn:hover {
+  opacity: 0.9;
+}

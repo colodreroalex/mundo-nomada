@@ -15,18 +15,31 @@ export class RegisterComponent {
   email: string = '';
   password: string = '';
 
+  // Propiedad para notificaciones: message y type (success, danger, etc.)
+  notification: { message: string; type: string } | null = null;
+
   constructor(private authService: AuthService, private router: Router) {}
 
   register() {
     this.authService.register(this.name, this.email, this.password).subscribe({
       next: (response) => {
         console.log('Registro exitoso', response);
-        alert('Te has registrado exitosamente! Por favor, inicia sesión.');
-        this.router.navigate(['/login']);
+        // Mostramos la notificación de éxito
+        this.notification = { message: 'Te has registrado exitosamente! Por favor, inicia sesión.', type: 'success' };
+        // Limpiamos la notificación y redirigimos después de 3 segundos
+        setTimeout(() => {
+          this.notification = null;
+          this.router.navigate(['/login']);
+        }, 3000);
       },
       error: (error) => {
         console.error('Registro fallido', error);
-        alert('Error en el registro. Por favor, intenta nuevamente.');
+        // Notificación de error
+        this.notification = { message: 'Error en el registro. Por favor, intenta nuevamente.', type: 'danger' };
+        // Limpiar la notificación después de 3 segundos
+        setTimeout(() => {
+          this.notification = null;
+        }, 3000);
       }
     });
   }

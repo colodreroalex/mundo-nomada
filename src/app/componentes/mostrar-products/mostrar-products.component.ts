@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router'; // <-- Importar Router
+import { Router, ActivatedRoute } from '@angular/router';
 import { Producto } from '../../../models/Producto';
 import { ProductosService } from '../../services/productos.service';
 import { CarritoService } from '../../services/carrito.service';
@@ -24,12 +24,15 @@ export class MostrarProductsComponent {
   error: string = '';
   currentUser: User | null = null;
 
+  // Propiedad para notificaciones: type puede ser 'success', 'warning', 'danger', etc.
+  notification: { message: string; type: string } | null = null;
+
   constructor(
     private productosService: ProductosService,
     private carritoService: CarritoService,
     private authService: AuthService, 
     private route: ActivatedRoute,
-    private router: Router   // <-- Inyectamos el Router
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -48,7 +51,6 @@ export class MostrarProductsComponent {
   loadProducts(): void {
     this.loading = true;
     if (this.filterCategory !== null) {
-      // Se usa el endpoint que filtra en el backend
       this.productosService.getProductsByCategory(this.filterCategory).subscribe({
         next: (data) => {
           this.products = data;
@@ -61,7 +63,6 @@ export class MostrarProductsComponent {
         }
       });
     } else {
-      // Se cargan todos los productos
       this.productosService.recuperarTodos().subscribe({
         next: (data) => {
           this.products = data;
@@ -78,8 +79,7 @@ export class MostrarProductsComponent {
 
   // Método para ver el detalle del producto al hacer clic en la tarjeta
   verDetalleProducto(producto: Producto): void {
-    // Supongamos que tu ruta de detalle es '/producto/:id'
-    // Ajusta el nombre de la ruta según tu routing
+    // Supongamos que la ruta de detalle es '/producto/:id'
     this.router.navigate(['/producto', producto.ProductoID]);
   }
 
@@ -106,11 +106,13 @@ export class MostrarProductsComponent {
 
     this.carritoService.addToCart(carritoItem).subscribe({
       next: () => {
-        alert('Producto añadido o actualizado en el carrito');
+        this.notification = { message: 'Producto añadido o actualizado en el carrito', type: 'success' };
+        setTimeout(() => this.notification = null, 2000);
       },
       error: (err) => {
         console.error(err);
-        alert('Ocurrió un error al añadir el producto al carrito');
+        this.notification = { message: 'Ocurrió un error al añadir el producto al carrito', type: 'danger' };
+        setTimeout(() => this.notification = null, 2000);
       }
     });
   }

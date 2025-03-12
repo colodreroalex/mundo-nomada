@@ -1,6 +1,11 @@
 <div class="container mt-4">
   <h1 class="text-center">Modificar Producto</h1>
-  
+
+  <!-- Bloque para notificaciones -->
+  <div *ngIf="notification" class="alert alert-{{ notification.type }} text-center" role="alert">
+    {{ notification.message }}
+  </div>
+
   <!-- Tabla de productos -->
   <table class="table table-bordered table-striped">
     <thead class="table-dark">
@@ -36,22 +41,37 @@
   <!-- Formulario para modificar el producto seleccionado -->
   <div class="card p-3 mt-4" *ngIf="productoSeleccionado">
     <h5 class="card-title">Editar Producto</h5>
-    <div class="mb-3">
-      <label class="form-label">Nombre:</label>
-      <input type="text" class="form-control" [(ngModel)]="productoSeleccionado.nombre" />
-    </div>
-    <div class="mb-3">
-      <label class="form-label">Precio:</label>
-      <input type="number" class="form-control" [(ngModel)]="productoSeleccionado.precio" />
-    </div>
-    <div class="mb-3">
-      <label class="form-label">Descripción:</label>
-      <input type="text" class="form-control" [(ngModel)]="productoSeleccionado.descripcion" />
-    </div>
-    <div class="mb-3">
-      <label class="form-label">Stock:</label>
-      <input type="number" class="form-control" [(ngModel)]="productoSeleccionado.stock" />
-    </div>
-    <button class="btn btn-warning" (click)="modificarProducto()">Modificar</button>
+    <!-- Se utiliza un formulario template-driven -->
+    <form #form="ngForm" (ngSubmit)="modificarProducto(form)">
+      <div class="mb-3">
+        <label class="form-label">Nombre:</label>
+        <input type="text" class="form-control" [(ngModel)]="productoSeleccionado.nombre" name="nombre" required />
+        <div *ngIf="form.submitted && !productoSeleccionado?.nombre" class="text-danger">
+          El nombre es obligatorio.
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Precio:</label>
+        <input type="number" class="form-control" [(ngModel)]="productoSeleccionado.precio" name="precio" required />
+        <div *ngIf="form.submitted && !productoSeleccionado?.precio" class="text-danger">
+          El precio es obligatorio.
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Descripción:</label>
+        <input type="text" class="form-control" [(ngModel)]="productoSeleccionado.descripcion" name="descripcion" required />
+        <div *ngIf="form.submitted && !productoSeleccionado?.descripcion" class="text-danger">
+          La descripción es obligatoria.
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Stock:</label>
+        <input type="number" class="form-control" [(ngModel)]="productoSeleccionado.stock" name="stock" required />
+        <div *ngIf="form.submitted && (productoSeleccionado?.stock === null || productoSeleccionado?.stock === undefined)" class="text-danger">
+          El stock es obligatorio.
+        </div>
+      </div>
+      <button class="btn btn-warning" type="submit">Modificar</button>
+    </form>
   </div>
 </div>

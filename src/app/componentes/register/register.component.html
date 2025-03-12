@@ -1,6 +1,12 @@
 <div class="container mt-5 d-flex flex-column align-items-center">
   <div class="card p-4 shadow-lg" style="max-width: 400px; width: 100%; border-radius: 10px; background-color: var(--color-secundario);">
     <h2 class="text-center mb-4" style="color: var(--color-texto);">Crea una cuenta</h2>
+    
+    <!-- Bloque de notificación -->
+    <div *ngIf="notification" class="alert alert-{{ notification.type }} text-center" role="alert">
+      {{ notification.message }}
+    </div>
+
     <form (ngSubmit)="register()">
       <div class="mb-3">
         <label for="name" class="form-label" style="color: var(--color-texto);">Nombre</label>

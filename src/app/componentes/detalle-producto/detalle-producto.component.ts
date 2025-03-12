@@ -20,6 +20,8 @@ export class DetalleProductoComponent implements OnInit {
   currentUser: User | null = null; // Usuario actual (si está logueado)
   loading: boolean = false;
   error: string = '';
+  // Propiedad para notificaciones. type puede ser 'success', 'warning', 'danger', etc.
+  notification: { message: string; type: string } | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -30,7 +32,7 @@ export class DetalleProductoComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Al iniciar, obtenemos el ID del producto desde la URL
+    // Obtenemos el ID del producto desde la URL
     const idParam = this.route.snapshot.paramMap.get('id');
     if (idParam) {
       const productoID = +idParam; // Convertir a number
@@ -41,12 +43,11 @@ export class DetalleProductoComponent implements OnInit {
     this.currentUser = this.authService.getCurrentUser();
   }
 
-  // detalle-producto.component.ts
   cargarProducto(productoID: number): void {
     this.loading = true;
     this.productosService.seleccionarPorID(productoID).subscribe({
       next: (producto: Producto) => {
-        this.producto = producto; // ya no es un array
+        this.producto = producto;
         this.loading = false;
       },
       error: (err) => {
@@ -58,36 +59,94 @@ export class DetalleProductoComponent implements OnInit {
   }
 
   addToCart(producto: Producto): void {
-    // Validar que el stock sea mayor que 0
-    if (producto.stock === 0 || +producto.stock === 0) {
-      alert('El producto no tiene stock disponible.');
-      return;
-    }
-  
-    // Si no hay usuario logueado, redirigimos a Login
+    // Si no hay un usuario logueado, mostramos el mensaje y redirigimos al login
     if (!this.currentUser) {
-      this.router.navigate(['/login']);
+      this.notification = {
+        message: 'Debes iniciar sesión para añadir productos al carrito',
+        type: 'warning',
+      };
+      setTimeout(() => {
+        this.notification = null;
+        this.router.navigate(['/login']);
+      }, 3000);
       return;
     }
   
-    // Si hay usuario, creamos el objeto Carrito y lo enviamos
-    const carritoItem: Carrito = new Carrito(
-      0, // ID generado por la BD
-      this.currentUser.id,
-      producto.ProductoID,
-      1, // Cantidad por defecto
-      producto // Se pasa el objeto completo del producto
-    );
+    // Verifica si hay stock disponible
+    if (producto.stock === 0) {
+      this.notification = {
+        message: 'El producto no tiene stock disponible.',
+        type: 'warning',
+      };
+      setTimeout(() => {
+        this.notification = null;
+      }, 1500);
+      return;
+    }
   
-    this.carritoService.addToCart(carritoItem).subscribe({
-      next: () => {
-        alert('Producto añadido o actualizado en el carrito');
-      },
-      error: (err) => {
-        console.error(err);
-        alert('Ocurrió un error al añadir el producto al carrito');
-      },
+    const user = this.currentUser;
+  
+    // Consultamos el carrito del usuario
+    this.carritoService.getCart(user.id).subscribe((cartItems: Carrito[]) => {
+      const existingCartItem = cartItems.find(
+        (item) => item.producto_id === producto.ProductoID
+      );
+      const currentQuantity = existingCartItem ? existingCartItem.cantidad : 0;
+  
+      // Si la cantidad actual ya alcanzó el stock, se notifica
+      if (currentQuantity >= producto.stock) {
+        this.notification = {
+          message: 'No quedan más unidades disponibles para este producto.',
+          type: 'warning',
+        };
+        setTimeout(() => {
+          this.notification = null;
+        }, 1500);
+        return;
+      }
+  
+      // Si se puede agregar, creamos el objeto Carrito y lo añadimos
+      const carritoItem: Carrito = new Carrito(
+        0,                // ID generado por la base de datos
+        user.id,          // ID del usuario
+        producto.ProductoID,
+        1,                // Se añade 1 unidad
+        producto          // Objeto completo del producto
+      );
+  
+      this.carritoService.addToCart(carritoItem).subscribe({
+        next: (response: any) => {
+          // Se espera que el backend devuelva un objeto con la propiedad "resultado"
+          if (response.resultado === 'OK') {
+            this.notification = {
+              message: 'Producto añadido o actualizado en el carrito',
+              type: 'success',
+            };
+          } else {
+            // En caso de error, se muestra el mensaje recibido del backend
+            this.notification = {
+              message: response.mensaje || 'No quedan más unidades disponibles para este producto.',
+              type: 'warning',
+            };
+          }
+          setTimeout(() => {
+            this.notification = null;
+          }, 1500);
+        },
+        error: (err) => {
+          console.error(err);
+          this.notification = {
+            message: 'Ocurrió un error al añadir el producto al carrito',
+            type: 'danger',
+          };
+          setTimeout(() => {
+            this.notification = null;
+          }, 1500);
+        },
+      });
     });
   }
+  
+  
   
 }

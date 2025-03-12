@@ -1,6 +1,11 @@
 <div class="container my-5">
   <h2 class="mb-4 text-center">Productos Disponibles</h2>
 
+  <!-- Bloque para notificaciones -->
+  <div *ngIf="notification" class="alert alert-{{ notification.type }} text-center" role="alert">
+    {{ notification.message }}
+  </div>
+
   <!-- Campo para filtrar por nombre -->
   <div class="mb-4">
     <input
@@ -41,7 +46,7 @@
             </p>
           </div>
           <!-- Footer de la card -->
-          <!-- Aqui iba un div  con un ngIf CURRENT USER y boton para añadir al carrito -->
+          
         </div>
       </div>
     </div>

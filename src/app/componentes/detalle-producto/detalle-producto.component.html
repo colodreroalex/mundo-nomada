@@ -1,55 +1,59 @@
 <div class="detalle-producto-container">
     <div class="container py-4">
-
-        <!-- Indicador de carga -->
-        <div *ngIf="loading" class="text-center my-4">
-            <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Cargando...</span>
-            </div>
+      <!-- Bloque de notificación -->
+      <div *ngIf="notification" class="alert alert-{{ notification.type }} text-center" role="alert">
+        {{ notification.message }}
+      </div>
+  
+      <!-- Indicador de carga -->
+      <div *ngIf="loading" class="text-center my-4">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Cargando...</span>
         </div>
-
-        <!-- Mensaje de error -->
-        <div *ngIf="error" class="alert alert-danger text-center" role="alert">
-            {{ error }}
+      </div>
+  
+      <!-- Mensaje de error -->
+      <div *ngIf="error" class="alert alert-danger text-center" role="alert">
+        {{ error }}
+      </div>
+  
+      <!-- Si tenemos producto, lo mostramos -->
+      <div *ngIf="producto">
+        <div class="row">
+          <!-- Columna para la imagen -->
+          <div class="col-md-6 d-flex justify-content-center align-items-center">
+            <img [src]="producto.imagen" [alt]="producto.nombre" class="img-fluid producto-imagen">
+          </div>
+  
+          <!-- Columna para la info -->
+          <div class="col-md-6">
+            <h1 class="producto-nombre">{{ producto.nombre }}</h1>
+            <p class="producto-precio">
+              {{ producto.precio | currency:'EUR' }}
+            </p>
+  
+            <p class="producto-stock" *ngIf="producto.stock > 0">
+              <span class="badge bg-success">En stock</span>
+            </p>
+            <p class="producto-stock" *ngIf="producto.stock == 0">
+              <span class="badge bg-danger">Agotado</span>
+            </p>
+  
+            <p class="producto-descripcion">{{ producto.descripcion }}</p>
+  
+            <!-- Botón para agregar al carrito -->
+            <button class="btn btn-agregar-carrito mt-3" (click)="addToCart(producto)"
+              [disabled]="producto.stock === 0">
+              Agregar al carrito
+            </button>
+          </div>
         </div>
-
-        <!-- Si tenemos producto, lo mostramos -->
-        <div *ngIf="producto">
-            <div class="row">
-                <!-- Columna para la imagen -->
-                <div class="col-md-6 d-flex justify-content-center align-items-center">
-                    <img [src]="producto.imagen" [alt]="producto.nombre" class="img-fluid producto-imagen">
-                </div>
-
-                <!-- Columna para la info -->
-                <div class="col-md-6">
-                    <h1 class="producto-nombre">{{ producto.nombre }}</h1>
-                    <p class="producto-precio">
-                        {{ producto.precio | currency:'EUR' }}
-                    </p>
-
-                    <p class="producto-stock" *ngIf="producto.stock > 0">
-                        <span class="badge bg-success">En stock</span>
-                    </p>
-                    <p class="producto-stock" *ngIf="producto.stock == 0">
-                        <span class="badge bg-danger">Agotado</span>
-                    </p>
-
-
-                    <p class="producto-descripcion">{{ producto.descripcion }}</p>
-
-                    <!-- Botón para agregar al carrito -->
-                    <button class="btn btn-agregar-carrito mt-3" (click)="addToCart(producto)"
-                        [disabled]="producto.stock === 0">
-                        Agregar al carrito
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Si no hay producto (y no está cargando) -->
-        <div *ngIf="!producto && !loading && !error" class="alert alert-warning text-center">
-            No se encontró el producto.
-        </div>
+      </div>
+  
+      <!-- Si no hay producto (y no está cargando) -->
+      <div *ngIf="!producto && !loading && !error" class="alert alert-warning text-center">
+        No se encontró el producto.
+      </div>
     </div>
-</div>
+  </div>
+  
