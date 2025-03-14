@@ -13,44 +13,96 @@
     </div>
   </div>
 
-  <!-- Mensaje de error (opcional, ya se maneja con notificación) -->
+  <!-- Mensaje de error -->
   <div *ngIf="error" class="alert alert-danger text-center" role="alert">
     {{ error }}
   </div>
 
   <!-- Mostrar productos del carrito si existen -->
   <div *ngIf="carrito && carrito.length > 0; else noProducts">
-    <div class="row">
-      <div class="col-md-4 mb-4" *ngFor="let item of carrito">
-        <div class="card h-100 shadow-sm">
-          <img [src]="item.producto?.imagen" class="card-img-top" alt="{{ item.producto?.nombre }}">
-          <div class="card-body d-flex flex-column">
-            <h5 class="card-title">{{ item.producto?.nombre }}</h5>
-            <p class="card-text text-muted">{{ item.producto?.descripcion }}</p>
-            <p class="card-text">Precio: {{ item.producto?.precio | currency:'EUR' }}</p>
-            <!-- Controles para actualizar la cantidad -->
-            <div class="d-flex align-items-center mb-2">
-              <button class="btn btn-secondary" (click)="decrement(item)">-</button>
-              <span class="mx-2">{{ item.cantidad }}</span>
-              <button class="btn btn-secondary" (click)="increment(item)">+</button>
-            </div>
-            <button class="btn btn-danger mt-auto" (click)="removeItem(item)">Eliminar</button>
+
+    <!-- Encabezados de la tabla -->
+    <div class="row fw-bold mb-3 d-none d-md-flex text-center">
+      <div class="col-md-5 text-start">PRODUCTO</div>
+      <div class="col-md-2">PRECIO</div>
+      <div class="col-md-2">CANTIDAD</div>
+      <div class="col-md-2">TOTAL</div>
+      <div class="col-md-1"></div>
+    </div>
+
+    <!-- Listado de productos -->
+    <div class="row align-items-center mb-3" *ngFor="let item of carrito">
+      <!-- Columna Producto (imagen, nombre, color, talla...) -->
+      <div class="col-12 col-md-5 d-flex align-items-center mb-2 mb-md-0">
+        <img
+          [src]="item.producto?.imagen"
+          alt="{{ item.producto?.nombre }}"
+          class="img-thumbnail me-3"
+          style="width:80px; height:80px; object-fit:cover;"
+        />
+        <div>
+          <div class="fw-bold">{{ item.producto?.nombre }}</div>
+          <div class="text-muted" style="font-size: 0.9rem;">
           </div>
         </div>
       </div>
-    </div>
-    <!-- Sección para mostrar el total del carrito -->
-    <div class="card mt-4 shadow-sm border-primary">
-      <div class="card-body d-flex justify-content-between align-items-center">
-        <span class="fw-bold">Total</span>
-        <span class="fs-4 text-primary">{{ total | currency:'EUR' }}</span>
+
+      <!-- Columna Precio -->
+      <div class="col-6 col-md-2 text-center mb-2 mb-md-0">
+        {{ item.producto?.precio | currency:'EUR' }}
+      </div>
+
+      <!-- Columna Cantidad -->
+      <div class="col-6 col-md-2 text-center mb-2 mb-md-0">
+        <div class="d-flex justify-content-center align-items-center">
+          <button class="btn btn-secondary btn-sm" (click)="decrement(item)">-</button>
+          <span class="mx-2">{{ item.cantidad }}</span>
+          <button class="btn btn-secondary btn-sm" (click)="increment(item)">+</button>
+        </div>
+      </div>
+
+      <!-- Columna Total (precio x cantidad) -->
+      <div class="col-6 col-md-2 text-center mb-2 mb-md-0">
+        {{ total| currency:'EUR' }}
+      </div>
+
+      <!-- Botón eliminar -->
+      <div class="col-6 col-md-1 text-center">
+        <button class="btn btn-danger btn-sm" (click)="removeItem(item)">X</button>
       </div>
     </div>
-    <!-- Botón para finalizar compra -->
-  <div class="d-flex justify-content-end mt-4">
-    <a routerLink="/checkout" class="btn btn-success">Finalizar compra</a>
-  </div>
-     
+
+    <!-- Subtotal, aviso de envío gratis y botón de finalizar -->
+    <div class="row mt-4">
+      <div class="col-md-8 d-flex align-items-center">
+        <!-- Enlace de seguir comprando -->
+        <a routerLink="/mostrarProductos" class="btn btn-link ps-0">
+          Seguir comprando
+        </a>
+      </div>
+
+      <div class="col-md-4 text-end">
+        <!-- Subtotal -->
+        <div class="fw-bold fs-5">
+          SUBTOTAL: {{ total | currency:'EUR' }}
+        </div>
+
+        <!-- Aviso de envío gratis (ejemplo) -->
+        <div class="text-muted">
+          Compra por 
+          {{ (60 - total) | currency:'EUR' }}
+          más para obtener <strong>Envío Gratis</strong>!
+        </div>
+
+        <!-- Botón Finalizar pedido -->
+        <button
+          routerLink="/checkout"
+          class="btn btn-success mt-3"
+        >
+          Finalizar pedido
+        </button>
+      </div>
+    </div>
   </div>
 
   <!-- Mensaje cuando no hay productos -->

@@ -6,6 +6,7 @@ import { Carrito } from '../../../models/Carrito';
 import { User } from '../../../models/Users';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { combineLatest } from 'rxjs';
 
 @Component({
   selector: 'app-checkout',
@@ -18,6 +19,7 @@ export class CheckoutComponent implements OnInit {
   total: number = 0;
   loading: boolean = false;
   error: string = '';
+  feedbackMessage: string = ''; // Mensaje de feedback para el usuario
   currentUser: User | null = null;
 
   constructor(
@@ -27,11 +29,26 @@ export class CheckoutComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Obtener el usuario actual
-    this.currentUser = this.authService.getCurrentUser();
+    combineLatest([
+      this.authService.getCurrentUserObservable(),
+      this.authService.sessionLoadedSubject.asObservable()
+    ]).subscribe(([user, sessionLoaded]) => {
+      if (sessionLoaded) {
+        this.currentUser = user;
+        if (this.currentUser) {
+          this.loadCarrito();
+        } else {
+          this.error = 'Debes iniciar sesión para proceder al checkout';
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000);
+        }
+      }
+    });
+  }
 
+  loadCarrito(): void {
     if (this.currentUser) {
-      // Cargar el carrito y el total
       this.carritoService.getCart(this.currentUser.id).subscribe({
         next: (data) => {
           this.carrito = data;
@@ -39,12 +56,11 @@ export class CheckoutComponent implements OnInit {
             (acc, item) => acc + (item.producto?.precio || 0) * item.cantidad,
             0
           );
-          // Si hay elementos en el carrito, renderiza el botón de PayPal
+          // Renderiza el botón de PayPal si hay elementos en el carrito
           if (this.carrito && this.carrito.length > 0) {
-            // Se espera un corto tiempo para que Angular actualice el DOM
             setTimeout(() => {
               this.renderPayPalButton();
-            }, 500); // Puedes ajustar el tiempo según tus necesidades
+            }, 500);
           }
         },
         error: (err) => {
@@ -52,29 +68,29 @@ export class CheckoutComponent implements OnInit {
           this.error = 'Ocurrió un error al cargar el carrito';
         }
       });
-    } else {
-      this.error = 'Debes iniciar sesión para proceder al checkout';
-      setTimeout(() => {
-        this.router.navigate(['/login']);
-      }, 3000);
     }
   }
 
   renderPayPalButton(): void {
     if ((window as any).paypal) {
       (window as any).paypal.Buttons({
+        style: {
+          layout: 'vertical', // Deja 'vertical' para no perder el botón de tarjeta
+          color: 'gold',      // Puedes cambiarlo a 'blue', 'silver', etc.
+          shape: 'pill',      // Bordes redondeados
+          label: 'paypal'     // Otras opciones: 'checkout', 'buynow', etc.
+        },
         createOrder: (data: any, actions: any): Promise<string> => {
           return actions.order.create({
             purchase_units: [{
               amount: {
-                value: this.total.toFixed(2) // total a pagar
+                value: this.total.toFixed(2)
               }
             }]
           });
         },
         onApprove: (data: any, actions: any): Promise<void> => {
           return actions.order.capture().then((details: any) => {
-            // Una vez aprobado el pago, finalizamos la compra
             this.finalizePurchase();
           });
         },
@@ -85,17 +101,22 @@ export class CheckoutComponent implements OnInit {
       }).render('#paypal-button-container');
     }
   }
+  
 
   finalizePurchase(): void {
-    // Se llama al backend para confirmar la compra, reducir el stock y limpiar el carrito
     this.carritoService.finalizePurchase(this.carrito).subscribe({
       next: () => {
-        // Opcional: notificar al usuario y redirigir a una página de confirmación
-        this.router.navigate(['/confirmation']);
+        this.feedbackMessage = 'Compra realizada con éxito. Redirigiendo al inicio...';
+        setTimeout(() => {
+          this.router.navigate(['/']);
+        }, 3000);
       },
       error: (err) => {
         console.error(err);
-        this.error = 'Error al finalizar la compra';
+        this.error = 'Error al finalizar la compra. Redirigiendo al inicio...';
+        setTimeout(() => {
+          this.router.navigate(['/']);
+        }, 3000);
       }
     });
   }

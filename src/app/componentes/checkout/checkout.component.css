@@ -1,6 +1,6 @@
 /* Contenedor principal */
 .container {
-    max-width: 960px;
+    max-width: 800px;
     background-color: var(--color-secundario); /* Fondo claro */
     padding: 20px;
     border-radius: 8px;
@@ -32,12 +32,8 @@
     font-size: 1.5rem;
   }
   
-  /* Contenedor del botón de PayPal */
-  #paypal-button-container {
-    margin-top: 20px;
-    display: flex;
-    justify-content: center; /* Centra el botón horizontalmente */
-  }
+
+
   
   /* Notificaciones y errores */
   .alert {

@@ -12,6 +12,11 @@ export class AuthService {
   private apiUrl = 'http://localhost/mundonomada/api_php/auth/';
   private currentUserSubject: BehaviorSubject<User | null> = new BehaviorSubject<User | null>(null);
 
+  // Indicador de que la sesión ya se comprobó
+  public sessionLoadedSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
+  
+
   constructor(private http: HttpClient) {
     this.checkSession(); // Al iniciar la aplicación se verifica la sesión
   }
@@ -40,11 +45,17 @@ export class AuthService {
   }
 
   checkSession(): void {
-    // Llama al endpoint para verificar la sesión activa
     this.http.get<User>(`${this.apiUrl}getSession.php`, { withCredentials: true })
       .subscribe({
-        next: (user) => this.currentUserSubject.next(user),
-        error: () => this.currentUserSubject.next(null)
+        next: (user) => {
+          this.currentUserSubject.next(user);
+          // Indica que la sesión ya se comprobó
+          this.sessionLoadedSubject.next(true);
+        },
+        error: () => {
+          this.currentUserSubject.next(null);
+          this.sessionLoadedSubject.next(true);
+        }
       });
   }
 

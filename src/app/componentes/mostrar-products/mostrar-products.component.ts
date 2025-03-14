@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Producto } from '../../../models/Producto';
 import { ProductosService } from '../../services/productos.service';
@@ -16,7 +16,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './mostrar-products.component.html',
   styleUrls: ['./mostrar-products.component.css']
 })
-export class MostrarProductsComponent {
+export class MostrarProductsComponent implements OnInit {
   products: Producto[] = [];
   filterName: string = '';
   filterCategory: number | null = null;
@@ -45,7 +45,15 @@ export class MostrarProductsComponent {
       }
       this.loadProducts();
     });
-    this.currentUser = this.authService.getCurrentUser();
+
+    this.authService.getCurrentUserObservable().subscribe({
+      next: (user) => {
+        this.currentUser = user;
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
   }
 
   loadProducts(): void {

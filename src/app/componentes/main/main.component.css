@@ -1,74 +1,121 @@
-/* Resetear márgenes y padding generales */
-html, body {
-  margin: 0;
-  padding: 0;
-}
-
-/* Estilos para la invitación */
-.invitation {
-  text-align: center;
-  margin: 20px 0;
-  font-size: 1.2rem;
-  color: var(--color-primario);
-}
-
-.toggle-btn {
-  cursor: pointer;
-  font-size: 3rem;
-  color: var(--color-primario);
-  transition: color 0.3s ease, transform 0.3s ease;
-}
-
-.toggle-btn:hover {
-  color: var(--color-hover);
-  transform: scale(1.1);
-}
-
-/* Carousel: separación y transiciones para imágenes y controles */
-.carousel {
-  margin-top: 20px; /* Ajusta según la altura de tu menú */
-  padding-bottom: 20px; /* Espacio inferior */
-  width: 100vw;
-  margin-left: calc((100vw - 100%)/ -2);
-}
-
-.carousel-item img {
-  width: 100vw;  /* Ancho completo del viewport */
-  height: 150vh; /* Altura completa del viewport */
-  object-fit: cover;
-  transition: transform 0.5s ease, filter 0.5s ease;
-}
-
-.carousel-item img:hover {
-  transform: scale(1.05);
-  filter: brightness(0.95);
-}
-
-/* Estilos para los textos y cards */
-.card-title {
-  font-weight: 600;
-  transition: color 0.3s ease;
-}
-
-.card-title:hover {
-  color: var(--color-hover);
-}
-
-.card-text {
-  font-size: 1.1rem;
-  line-height: 1.6;
-}
-
-/* Sección "Nuestra Historia" */
-.historia-section {
-  padding-bottom: 50px; /* Ajusta este valor según lo necesites */
-}
-
-.historia-section .card {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.historia-section .card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-}
+/* =============================
+   Overwrite para contenedor full-width
+   ============================= */
+   .full-width {
+    max-width: 100% !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  
+  /* =============================
+     Estilos para la invitación
+     ============================= */
+  .invitation {
+    text-align: center;
+    margin: 20px 0;
+    font-size: 1.2rem;
+    color: var(--color-primario);
+  }
+  
+  .toggle-btn {
+    cursor: pointer;
+    font-size: 2.5rem;
+    color: var(--color-primario);
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+  
+  .toggle-btn:hover {
+    color: var(--color-hover);
+    transform: scale(1.1);
+  }
+  
+  /* =============================
+     Estilos para el Carrusel
+     ============================= */
+  .carousel {
+    margin: 0 auto;
+    width: 100%;
+    position: relative;
+  }
+  
+  .carousel-inner {
+    position: relative;
+  }
+  
+  .carousel-item img {
+    width: 100%;
+    height: 100vh;
+    object-fit: cover;
+    transition: transform 0.5s ease, filter 0.5s ease;
+  }
+  
+  .carousel-item img:hover {
+    transform: scale(1.03);
+    filter: brightness(0.95);
+  }
+  
+  /* Controles personalizados */
+  .custom-control {
+    width: 40px;
+    height: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.8;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    border: none;
+    background: transparent;
+  }
+  
+  .custom-icon {
+    background-color: rgba(0, 0, 0, 0.4);
+    padding: 8px;
+    border-radius: 50%;
+    background-size: 20px 20px;
+  }
+  
+  .custom-control:hover {
+    opacity: 1;
+    transform: translateY(-50%) scale(1.1);
+  }
+  
+  /* Indicadores del carrusel */
+  .carousel-indicators {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    z-index: 10;
+    padding-left: 0;
+    margin: 0;
+    list-style: none;
+  }
+  
+  .carousel-indicators li {
+    width: 10px;
+    height: 10px;
+    background-color: rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .carousel-indicators li.active {
+    background-color: rgba(255, 255, 255, 0.9);
+  }
+  
+  /* =============================
+     Estilos para textos y Cards
+     ============================= */
+  .card-title {
+    font-weight: 600;
+  }
+  
+  /* Ajuste para contenido principal en caso de menú fijo */
+  .main-content {
+    margin-top: 0;
+  }
+  

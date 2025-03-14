@@ -41,6 +41,7 @@
                style="height: 400px; object-fit: cover;">
           <div class="card-body d-flex flex-column">
             <h5 class="card-title">{{ producto.nombre }}</h5>
+            <p class="card-text">{{ producto.descripcion }}</p>
             <p class="card-text fw-bold mt-auto">
               {{ producto.precio | currency:'EUR' }}
             </p>

@@ -20,7 +20,7 @@
 
 /* Fuente y fondo global */
 body {
-  font-family: 'Poppins', sans-serif !important;
+  font-family: 'Montserrat', sans-serif !important;
   background-color: var(--color-secundario);
   color: var(--color-texto);
   line-height: 1.6;

@@ -1,57 +1,81 @@
-.card-img-top {
-    width: 100%;
-    height: 400px; /* Ajusta la altura a tu preferencia */
-    object-fit: cover;
-  }
-  
-  /* Contenedor de la tarjeta */
+/* =========================================
+   ========== Estilos antiguos (opcionales) =
+   ========================================= */
+
+/* Solo conserva estos estilos si todavía usas tarjetas (card) en otra parte del proyecto. */
 .card {
   border: none;
   border-radius: 8px;
   overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-
-/* Efecto al pasar el cursor sobre la tarjeta */
 .card:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
-
-/* Estilo para la imagen de la tarjeta */
 .card-img-top {
   width: 100%;
-  height: 250px; /* Ajusta la altura según necesites */
+  height: 250px; /* Ajusta la altura si lo necesitas */
   object-fit: cover;
 }
-
-/* Espaciado y tipografía del contenido */
 .card-body {
   padding: 1.25rem;
 }
-
 .card-title {
   font-size: 1.5rem;
   margin-bottom: 0.75rem;
 }
-
 .card-text {
   font-size: 1rem;
   margin-bottom: 1rem;
   line-height: 1.4;
 }
 
-/* Estilo para los controles de cantidad */
-.d-flex.align-items-center {
-  justify-content: center;
+/* =========================================
+   ========== Adaptación para el carrito ===
+   ========================================= */
+
+/* Imagen en el carrito */
+.img-thumbnail {
+  width: 80px;          /* Ajusta según tu preferencia */
+  height: 80px;         /* Ajusta según tu preferencia */
+  object-fit: cover;
+  border-radius: 8px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* Efecto hover opcional en la imagen */
+.img-thumbnail:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Fila de producto en el carrito */
+.row.align-items-center {
+  border-radius: 8px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin-bottom: 15px;   /* Espaciado entre filas */
+  padding: 10px;         /* Espacio interno */
+}
+
+/* Efecto hover en cada fila del carrito */
+.row.align-items-center:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Ajusta la tipografía si lo deseas */
+.fw-bold {
+  font-size: 1.1rem;
+}
+
+/* Estilo básico para los botones */
 .btn {
   min-width: 40px;
   transition: background-color 0.3s ease;
 }
 
-/* Opcional: Efecto de hover para los botones */
+/* Efecto hover en los botones */
 .btn:hover {
   opacity: 0.9;
 }

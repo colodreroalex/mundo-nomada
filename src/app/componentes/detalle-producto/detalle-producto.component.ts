@@ -40,7 +40,14 @@ export class DetalleProductoComponent implements OnInit {
     }
 
     // Obtenemos el usuario actual (si existe)
-    this.currentUser = this.authService.getCurrentUser();
+    this.authService.getCurrentUserObservable().subscribe({
+      next: (user) => {
+        this.currentUser = user;
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
   }
 
   cargarProducto(productoID: number): void {
@@ -146,7 +153,4 @@ export class DetalleProductoComponent implements OnInit {
       });
     });
   }
-  
-  
-  
 }

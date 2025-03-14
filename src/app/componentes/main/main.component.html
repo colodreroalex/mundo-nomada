@@ -1,46 +1,55 @@
-
-
-<!-- Contenedor del contenido a mostrar/ocultar -->
-<div>
-  <!-- Banner Carousel -->
-  <div class="container-fluid p-0">
-    <div id="bannerCarousel" class="carousel slide" data-bs-ride="carousel">
-      <div class="carousel-inner">
-        <div class="carousel-item active">
-          <img src="main/portada.jpeg" class="d-block w-100" alt="Banner 1">
-        </div>
-        <div class="carousel-item">
-          <img src="main/int_3.jpeg" class="d-block w-100" alt="Banner 2">
-        </div>
-        <div class="carousel-item">
-          <img src="main/int_4.jpeg" class="d-block w-100" alt="Banner 3">
-        </div>
-        <div class="carousel-item">
-          <img src="main/int_1.jpeg" class="d-block w-100" alt="Banner 4">
-        </div>
-        <div class="carousel-item">
-          <img src="main/int_2.jpeg" class="d-block w-100" alt="Banner 5">
-        </div>
+<!-- Carrusel de Banner -->
+<div class="full-width">
+  <div id="bannerCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
+    <!-- Indicadores del carrusel -->
+    <ol class="carousel-indicators">
+      <li data-bs-target="#bannerCarousel" data-bs-slide-to="0" class="active"></li>
+      <li data-bs-target="#bannerCarousel" data-bs-slide-to="1"></li>
+      <li data-bs-target="#bannerCarousel" data-bs-slide-to="2"></li>
+      <li data-bs-target="#bannerCarousel" data-bs-slide-to="3"></li>
+      <li data-bs-target="#bannerCarousel" data-bs-slide-to="4"></li>
+    </ol>
+    <!-- Elementos del carrusel -->
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img src="main/portada.jpeg" class="d-block w-100" alt="Banner 1">
       </div>
-      <button class="carousel-control-prev" type="button" data-bs-target="#bannerCarousel" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Anterior</span>
-      </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#bannerCarousel" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Siguiente</span>
-      </button>
+      <div class="carousel-item">
+        <img src="main/int_3.jpeg" class="d-block w-100" alt="Banner 2">
+      </div>
+      <div class="carousel-item">
+        <img src="main/int_4.jpeg" class="d-block w-100" alt="Banner 3">
+      </div>
+      <div class="carousel-item">
+        <img src="main/int_1.jpeg" class="d-block w-100" alt="Banner 4">
+      </div>
+      <div class="carousel-item">
+        <img src="main/int_2.jpeg" class="d-block w-100" alt="Banner 5">
+      </div>
     </div>
+    <!-- Controles personalizados -->
+    <button class="carousel-control-prev custom-control" type="button" data-bs-target="#bannerCarousel" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon custom-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Anterior</span>
+    </button>
+    <button class="carousel-control-next custom-control" type="button" data-bs-target="#bannerCarousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon custom-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Siguiente</span>
+    </button>
   </div>
-
-  <!-- Invitación interactiva -->
-<div class="invitation">
-  <p>Conoce nuestra historia... </p>
-  <span class="material-icons toggle-btn" (click)="toggleHistory()">
-    {{ showHistory ? 'fast_forward' : 'fast_rewind' }}
-  </span>
 </div>
 
+<!-- Componente para mostrar productos -->
+<app-mostrar-products></app-mostrar-products>
+
+<!-- Sección de invitación y "Nuestra Historia" -->
+<div>
+  <div class="invitation">
+    <p>Conoce nuestra historia...</p>
+    <span class="material-icons toggle-btn" (click)="toggleHistory()">
+      {{ showHistory ? 'fast_forward' : 'fast_rewind' }}
+    </span>
+  </div>
 
   <!-- Sección "Nuestra Historia" -->
   <div class="container my-5 historia-section" *ngIf="showHistory">
@@ -51,11 +60,11 @@
             Nuestra Historia
           </h2>
           <p class="card-text text-center" style="color: var(--color-texto);">
-            Mundo Nómada es una tienda de moda y complementos en Baena, Córdoba, ubicada en la Avenida Cervantes, 5. 
-            Nos especializamos en prendas y accesorios de alta calidad, combinando tendencias actuales con un servicio 
-            al cliente excepcional. En nuestra tienda, encontrarás desde chaquetas reversibles hasta faldas de raso y 
-            una gran variedad de vaqueros y complementos, siempre siguiendo las últimas tendencias. 
-            Incorporamos novedades constantemente para ofrecer a nuestros clientes opciones modernas y versátiles. 
+            Mundo Nómada es una tienda de moda y complementos en Baena, Córdoba, ubicada en la Avenida Cervantes, 5.
+            Nos especializamos en prendas y accesorios de alta calidad, combinando tendencias actuales con un servicio
+            al cliente excepcional. En nuestra tienda, encontrarás desde chaquetas reversibles hasta faldas de raso y
+            una gran variedad de vaqueros y complementos, siempre siguiendo las últimas tendencias.
+            Incorporamos novedades constantemente para ofrecer a nuestros clientes opciones modernas y versátiles.
             ¡Visítanos y descubre nuestra colección!
           </p>
         </div>
