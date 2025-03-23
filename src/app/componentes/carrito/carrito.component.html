@@ -63,7 +63,7 @@
 
       <!-- Columna Total (precio x cantidad) -->
       <div class="col-6 col-md-2 text-center mb-2 mb-md-0">
-        {{ total| currency:'EUR' }}
+        {{ (item.producto?.precio ?? 0) * item.cantidad | currency:'EUR' }}
       </div>
 
       <!-- Botón eliminar -->
