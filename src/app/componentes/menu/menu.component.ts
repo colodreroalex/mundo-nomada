@@ -12,7 +12,7 @@ import { Categoria } from '../../../models/Categoria';
   standalone: true,
   imports: [RouterModule, FormsModule, CommonModule],
   templateUrl: './menu.component.html',
-  styleUrls: ['./menu.component.css']
+  styleUrls: ['./menu.component.css'],
 })
 export class MenuComponent implements OnInit {
   isCollapsed: boolean = true;
@@ -23,10 +23,10 @@ export class MenuComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private categoriasService: CategoriasService // Inyectamos el servicio
+    private categoriasService: CategoriasService
   ) {
     // Suscribirse al observable para actualizar el estado del usuario
-    this.authService.getCurrentUserObservable().subscribe(user => {
+    this.authService.getCurrentUserObservable().subscribe((user) => {
       this.currentUser = user;
     });
   }
@@ -43,7 +43,7 @@ export class MenuComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al obtener las categorías', err);
-      }
+      },
     });
   }
 
@@ -60,7 +60,7 @@ export class MenuComponent implements OnInit {
         },
         error: (error) => {
           console.error('Error al cerrar sesión', error);
-        }
+        },
       });
     }
   }

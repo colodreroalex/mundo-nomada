@@ -3,7 +3,6 @@
     <!-- LOGO / BRAND -->
     <a class="navbar-brand fw-bold text-dark d-flex align-items-center" routerLink="/">
       <img src="img/logo.jpg" alt="Logo" class="logo d-inline-block align-text-top me-2">
-      
       <span class="ms-3">Mundo Nómada</span>
     </a>
 
@@ -14,8 +13,7 @@
       (click)="toggleCollapse()"
       aria-controls="navbarNav"
       [attr.aria-expanded]="!isCollapsed"
-      aria-label="Toggle navigation"
-    >
+      aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -23,8 +21,7 @@
     <div
       [ngClass]="{'collapse': isCollapsed, 'navbar-collapse': true}"
       id="navbarNav"
-      class="justify-content-end"
-    >
+      class="justify-content-end">
       <!-- MENÚ DE ENLACES -->
       <ul class="navbar-nav align-items-center">
         <li class="nav-item">
@@ -51,19 +48,22 @@
             </li>
           </ul>
         </li>
-        
 
         <li class="nav-item">
           <a class="nav-link" routerLink="/contacto">Contacto</a>
         </li>
+
         <li class="nav-item" *ngIf="currentUser && currentUser.role === 'admin'">
           <a class="nav-link" routerLink="/adminPanel">Admin</a>
         </li>
+
+        <!-- Botón del carrito: Se muestra siempre -->
         <li class="nav-item">
-          <a *ngIf="currentUser" routerLink="/carrito" class="nav-link text-dark">
+          <a routerLink="/carrito" class="nav-link text-dark">
             <i class="bi bi-cart3 fs-5"></i>
           </a>
         </li>
+
         <li class="nav-item">
           <ng-container *ngIf="currentUser; else showLogin">
             <a (click)="logout()" class="nav-link text-dark" style="cursor: pointer;">

@@ -16,11 +16,11 @@ import { User } from '../../../models/Users';
   styleUrls: ['./detalle-producto.component.css'],
 })
 export class DetalleProductoComponent implements OnInit {
-  producto: Producto | null = null; // Almacena el producto
-  currentUser: User | null = null; // Usuario actual (si está logueado)
+  producto: Producto | null = null;
+  currentUser: User | null = null;
   loading: boolean = false;
   error: string = '';
-  // Propiedad para notificaciones. type puede ser 'success', 'warning', 'danger', etc.
+  // Propiedad para notificaciones: type puede ser 'success', 'warning', 'danger', etc.
   notification: { message: string; type: string } | null = null;
 
   constructor(
@@ -32,14 +32,12 @@ export class DetalleProductoComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Obtenemos el ID del producto desde la URL
     const idParam = this.route.snapshot.paramMap.get('id');
     if (idParam) {
-      const productoID = +idParam; // Convertir a number
+      const productoID = +idParam;
       this.cargarProducto(productoID);
     }
 
-    // Obtenemos el usuario actual (si existe)
     this.authService.getCurrentUserObservable().subscribe({
       next: (user) => {
         this.currentUser = user;
@@ -66,20 +64,10 @@ export class DetalleProductoComponent implements OnInit {
   }
 
   addToCart(producto: Producto): void {
-    // Si no hay un usuario logueado, mostramos el mensaje y redirigimos al login
-    if (!this.currentUser) {
-      this.notification = {
-        message: 'Debes iniciar sesión para añadir productos al carrito',
-        type: 'warning',
-      };
-      setTimeout(() => {
-        this.notification = null;
-        this.router.navigate(['/login']);
-      }, 3000);
-      return;
-    }
-  
-    // Verifica si hay stock disponible
+    // Si no hay usuario logueado, se tratará como invitado (userId = 0)
+    const userId = this.currentUser ? this.currentUser.id : 0;
+
+    // Verificar stock disponible
     if (producto.stock === 0) {
       this.notification = {
         message: 'El producto no tiene stock disponible.',
@@ -90,17 +78,50 @@ export class DetalleProductoComponent implements OnInit {
       }, 1500);
       return;
     }
+
+    // Para usuarios invitados, solicitar verificación en tiempo real del stock
+    if (userId === 0) {
+      this.loading = true;
+      this.carritoService.verificarStockActualizado(producto.ProductoID).subscribe({
+        next: (productoActualizado) => {
+          this.loading = false;
+          // Actualizar la vista con el stock real
+          this.producto = productoActualizado;
+          
+          // Si no hay stock, mostrar mensaje y salir
+          if (productoActualizado.stock === 0) {
+            this.notification = {
+              message: 'El producto ya no tiene stock disponible.',
+              type: 'warning',
+            };
+            setTimeout(() => this.notification = null, 1500);
+            return;
+          }
+          
+          // Continuar con el proceso de agregar al carrito con la información actualizada
+          this.procesarAgregarAlCarrito(userId, productoActualizado);
+        },
+        error: (err) => {
+          this.loading = false;
+          console.error('Error al verificar stock actualizado:', err);
+          // Continuar con el proceso usando los datos actuales, aunque no sean los más recientes
+          this.procesarAgregarAlCarrito(userId, producto);
+        }
+      });
+    } else {
+      // Para usuarios registrados, continuar normalmente
+      this.procesarAgregarAlCarrito(userId, producto);
+    }
+  }
   
-    const user = this.currentUser;
-  
-    // Consultamos el carrito del usuario
-    this.carritoService.getCart(user.id).subscribe((cartItems: Carrito[]) => {
+  // Método auxiliar para continuar el proceso de agregar al carrito
+  procesarAgregarAlCarrito(userId: number, producto: Producto): void {
+    // Consultar el carrito actual (para validar si ya está añadido, etc.)
+    this.carritoService.getCart(userId).subscribe((cartItems: Carrito[]) => {
       const existingCartItem = cartItems.find(
         (item) => item.producto_id === producto.ProductoID
       );
       const currentQuantity = existingCartItem ? existingCartItem.cantidad : 0;
-  
-      // Si la cantidad actual ya alcanzó el stock, se notifica
       if (currentQuantity >= producto.stock) {
         this.notification = {
           message: 'No quedan más unidades disponibles para este producto.',
@@ -111,16 +132,16 @@ export class DetalleProductoComponent implements OnInit {
         }, 1500);
         return;
       }
-  
-      // Si se puede agregar, creamos el objeto Carrito y lo añadimos
+
+      // Crear el objeto Carrito y añadirlo
       const carritoItem: Carrito = new Carrito(
-        0,                // ID generado por la base de datos
-        user.id,          // ID del usuario
+        0,              // ID (se asignará en backend o se genera para localStorage)
+        userId,         // 0 si es invitado
         producto.ProductoID,
-        1,                // Se añade 1 unidad
-        producto          // Objeto completo del producto
+        1,              // Se añade 1 unidad
+        producto        // Objeto completo del producto
       );
-  
+
       this.carritoService.addToCart(carritoItem).subscribe({
         next: (response: any) => {
           // Se espera que el backend devuelva un objeto con la propiedad "resultado"
@@ -143,7 +164,7 @@ export class DetalleProductoComponent implements OnInit {
         error: (err) => {
           console.error(err);
           this.notification = {
-            message: 'Ocurrió un error al añadir el producto al carrito',
+            message: err.mensaje || 'Ocurrió un error al añadir el producto al carrito',
             type: 'danger',
           };
           setTimeout(() => {

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { CarritoService } from './carrito.service'; // Import the CarritoService
 import { User } from '../../models/Users'; // Asegúrate de importar la clase User correctamente
 
 @Injectable({
@@ -16,16 +17,25 @@ export class AuthService {
   public sessionLoadedSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   
-
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private carritoService: CarritoService) {
     this.checkSession(); // Al iniciar la aplicación se verifica la sesión
   }
 
   login(email: string, password: string, rememberMe: boolean): Observable<User> {
-    return this.http.post<User>(`${this.apiUrl}login.php`, { email, password, rememberMe }, { withCredentials: true })
+    return this.http
+      .post<User>(`${this.apiUrl}login.php`, { email, password, rememberMe }, { withCredentials: true })
       .pipe(
         tap(response => {
           this.currentUserSubject.next(response);
+          // Migrar el carrito local al usuario autenticado, si existiera
+          this.carritoService.migrateGuestCart(response.id).subscribe({
+            next: () => {
+              console.log('Carrito de invitado migrado exitosamente.');
+            },
+            error: (err: any) => {
+              console.error('Error al migrar el carrito de invitado:', err);
+            }
+          });
         })
       );
   }
