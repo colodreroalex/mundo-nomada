@@ -59,8 +59,14 @@
 
         <!-- Botón del carrito: Se muestra siempre -->
         <li class="nav-item">
-          <a routerLink="/carrito" class="nav-link text-dark">
+          <a routerLink="/carrito" class="nav-link text-dark position-relative">
             <i class="bi bi-cart3 fs-5"></i>
+            <!-- Contador de productos en el carrito -->
+            <span *ngIf="cantidadProductosCarrito > 0" 
+                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+              {{ cantidadProductosCarrito > 99 ? '99+' : cantidadProductosCarrito }}
+              <span class="visually-hidden">productos en el carrito</span>
+            </span>
           </a>
         </li>
 

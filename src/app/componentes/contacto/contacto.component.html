@@ -26,12 +26,40 @@
 
       <hr>
       <h4>Formulario de Contacto</h4>
-      <form>
+      
+      <!-- Mensaje de éxito -->
+      <div *ngIf="mensajeEnviado" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="material-icons align-middle">check_circle</i>
+        Tu mensaje ha sido enviado correctamente. Nos pondremos en contacto contigo lo antes posible.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="mensajeEnviado = false"></button>
+      </div>
+      
+      <!-- Mensaje de error -->
+      <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="material-icons align-middle">error</i>
+        <span *ngIf="errorMessage">{{ errorMessage }}</span>
+        <span *ngIf="!errorMessage">Ha ocurrido un error al enviar el mensaje. Por favor, inténtalo de nuevo más tarde.</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="error = false"></button>
+      </div>
+      
+      <form [formGroup]="contactForm" (ngSubmit)="enviarMensaje()" id="contact-form">
         <!-- Nombre -->
         <div class="mb-3">
           <label for="nombre" class="form-label">Nombre</label>
           <div class="input-group">
-            <input type="text" class="form-control" id="nombre" placeholder="Tu nombre" />
+            <input 
+              type="text" 
+              class="form-control" 
+              id="nombre" 
+              name="from_name"
+              formControlName="nombre" 
+              placeholder="Tu nombre" 
+              [ngClass]="{'is-invalid': getCampoInvalido('nombre')}" 
+            />
+          </div>
+          <div *ngIf="getCampoInvalido('nombre')" class="text-danger small mt-1">
+            <div *ngIf="contactForm.get('nombre')?.errors?.['required']">El nombre es requerido.</div>
+            <div *ngIf="contactForm.get('nombre')?.errors?.['minlength']">El nombre debe tener al menos 2 caracteres.</div>
           </div>
         </div>
 
@@ -39,7 +67,19 @@
         <div class="mb-3">
           <label for="email" class="form-label">Correo Electrónico</label>
           <div class="input-group">
-            <input type="email" class="form-control" id="email" placeholder="nombre@ejemplo.com" />
+            <input 
+              type="email" 
+              class="form-control" 
+              id="email" 
+              name="reply_to"
+              formControlName="email" 
+              placeholder="nombre@ejemplo.com" 
+              [ngClass]="{'is-invalid': getCampoInvalido('email')}" 
+            />
+          </div>
+          <div *ngIf="getCampoInvalido('email')" class="text-danger small mt-1">
+            <div *ngIf="contactForm.get('email')?.errors?.['required']">El correo electrónico es requerido.</div>
+            <div *ngIf="contactForm.get('email')?.errors?.['email']">Por favor, ingresa un correo electrónico válido.</div>
           </div>
         </div>
 
@@ -47,11 +87,33 @@
         <div class="mb-3">
           <label for="mensaje" class="form-label">Mensaje</label>
           <div class="input-group">
-            <textarea class="form-control" id="mensaje" placeholder="Escribe tu mensaje" style="height: 150px; resize: none;"></textarea>
+            <textarea 
+              class="form-control" 
+              id="mensaje" 
+              name="message"
+              formControlName="mensaje" 
+              placeholder="Escribe tu mensaje" 
+              style="height: 150px; resize: none;"
+              [ngClass]="{'is-invalid': getCampoInvalido('mensaje')}"
+            ></textarea>
+          </div>
+          <div *ngIf="getCampoInvalido('mensaje')" class="text-danger small mt-1">
+            <div *ngIf="contactForm.get('mensaje')?.errors?.['required']">El mensaje es requerido.</div>
+            <div *ngIf="contactForm.get('mensaje')?.errors?.['minlength']">El mensaje debe tener al menos 10 caracteres.</div>
           </div>
         </div>
 
-        <button type="submit" class="btn btn-primary btn-lg w-100">Enviar Mensaje</button>
+        <button 
+          type="submit" 
+          class="btn btn-primary btn-lg w-100" 
+          [disabled]="enviando"
+        >
+          <span *ngIf="!enviando">Enviar Mensaje</span>
+          <span *ngIf="enviando">
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Enviando...
+          </span>
+        </button>
       </form>
     </div>
 

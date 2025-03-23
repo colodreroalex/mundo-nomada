@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CategoriasService } from '../../services/categorias.service';
 import { Categoria } from '../../../models/Categoria';
+import { CarritoService } from '../../services/carrito.service';
 
 @Component({
   selector: 'app-menu',
@@ -19,20 +20,31 @@ export class MenuComponent implements OnInit {
   currentUser: User | null = null;
   // Propiedad para almacenar las categorías obtenidas de la base de datos
   categorias: Categoria[] = [];
+  // Contador de productos en el carrito
+  cantidadProductosCarrito: number = 0;
 
   constructor(
     private authService: AuthService,
     private router: Router,
-    private categoriasService: CategoriasService
+    private categoriasService: CategoriasService,
+    private carritoService: CarritoService
   ) {
     // Suscribirse al observable para actualizar el estado del usuario
     this.authService.getCurrentUserObservable().subscribe((user) => {
       this.currentUser = user;
+      // Actualizar el contador del carrito cuando cambia el usuario
+      this.actualizarContadorCarrito();
     });
   }
 
   ngOnInit(): void {
     this.getCategorias();
+    this.actualizarContadorCarrito();
+    
+    // Actualizar el contador cada 2 segundos para reflejar cambios
+    setInterval(() => {
+      this.actualizarContadorCarrito();
+    }, 2000);
   }
 
   // Método para obtener las categorías desde el servicio
@@ -43,6 +55,23 @@ export class MenuComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al obtener las categorías', err);
+      },
+    });
+  }
+
+  // Método para actualizar el contador de productos en el carrito
+  actualizarContadorCarrito(): void {
+    const userId = this.currentUser ? this.currentUser.id : 0;
+    this.carritoService.getCart(userId).subscribe({
+      next: (carrito) => {
+        // Calcular la cantidad total de productos (suma de cantidades)
+        this.cantidadProductosCarrito = carrito.reduce(
+          (total, item) => total + item.cantidad,
+          0
+        );
+      },
+      error: (err) => {
+        console.error('Error al obtener productos del carrito', err);
       },
     });
   }
