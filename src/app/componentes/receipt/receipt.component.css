@@ -1,0 +1,216 @@
+.receipt-wrapper {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 20px auto;
+    max-width: 800px;
+  }
+  
+  .receipt-actions {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  
+  .btn-download, .btn-print {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+  }
+  
+  .btn-download {
+    background-color: #3498db;
+    color: white;
+  }
+  
+  .btn-download:hover {
+    background-color: #2980b9;
+  }
+  
+  .btn-print {
+    background-color: #2ecc71;
+    color: white;
+  }
+  
+  .btn-print:hover {
+    background-color: #27ae60;
+  }
+  
+  .btn-download:disabled, .btn-print:disabled {
+    background-color: #95a5a6;
+    cursor: not-allowed;
+  }
+  
+  .receipt-container {
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    border-radius: 8px;
+  }
+  
+  /* Estilos para la impresión */
+  @media print {
+    .receipt-actions {
+      display: none;
+    }
+    
+    .receipt-container {
+      box-shadow: none;
+      padding: 0;
+    }
+  }
+  
+  .receipt-header {
+    text-align: center;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .receipt-header h1 {
+    color: #3498db;
+    margin: 0;
+    font-size: 28px;
+  }
+  
+  .receipt-header h2 {
+    margin: 10px 0 0;
+    font-size: 20px;
+    color: #7f8c8d;
+  }
+  
+  .receipt-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .receipt-customer {
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #ecf0f1;
+  }
+  
+  .receipt-customer h3 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+    font-size: 18px;
+  }
+  
+  .receipt-items {
+    margin-bottom: 25px;
+  }
+  
+  .receipt-items h3 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+    font-size: 18px;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  thead {
+    background-color: #f9f9f9;
+  }
+  
+  th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ecf0f1;
+  }
+  
+  th {
+    font-weight: 600;
+    color: #2c3e50;
+  }
+  
+  tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  tfoot {
+    font-weight: bold;
+  }
+  
+  .total-label {
+    text-align: right;
+    font-size: 16px;
+  }
+  
+  .total-amount {
+    font-size: 16px;
+    color: #e74c3c;
+  }
+  
+  .receipt-footer {
+    text-align: center;
+    margin-top: 30px;
+    border-top: 1px solid #ecf0f1;
+    padding-top: 20px;
+  }
+  
+  .thank-you {
+    font-size: 18px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 15px;
+  }
+  
+  .contact-info {
+    margin-bottom: 5px;
+  }
+  
+  .email {
+    color: #3498db;
+    margin-bottom: 15px;
+  }
+  
+  .copyright {
+    font-size: 12px;
+    color: #95a5a6;
+    margin-top: 20px;
+  }
+  
+  .success-message {
+    background-color: #2ecc71;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    animation: fadeIn 0.3s ease;
+  }
+  
+  .loading-spinner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #7f8c8d;
+  }
+  
+  .spinner {
+    border: 3px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top: 3px solid #3498db;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  

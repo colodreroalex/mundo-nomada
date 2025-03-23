@@ -1,0 +1,77 @@
+<div class="receipt-wrapper">
+    <!-- Botones de acción para el recibo -->
+    <div class="receipt-actions" *ngIf="showButtons">
+      <button class="btn-download" (click)="downloadDirectPdf()" [disabled]="loading">
+        <i class="fas fa-file-pdf"></i> Descargar PDF
+      </button>
+      <button class="btn-print" (click)="printReceipt()" [disabled]="loading">
+        <i class="fas fa-print"></i> Imprimir
+      </button>
+      <div class="success-message" *ngIf="downloadComplete">
+        ¡PDF generado con éxito!
+      </div>
+      <div class="loading-spinner" *ngIf="loading">
+        <div class="spinner"></div> Generando PDF...
+      </div>
+    </div>
+  
+    <!-- Contenido del recibo para convertir a PDF -->
+    <div id="receipt-container" class="receipt-container">
+      <div class="receipt-header">
+        <h1>MUNDO NÓMADA</h1>
+        <h2>Recibo de Compra</h2>
+      </div>
+  
+      <div class="receipt-info">
+        <div class="receipt-date">
+          <p><strong>Fecha:</strong> {{fechaCompra | date:'dd/MM/yyyy'}}</p>
+          <p><strong>Hora:</strong> {{fechaCompra | date:'HH:mm:ss'}}</p>
+        </div>
+        <div class="receipt-order">
+          <p><strong>Número de orden:</strong> {{orderId}}</p>
+        </div>
+      </div>
+  
+      <div class="receipt-customer">
+        <h3>Información del cliente</h3>
+        <p><strong>Cliente:</strong> {{user ? user.name + ' ' : 'Usuario invitado'}}</p>
+        <p><strong>Email:</strong> {{user ? user.email : 'No disponible'}}</p>
+      </div>
+  
+      <div class="receipt-items">
+        <h3>Detalle de productos</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Cantidad</th>
+              <th>Precio/ud</th>
+              <th>Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of items">
+              <td>{{item.producto ? item.producto.nombre : 'Producto no disponible'}}</td>
+              <td>{{item.cantidad}}</td>
+              <td>{{item.producto ? (item.producto.precio | currency:'EUR':'symbol':'1.2-2') : '0.00 €'}}</td>
+              <td>{{item.producto ? (item.producto.precio * item.cantidad | currency:'EUR':'symbol':'1.2-2') : '0.00 €'}}</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="3" class="total-label">Total</td>
+              <td class="total-amount">{{total | currency:'EUR':'symbol':'1.2-2'}}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+  
+      <div class="receipt-footer">
+        <p class="thank-you">¡Gracias por tu compra!</p>
+        <p class="contact-info">Si tienes alguna pregunta sobre tu pedido, por favor contáctanos a:</p>
+        <p class="email">mundonomadabaena&#64;gmail.com</p>
+        <p class="copyright">© 2025 Mundo Nómada - Todos los derechos reservados</p>
+      </div>
+    </div>
+  </div>
+  

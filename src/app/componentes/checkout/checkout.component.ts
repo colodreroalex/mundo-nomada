@@ -7,11 +7,14 @@ import { User } from '../../../models/Users';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { PdfService } from '../../services/pdf.service';
+import { ReceiptComponent } from '../receipt/receipt.component';
 
 @Component({
   selector: 'app-checkout',
+  standalone: true,
+  imports: [FormsModule, CommonModule, ReceiptComponent],
   templateUrl: './checkout.component.html',
-  imports: [FormsModule, CommonModule],
   styleUrls: ['./checkout.component.css']
 })
 export class CheckoutComponent implements OnInit {
@@ -22,11 +25,16 @@ export class CheckoutComponent implements OnInit {
   feedbackMessage: string = ''; // Mensaje de feedback para el usuario
   currentUser: User | null = null;
 
+  // Variables para el recibo
+  orderCompleted: boolean = false;
+  orderId: string = '';
+
   constructor(
     private carritoService: CarritoService,
     private authService: AuthService,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private pdfService: PdfService
   ) {}
 
   ngOnInit(): void {
@@ -168,12 +176,23 @@ export class CheckoutComponent implements OnInit {
           
           // Si todo está bien, proceder con la compra
           this.carritoService.finalizePurchase(this.carrito).subscribe({
-            next: () => {
+            next: (response) => {
               this.loading = false;
-              this.feedbackMessage = 'Compra realizada con éxito. Redirigiendo al inicio...';
-              setTimeout(() => {
-                this.router.navigate(['/']);
-              }, 3000);
+              this.feedbackMessage = 'Compra realizada con éxito';
+              
+              // Generar ID de orden
+              this.orderId = `ORD-${new Date().getTime()}`;
+              
+              // Mostrar el recibo y no redirigir inmediatamente
+              this.orderCompleted = true;
+              
+              // Opcional: guardar una copia del carrito antes de limpiarlo
+              const carritoCompletado = [...this.carrito];
+              
+              // Limpiar el carrito después de la compra exitosa
+              if (!this.currentUser) {
+                this.carritoService.saveLocalCart([]);
+              }
             },
             error: (err) => {
               this.loading = false;
@@ -188,5 +207,19 @@ export class CheckoutComponent implements OnInit {
           this.error = 'Ocurrió un error al verificar el stock de los productos. Intente nuevamente.';
         }
       });
+  }
+
+  /**
+   * Genera el PDF del recibo después de una compra exitosa
+   */
+  downloadReceipt(): void {
+    this.pdfService.generateReceiptPdf(this.carrito, this.total, this.currentUser, this.orderId);
+  }
+
+  /**
+   * Redirige al usuario después de completar el proceso
+   */
+  goToHome(): void {
+    this.router.navigate(['/']);
   }
 }

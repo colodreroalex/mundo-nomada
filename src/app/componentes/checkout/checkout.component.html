@@ -18,8 +18,33 @@
     </div>
   </div>
 
-  <!-- Resumen del carrito -->
-  <div *ngIf="!loading && carrito && carrito.length > 0">
+  <!-- Sección de recibo (aparece después de completar la compra) -->
+  <div *ngIf="orderCompleted" class="purchase-success mt-4">
+    <div class="alert alert-success mb-4">
+      <h4 class="alert-heading">¡Compra realizada con éxito!</h4>
+      <p>Tu pedido con número <strong>{{ orderId }}</strong> ha sido procesado correctamente.</p>
+    </div>
+    
+    <div class="text-center mb-4">
+      <button class="btn btn-primary me-2" (click)="downloadReceipt()">
+        <i class="fas fa-file-pdf"></i> Descargar Recibo
+      </button>
+      <button class="btn btn-success" (click)="goToHome()">
+        <i class="fas fa-home"></i> Volver al Inicio
+      </button>
+    </div>
+    
+    <!-- Componente de recibo -->
+    <app-receipt 
+      [items]="carrito" 
+      [total]="total" 
+      [user]="currentUser" 
+      [orderId]="orderId">
+    </app-receipt>
+  </div>
+
+  <!-- Resumen del carrito (se muestra solo si no se ha completado la compra) -->
+  <div *ngIf="!loading && carrito && carrito.length > 0 && !orderCompleted">
     <div class="mb-3">
       <h4>Resumen de tu compra</h4>
       <ul class="list-group">
@@ -44,7 +69,7 @@
     <div id="paypal-button-container"></div>
   </div>
 
-  <div *ngIf="!loading && carrito.length === 0" class="alert alert-warning text-center">
-    No hay productos en el carrito.
+  <div *ngIf="!loading && carrito.length === 0 && !orderCompleted" class="alert alert-warning text-center">
+    No hay productos en el carrito. Con lo cual no hay un pedido que procesar.
   </div>
 </div>
