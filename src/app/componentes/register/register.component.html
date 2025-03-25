@@ -1,6 +1,9 @@
 <div class="container mt-5 d-flex flex-column align-items-center">
-  <div class="card p-4 shadow-lg" style="max-width: 400px; width: 100%; border-radius: 10px; background-color: var(--color-secundario);">
-    <h2 class="text-center mb-4" style="color: var(--color-texto);">Crea una cuenta</h2>
+  <div class="card p-4 shadow-lg bg-secundario" style="max-width: 450px; width: 100%; border-radius: 12px; border: none;">
+    <div class="text-center mb-4">
+      <h2 class="text-primario fw-bold">Crea una cuenta</h2>
+      <p class="text-muted small">Únete a la comunidad de Mundo Nómada</p>
+    </div>
     
     <!-- Bloque de notificación -->
     <div *ngIf="notification" class="alert alert-{{ notification.type }} text-center" role="alert">
@@ -9,18 +12,60 @@
 
     <form (ngSubmit)="register()">
       <div class="mb-3">
-        <label for="name" class="form-label" style="color: var(--color-texto);">Nombre</label>
-        <input type="text" [(ngModel)]="name" name="name" id="name" class="form-control" required>
+        <label for="name" class="form-label fw-semibold">Nombre</label>
+        <div class="input-group">
+          <span class="input-group-text bg-light border-end-0">
+            <i class="bi bi-person text-primario"></i>
+          </span>
+          <input 
+            type="text" 
+            [(ngModel)]="name" 
+            name="name" 
+            id="name" 
+            class="form-control border-start-0" 
+            placeholder="Tu nombre"
+            required>
+        </div>
       </div>
       <div class="mb-3">
-        <label for="email" class="form-label" style="color: var(--color-texto);">Email</label>
-        <input type="email" [(ngModel)]="email" name="email" id="email" class="form-control" required>
+        <label for="email" class="form-label fw-semibold">Email</label>
+        <div class="input-group">
+          <span class="input-group-text bg-light border-end-0">
+            <i class="bi bi-envelope text-primario"></i>
+          </span>
+          <input 
+            type="email" 
+            [(ngModel)]="email" 
+            name="email" 
+            id="email" 
+            class="form-control border-start-0" 
+            placeholder="ejemplo@correo.com"
+            required>
+        </div>
       </div>
       <div class="mb-3">
-        <label for="password" class="form-label" style="color: var(--color-texto);">Contraseña</label>
-        <input type="password" [(ngModel)]="password" name="password" id="password" class="form-control" required>
+        <label for="password" class="form-label fw-semibold">Contraseña</label>
+        <div class="input-group">
+          <span class="input-group-text bg-light border-end-0">
+            <i class="bi bi-lock text-primario"></i>
+          </span>
+          <input 
+            type="password" 
+            [(ngModel)]="password" 
+            name="password" 
+            id="password" 
+            class="form-control border-start-0" 
+            placeholder="Crea una contraseña segura"
+            required>
+        </div>
       </div>
-      <button type="submit" class="btn btn-primary w-100">Confirmar</button>
+      <div class="d-grid gap-2 mb-3">
+        <button type="submit" class="btn-custom">Registrarse</button>
+      </div>
+      <div class="text-center mt-4 p-3 bg-light rounded">
+        <p class="mb-1">¿Ya tienes una cuenta?</p>
+        <a href="/login" class="text-primario fw-bold">Iniciar sesión</a>
+      </div>
     </form>
   </div>
 </div>

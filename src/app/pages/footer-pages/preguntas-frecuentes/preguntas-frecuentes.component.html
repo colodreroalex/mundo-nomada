@@ -1,0 +1,250 @@
+<div class="container mt-5 mb-5">
+    <h1 class="text-center mb-4 text-primario">Preguntas Frecuentes</h1>
+    
+    <div class="row mb-5">
+        <div class="col-md-10 offset-md-1">
+            <div class="card shadow bg-secundario">
+                <div class="card-body">
+                    <p class="lead text-center">
+                        En Mundo Nómada queremos que tu experiencia de compra sea lo más sencilla y satisfactoria posible. 
+                        Aquí encontrarás respuestas a las preguntas más comunes de nuestros clientes.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Compras y Pedidos -->
+    <div class="row mb-5">
+        <div class="col-md-10 offset-md-1">
+            <div class="card shadow bg-secundario">
+                <div class="card-header bg-primario text-secundario">
+                    <h3 class="mb-0">Compras y Pedidos</h3>
+                </div>
+                <div class="card-body">
+                    <!-- Accordion para Compras y Pedidos -->
+                    <div class="accordion" id="accordionCompras">
+                        <!-- Pregunta 1 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button bg-secundario text-primario" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    ¿Cómo puedo realizar un pedido?
+                                </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionCompras">
+                                <div class="accordion-body">
+                                    <p>Realizar un pedido en nuestra tienda online es muy sencillo:</p>
+                                    <ol>
+                                        <li>Navega por nuestro catálogo y añade los productos que desees a tu carrito.</li>
+                                        <li>Una vez hayas seleccionado todos los productos, haz clic en "Carrito" en la parte superior derecha.</li>
+                                        <li>Revisa tu pedido y haz clic en "Proceder al pago".</li>
+                                        <li>Introduce tus datos de envío y pago.</li>
+                                        <li>Confirma tu pedido y ¡listo!</li>
+                                    </ol>
+                                    <p>También puedes realizar tu pedido visitando cualquiera de nuestras <a [routerLink]="['/nuestras-tiendas']">tiendas físicas</a>.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Pregunta 2 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed bg-secundario text-primario" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    ¿Cuáles son los métodos de pago aceptados?
+                                </button>
+                            </h2>
+                            <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionCompras">
+                                <div class="accordion-body">
+                                    <p>Aceptamos los siguientes métodos de pago:</p>
+                                    <ul>
+                                        <li>Tarjetas de crédito y débito (Visa, Mastercard, American Express)</li>
+                                        <li>PayPal</li>
+                                        <li>Bizum</li>
+                                        <li>Transferencia bancaria</li>
+                                    </ul>
+                                    <p>Todos los pagos online se procesan en un entorno seguro mediante cifrado SSL.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Pregunta 3 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed bg-secundario text-primario" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                    ¿Es posible modificar o cancelar mi pedido?
+                                </button>
+                            </h2>
+                            <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionCompras">
+                                <div class="accordion-body">
+                                    <p>Puedes modificar o cancelar tu pedido siempre que no haya sido procesado:</p>
+                                    <ul>
+                                        <li>Si tu pedido aún no ha sido procesado, puedes cancelarlo contactando con nuestro servicio de atención al cliente a través del correo <strong>mundonomadabaena&#64;gmail.com</strong> o llamando al teléfono 957 123 456.</li>
+                                        <li>Una vez que el pedido ha sido procesado y enviado, no es posible modificarlo o cancelarlo, pero siempre puedes realizar una devolución una vez lo recibas.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Envíos y Entregas -->
+    <div class="row mb-5">
+        <div class="col-md-10 offset-md-1">
+            <div class="card shadow bg-secundario">
+                <div class="card-header bg-primario text-secundario">
+                    <h3 class="mb-0">Envíos y Entregas</h3>
+                </div>
+                <div class="card-body">
+                    <!-- Accordion para Envíos -->
+                    <div class="accordion" id="accordionEnvios">
+                        <!-- Pregunta 1 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button bg-secundario text-primario" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEnvio1" aria-expanded="true" aria-controls="collapseEnvio1">
+                                    ¿Cuánto tarda en llegar mi pedido?
+                                </button>
+                            </h2>
+                            <div id="collapseEnvio1" class="accordion-collapse collapse show" data-bs-parent="#accordionEnvios">
+                                <div class="accordion-body">
+                                    <p>Los tiempos de entrega dependen del destino:</p>
+                                    <ul>
+                                        <li><strong class="text-primario">Península:</strong> 2-3 días laborables</li>
+                                        <li><strong class="text-primario">Baleares:</strong> 3-4 días laborables</li>
+                                        <li><strong class="text-primario">Canarias, Ceuta y Melilla:</strong> 5-7 días laborables</li>
+                                        <li><strong class="text-primario">Internacional:</strong> 7-15 días laborables dependiendo del país</li>
+                                    </ul>
+                                    <p>Estos plazos son estimados y pueden variar según la disponibilidad del producto o circunstancias excepcionales.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Pregunta 2 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed bg-secundario text-primario" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEnvio2" aria-expanded="false" aria-controls="collapseEnvio2">
+                                    ¿Cómo puedo hacer seguimiento de mi pedido?
+                                </button>
+                            </h2>
+                            <div id="collapseEnvio2" class="accordion-collapse collapse" data-bs-parent="#accordionEnvios">
+                                <div class="accordion-body">
+                                    <p>Una vez que tu pedido ha sido enviado, recibirás un correo electrónico con un número de seguimiento y un enlace para rastrear tu paquete. También puedes acceder a esta información desde tu cuenta, en la sección "Mis pedidos".</p>
+                                    <p>Si no has recibido este correo o tienes dificultades para hacer el seguimiento, no dudes en contactar con nuestro servicio de atención al cliente.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Pregunta 3 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed bg-secundario text-primario" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEnvio3" aria-expanded="false" aria-controls="collapseEnvio3">
+                                    ¿Cuál es el coste de envío?
+                                </button>
+                            </h2>
+                            <div id="collapseEnvio3" class="accordion-collapse collapse" data-bs-parent="#accordionEnvios">
+                                <div class="accordion-body">
+                                    <p>Los gastos de envío son:</p>
+                                    <ul>
+                                        <li><strong class="text-primario">Península:</strong> 3,95€ (gratis para pedidos superiores a 50€)</li>
+                                        <li><strong class="text-primario">Baleares:</strong> 5,95€ (gratis para pedidos superiores a 75€)</li>
+                                        <li><strong class="text-primario">Canarias, Ceuta y Melilla:</strong> 9,95€ (gratis para pedidos superiores a 100€)</li>
+                                        <li><strong class="text-primario">Internacional:</strong> Variables según destino</li>
+                                    </ul>
+                                    <p>Estos costes se calculan automáticamente en el proceso de compra antes de finalizar el pedido.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Devoluciones y Cambios -->
+    <div class="row mb-5">
+        <div class="col-md-10 offset-md-1">
+            <div class="card shadow bg-secundario">
+                <div class="card-header bg-primario text-secundario">
+                    <h3 class="mb-0">Devoluciones y Cambios</h3>
+                </div>
+                <div class="card-body">
+                    <!-- Accordion para Devoluciones -->
+                    <div class="accordion" id="accordionDevoluciones">
+                        <!-- Pregunta 1 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button bg-secundario text-primario" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDev1" aria-expanded="true" aria-controls="collapseDev1">
+                                    ¿Cómo puedo devolver un producto?
+                                </button>
+                            </h2>
+                            <div id="collapseDev1" class="accordion-collapse collapse show" data-bs-parent="#accordionDevoluciones">
+                                <div class="accordion-body">
+                                    <p>Para devolver un producto:</p>
+                                    <ol>
+                                        <li>Accede a tu cuenta y ve a la sección "Mis pedidos".</li>
+                                        <li>Selecciona el pedido que contiene el producto que deseas devolver.</li>
+                                        <li>Haz clic en "Solicitar devolución" y sigue las instrucciones.</li>
+                                        <li>Te enviaremos una etiqueta de devolución que deberás adjuntar al paquete.</li>
+                                        <li>Lleva el paquete a la oficina de correos o punto de recogida más cercano.</li>
+                                    </ol>
+                                    <p>También puedes devolver tu compra en cualquiera de nuestras <a [routerLink]="['/nuestras-tiendas']">tiendas físicas</a> presentando el ticket de compra o factura.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Pregunta 2 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed bg-secundario text-primario" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDev2" aria-expanded="false" aria-controls="collapseDev2">
+                                    ¿Cuál es el plazo para devolver un producto?
+                                </button>
+                            </h2>
+                            <div id="collapseDev2" class="accordion-collapse collapse" data-bs-parent="#accordionDevoluciones">
+                                <div class="accordion-body">
+                                    <p>Dispones de 30 días naturales desde la recepción del pedido para devolver un producto. Para que la devolución sea válida, el producto debe estar en perfecto estado, con todas sus etiquetas originales y sin haber sido usado.</p>
+                                    <p>En caso de productos defectuosos, el plazo se amplía a 3 años según la Ley de Garantías.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Pregunta 3 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed bg-secundario text-primario" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDev3" aria-expanded="false" aria-controls="collapseDev3">
+                                    ¿Cómo se realiza el reembolso?
+                                </button>
+                            </h2>
+                            <div id="collapseDev3" class="accordion-collapse collapse" data-bs-parent="#accordionDevoluciones">
+                                <div class="accordion-body">
+                                    <p>El reembolso se realizará utilizando el mismo método de pago que empleaste para realizar la compra:</p>
+                                    <ul>
+                                        <li>Para pagos con tarjeta: el importe se reembolsará a la misma tarjeta.</li>
+                                        <li>Para pagos por PayPal: el importe se reembolsará a tu cuenta de PayPal.</li>
+                                        <li>Para pagos por transferencia: necesitaremos tus datos bancarios para realizar la devolución.</li>
+                                    </ul>
+                                    <p>El plazo para recibir el reembolso es de 7 a 14 días hábiles desde que recibimos el producto devuelto, aunque suele ser más rápido.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contacto -->
+    <div class="row">
+        <div class="col-md-10 offset-md-1">
+            <div class="card shadow bg-secundario">
+                <div class="card-header bg-primario text-secundario">
+                    <h3 class="mb-0">¿No encuentras lo que buscas?</h3>
+                </div>
+                <div class="card-body text-center">
+                    <p class="mb-4">Si no has encontrado respuesta a tu pregunta, no dudes en contactarnos.</p>
+                    <p class="mb-3"><strong>Email:</strong> mundonomadabaena&#64;gmail.com</p>
+                    <p class="mb-3"><strong>Teléfono:</strong> 957 123 456</p>
+                    <p class="mb-4"><strong>Horario de atención:</strong> Lunes a Viernes de 10:00 a 14:00 y de 17:00 a 20:00</p>
+                    <div class="text-center mt-4">
+                        <a [routerLink]="['/contacto']" class="btn-custom">Contactar con nosotros</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

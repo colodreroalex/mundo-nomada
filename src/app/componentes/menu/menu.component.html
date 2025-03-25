@@ -39,6 +39,12 @@
             Catálogo
           </a>
           <ul class="dropdown-menu" aria-labelledby="catalogoDropdown">
+            <li>
+              <a class="dropdown-item" routerLink="/mostrarProductos">
+                <i class="bi bi-grid-3x3-gap-fill me-2"></i>Mostrar Todos
+              </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
             <li *ngFor="let categoria of categorias">
               <a 
                 class="dropdown-item" 

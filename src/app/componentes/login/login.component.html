@@ -1,50 +1,65 @@
 <div class="container mt-5 d-flex flex-column align-items-center">
-    <div class="card p-4 shadow-lg" style="max-width: 400px; width: 100%; border-radius: 10px; background-color: var(--color-secundario);">
-      <h2 class="text-center mb-4">Acceso</h2>
-      <form (ngSubmit)="login()">
-        <div class="mb-3">
-          <label for="email" class="form-label">Email</label>
+  <div class="card p-4 shadow-lg bg-secundario" style="max-width: 450px; width: 100%; border-radius: 12px; border: none;">
+    <div class="text-center mb-4">
+      <h2 class="text-primario fw-bold">Acceso a tu cuenta</h2>
+      <p class="text-muted small">Bienvenido de nuevo a Mundo Nómada</p>
+    </div>
+    <form (ngSubmit)="login()">
+      <div class="mb-3">
+        <label for="email" class="form-label fw-semibold">Email</label>
+        <div class="input-group">
+          <span class="input-group-text bg-light border-end-0">
+            <i class="bi bi-envelope text-primario"></i>
+          </span>
           <input 
             type="email" 
             [(ngModel)]="email" 
             name="email" 
             id="email" 
-            class="form-control" 
+            class="form-control border-start-0" 
+            placeholder="ejemplo@correo.com"
             required>
         </div>
-        <div class="mb-3">
-          <label for="password" class="form-label">Contraseña</label>
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label fw-semibold">Contraseña</label>
+        <div class="input-group">
+          <span class="input-group-text bg-light border-end-0">
+            <i class="bi bi-lock text-primario"></i>
+          </span>
           <input 
             type="password" 
             [(ngModel)]="password" 
             name="password" 
             id="password" 
-            class="form-control" 
+            class="form-control border-start-0" 
+            placeholder="Contraseña"
             required>
         </div>
-        <!-- Checkbox para "Remember Me" -->
-        <div class="mb-3 form-check">
-          <input 
-            type="checkbox" 
-            class="form-check-input" 
-            id="rememberMe" 
-            [(ngModel)]="rememberMe" 
-            name="rememberMe">
-          <label class="form-check-label" for="rememberMe">Recordar contraseña</label>
-        </div>
-        <button type="submit" class="btn btn-primary w-100">Iniciar Sesion</button>
-      </form>
-      
-      
-      <!-- Mensaje de error -->
-      <div *ngIf="errorMessage" class="alert alert-danger mt-3">
-        {{ errorMessage }}
       </div>
-      
-      <div class="text-center mt-3">
-        <span>¿No estás registrado?</span>
-        <a href="/register" class="text-decoration-none fw-bold text-primary"> Regístrate aquí</a>
+      <!-- Checkbox para "Remember Me" -->
+      <div class="mb-3 form-check">
+        <input 
+          type="checkbox" 
+          class="form-check-input" 
+          id="rememberMe" 
+          [(ngModel)]="rememberMe" 
+          name="rememberMe">
+        <label class="form-check-label" for="rememberMe">Recordar contraseña</label>
       </div>
+      <div class="d-grid gap-2 mb-3">
+        <button type="submit" class="btn-custom">Iniciar Sesión</button>
+      </div>
+    </form>
+    
+    <!-- Mensaje de error -->
+    <div *ngIf="errorMessage" class="alert alert-danger mt-3">
+      {{ errorMessage }}
+    </div>
+    
+    <div class="text-center mt-4 p-3 bg-light rounded">
+      <p class="mb-1">¿No estás registrado?</p>
+      <a href="/register" class="text-primario fw-bold"> Regístrate aquí</a>
     </div>
   </div>
-  
+</div>

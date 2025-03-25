@@ -1,12 +1,52 @@
 <footer class="footer">
     <div class="footer-container">
-        <div class="footer-logo">
-            <span class="text-muted">© 2025 Mundo Nomada, Inc</span>
+        <div class="footer-content">
+            <!-- Primera columna: SOBRE NOSOTROS -->
+            <div class="footer-col">
+                <h5>SOBRE NOSOTROS</h5>
+                <ul>
+                    <li><a [routerLink]="['/conocenos']">Conócenos</a></li>
+                    <li><a [routerLink]="['/nuestras-tiendas']">Nuestras tiendas</a></li>
+                    <li><a [routerLink]="['/trabaja-con-nosotros']">Trabaja con nosotros</a></li>
+                    <li><a [routerLink]="['/contacto']">Contacto</a></li>
+                </ul>
+            </div>
+
+            <!-- Segunda columna: AYUDA -->
+            <div class="footer-col">
+                <h5>AYUDA</h5>
+                <ul>
+                    <li><a [routerLink]="['/preguntas-frecuentes']">Preguntas frecuentes</a></li>
+                    <li><a [routerLink]="['/condiciones-compra']">Condiciones de compra</a></li>
+                    <li><a [routerLink]="['/politica-devolucion']">Política de devolución</a></li>
+                </ul>
+            </div>
+
+            <!-- Tercera columna: SÍGUENOS -->
+            <div class="footer-col">
+                <h5>SÍGUENOS</h5>
+                <ul class="social-links">
+                    <li><a href="https://www.facebook.com/p/mundo-nomada-baena-61553214752681/"><i class="bi bi-facebook"></i> Facebook</a></li>
+                    <li><a href="https://www.instagram.com/mundonomadaa/?hl=es"><i class="bi bi-instagram"></i> Instagram</a></li>
+                    <li><a href="https://www.tiktok.com/@marisagarcavalver"><i class="bi bi-tiktok"></i> TikTok</a></li>
+                </ul>
+            </div>
+
+            <!-- Cuarta columna: Enlaces legales -->
+            <div class="footer-col legal-links">
+                <ul>
+                    <li><a [routerLink]="['/aviso-legal']">Aviso Legal</a></li>
+                    <li><a [routerLink]="['/politica-privacidad']">Política de Privacidad</a></li>
+                    <li><a [routerLink]="['/terminos-servicio']">Términos de servicio</a></li>
+                    <li><a [routerLink]="['/politica-cookies']">Política de Cookies</a></li>
+                    <li><a [routerLink]="['/consentimiento-cookies']">Consentimiento de Cookies</a></li>
+                </ul>
+            </div>
         </div>
 
-        <div class="footer-links">
-            <a href="https://www.instagram.com/mundonomadaa/?hl=en"><i class="bi bi-instagram"></i></a>
-            <a href="https://www.facebook.com/mundonomada.baena/"><i class="bi bi-facebook"></i></a>
+        <!-- Copyright -->
+        <div class="copyright">
+            <p><strong> 2025 Mundo Nomada, Inc. Todos los derechos reservados.</strong></p>
         </div>
     </div>
 </footer>

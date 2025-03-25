@@ -1,44 +1,131 @@
 footer {
-    position: auto;
-    bottom: 0;
     width: 100%;
-    background-color: #f7f7f7;
-    z-index: 999;
-    padding: 10px 0;
-    box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
+    background-color: #f0f0f0;
+    padding: 40px 0 20px;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .footer-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 15px;
 }
 
+/* Contenido principal del footer */
+.footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
 
+.footer-col {
+    width: 22%;
+    margin-bottom: 20px;
+}
 
+.footer-col h5 {
+    color: #333;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+    letter-spacing: 0.5px;
+}
 
-.footer-logo img {
-    height: 40px;
+.footer-col ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.footer-col ul li {
+    margin-bottom: 8px;
+}
+
+.footer-col ul li a {
+    color: #555;
+    font-size: 13px;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-col ul li a:hover {
+    color: var(--color-primario);
+}
+
+/* Enlaces legales */
+.legal-links ul {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.legal-links ul li {
+    margin-right: 15px;
+}
+
+/* Enlaces sociales */
+.social-links li a {
+    display: flex;
+    align-items: center;
+}
+
+.social-links li a i {
+    margin-right: 8px;
+    font-size: 16px;
+}
+
+/* Métodos de pago */
+.payment-methods {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.payment-methods img {
+    height: 20px;
     width: auto;
 }
 
-.footer-links {
-    display: flex;
-    gap: 15px;
-    align-items: center;  /* Asegura alineación vertical */
+/* Copyright */
+.copyright {
+    text-align: center;
+    font-size: 12px;
+    color: #777;
+    padding-top: 10px;
 }
 
-.footer-links a {
-    color: var(--color-primario);
-    text-decoration: none;
-    font-size: 18px;
+/* Responsive */
+@media (max-width: 768px) {
+    .footer-col {
+        width: 48%;
+    }
+    
+    .payment-methods {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .legal-links {
+        width: 100%;
+    }
 }
 
-.footer-links a:hover {
-    color: var(--color-hover);
+@media (max-width: 576px) {
+    .footer-col {
+        width: 100%;
+    }
+    
+    .legal-links ul {
+        flex-direction: column;
+    }
+    
+    .legal-links ul li {
+        margin-right: 0;
+        margin-bottom: 8px;
+    }
 }
-
-

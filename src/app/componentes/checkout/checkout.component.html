@@ -1,75 +1,142 @@
-<div class="container my-5">
-  <h2 class="mb-4 text-center"></h2>
-
-  <!-- Mensaje de error -->
-  <div *ngIf="error" class="alert alert-danger text-center">
-    {{ error }}
-  </div>
-
-  <!-- Mensaje de feedback para éxito -->
-  <div *ngIf="feedbackMessage" class="alert alert-success text-center">
-    {{ feedbackMessage }}
-  </div>
-
-  <!-- Indicador de carga -->
-  <div *ngIf="loading" class="d-flex justify-content-center my-4">
-    <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Cargando...</span>
+<div class="checkout-container">
+  <!-- Header con título -->
+  <div class="bg-primario text-secundario py-4 mb-5 rounded-header shadow">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-12 text-center">
+          <h2 class="text-secundario mb-0 display-5 fw-bold">Finalizar Compra</h2>
+          <p class="lead mb-0 mt-2 text-secundario opacity-75">Completa tu pedido de forma segura</p>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- Sección de recibo (aparece después de completar la compra) -->
-  <div *ngIf="orderCompleted" class="purchase-success mt-4">
-    <div class="alert alert-success mb-4">
-      <h4 class="alert-heading">¡Compra realizada con éxito!</h4>
-      <p>Tu pedido con número <strong>{{ orderId }}</strong> ha sido procesado correctamente.</p>
+  <div class="container checkout-content">
+    <!-- Mensajes de notificación -->
+    <div *ngIf="error" class="notification-banner alert alert-danger text-center shadow-sm mb-4" role="alert">
+      <i class="bi bi-exclamation-triangle-fill me-2"></i>
+      {{ error }}
     </div>
-    
-    <div class="text-center mb-4">
-      <button class="btn btn-primary me-2" (click)="downloadReceipt()">
-        <i class="fas fa-file-pdf"></i> Descargar Recibo
-      </button>
-      <button class="btn btn-success" (click)="goToHome()">
-        <i class="fas fa-home"></i> Volver al Inicio
-      </button>
-    </div>
-    
-    <!-- Componente de recibo -->
-    <app-receipt 
-      [items]="carrito" 
-      [total]="total" 
-      [user]="currentUser" 
-      [orderId]="orderId">
-    </app-receipt>
-  </div>
 
-  <!-- Resumen del carrito (se muestra solo si no se ha completado la compra) -->
-  <div *ngIf="!loading && carrito && carrito.length > 0 && !orderCompleted">
-    <div class="mb-3">
-      <h4>Resumen de tu compra</h4>
-      <ul class="list-group">
-        <li class="list-group-item d-flex align-items-center" *ngFor="let item of carrito">
-          <img [src]="item.producto?.imagen" alt="{{ item.producto?.nombre }}" class="img-thumbnail me-3" style="width: 50px; height: 50px; object-fit: cover;">
-          <div class="flex-grow-1">
-            <h5 class="mb-1">{{ item.producto?.nombre }}</h5>
-            <small class="text-muted">Cantidad: {{ item.cantidad }}</small>
-          </div>
-          <span class="fw-bold">{{ item.producto?.precio | currency:'EUR' }}</span>
-        </li>
-      </ul>
-      <div class="mt-3 text-end">
-        <strong>Total: {{ total | currency:'EUR' }}</strong>
+    <div *ngIf="feedbackMessage" class="notification-banner alert alert-success text-center shadow-sm mb-4" role="alert">
+      <i class="bi bi-check-circle-fill me-2"></i>
+      {{ feedbackMessage }}
+    </div>
+
+    <!-- Indicador de carga -->
+    <div *ngIf="loading" class="d-flex justify-content-center my-5">
+      <div class="spinner-container">
+        <div class="spinner-border text-primario" role="status">
+          <span class="visually-hidden">Cargando...</span>
+        </div>
+        <p class="mt-3 text-primario">Procesando tu compra...</p>
       </div>
     </div>
 
-    <br>
-    <br>
+    <!-- Sección de recibo (aparece después de completar la compra) -->
+    <div *ngIf="orderCompleted" class="purchase-success mt-4">
+      <div class="success-card shadow-sm p-4 mb-4">
+        <div class="text-center mb-3">
+          <i class="bi bi-check-circle-fill success-icon"></i>
+        </div>
+        <h4 class="alert-heading text-center">¡Compra realizada con éxito!</h4>
+        <p class="text-center">Tu pedido con número <strong class="order-number">{{ orderId }}</strong> ha sido procesado correctamente.</p>
+      </div>
+      
+      <div class="text-center mb-4 action-buttons">
+        <button class="btn btn-outline-primario me-2" (click)="downloadReceipt()">
+          <i class="bi bi-file-earmark-pdf me-2"></i> Descargar Recibo
+        </button>
+        <button class="btn btn-primario" (click)="goToHome()">
+          <i class="bi bi-house-door me-2"></i> Volver al Inicio
+        </button>
+      </div>
+      
+      <!-- Componente de recibo -->
+      <div class="receipt-container shadow-sm">
+        <app-receipt 
+          [items]="carrito" 
+          [total]="total" 
+          [user]="currentUser" 
+          [orderId]="orderId">
+        </app-receipt>
+      </div>
+    </div>
 
-    <!-- Contenedor para el botón de PayPal -->
-    <div id="paypal-button-container"></div>
-  </div>
+    <!-- Resumen del carrito (se muestra solo si no se ha completado la compra) -->
+    <div *ngIf="!loading && carrito && carrito.length > 0 && !orderCompleted" class="cart-summary-container">
+      <div class="row">
+        <!-- Columna izquierda: Lista de productos -->
+        <div class="col-lg-7 mb-4">
+          <div class="cart-summary shadow-sm p-4">
+            <h4 class="section-title mb-4"><i class="bi bi-cart-check me-2"></i>Resumen de tu compra</h4>
+            <ul class="cart-items-list">
+              <li class="cart-item" *ngFor="let item of carrito">
+                <div class="cart-item-image">
+                  <img [src]="item.producto?.imagen" alt="{{ item.producto?.nombre }}" class="img-fluid rounded">
+                </div>
+                <div class="cart-item-details">
+                  <h5 class="item-title">{{ item.producto?.nombre }}</h5>
+                  <div class="item-meta">
+                    <span class="quantity"><i class="bi bi me-1"></i>Cantidad: {{ item.cantidad }}</span>
+                    <span class="price">{{ ((item.producto?.precio || 0) * item.cantidad) | currency:'EUR' }}</span>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+        
+        <!-- Columna derecha: Total y pago -->
+        <div class="col-lg-5">
+          <div class="payment-summary shadow-sm p-4 mb-4">
+            <h4 class="section-title mb-4"><i class="bi bi-credit-card me-2"></i>Pago</h4>
+            <div class="total-container mb-4">
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="total-label">Subtotal:</span>
+                <span class="total-value">{{ total | currency:'EUR' }}</span>
+              </div>
+              <div class="d-flex justify-content-between align-items-center mt-2">
+                <span class="total-label">Envío:</span>
+                <span class="shipping-free">Gratis</span>
+              </div>
+              <hr class="my-3">
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="total-label fw-bold">Total:</span>
+                <span class="final-total">{{ total | currency:'EUR' }}</span>
+              </div>
+            </div>
+            
+            <div class="payment-method">
+              <h5 class="payment-title">Método de pago</h5>
+              <p class="payment-description">Selecciona PayPal para completar tu compra de forma segura.</p>
+              
+              <!-- Contenedor para el botón de PayPal -->
+              <div id="paypal-button-container" class="mt-3"></div>
+            </div>
+          </div>
+          
+          <div class="secure-payment shadow-sm p-3">
+            <div class="d-flex align-items-center">
+              <i class="bi bi-shield-lock me-3 security-icon"></i>
+              <div>
+                <h6 class="mb-1">Pago 100% seguro</h6>
+                <p class="mb-0 small">Tus datos están protegidos con encriptación SSL</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-  <div *ngIf="!loading && carrito.length === 0 && !orderCompleted" class="alert alert-warning text-center">
-    No hay productos en el carrito. Con lo cual no hay un pedido que procesar.
+    <!-- Carrito vacío -->
+    <div *ngIf="!loading && carrito.length === 0 && !orderCompleted" class="empty-cart-container text-center shadow-sm p-5 my-5">
+      <i class="bi bi-cart-x empty-cart-icon mb-3"></i>
+      <h4 class="mb-3">Tu carrito está vacío</h4>
+      <p class="mb-4">No hay productos en el carrito. Con lo cual no hay un pedido que procesar.</p>
+      <button class="btn btn-primario" (click)="goToHome()">
+        <i class="bi bi-shop me-2"></i> Ir a comprar
+      </button>
+    </div>
   </div>
 </div>

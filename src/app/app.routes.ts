@@ -14,6 +14,17 @@ import { CarritoComponent } from './componentes/carrito/carrito.component';
 import { DeleteCategoriaComponent } from './componentes/delete-categoria/delete-categoria.component';
 import { DetalleProductoComponent } from './componentes/detalle-producto/detalle-producto.component';
 import { CheckoutComponent } from './componentes/checkout/checkout.component';
+import { ConocenosComponent } from './pages/footer-pages/conocenos/conocenos.component';
+import { NuestrasTiendasComponent } from './pages/footer-pages/nuestras-tiendas/nuestras-tiendas.component';
+import { TrabajaConNosotrosComponent } from './pages/footer-pages/trabaja-con-nosotros/trabaja-con-nosotros.component';
+import { PreguntasFrecuentesComponent } from './pages/footer-pages/preguntas-frecuentes/preguntas-frecuentes.component';
+import { CondicionesCompraComponent } from './pages/footer-pages/condiciones-compra/condiciones-compra.component';
+import { PoliticaDevolucionComponent } from './pages/footer-pages/politica-devolucion/politica-devolucion.component';
+import { AvisoLegalComponent } from './pages/footer-pages/aviso-legal/aviso-legal.component';
+import { PoliticaPrivacidadComponent } from './pages/footer-pages/politica-privacidad/politica-privacidad.component';
+import { TerminosServicioComponent } from './pages/footer-pages/terminos-servicio/terminos-servicio.component';
+import { PoliticaCookiesComponent } from './pages/footer-pages/politica-cookies/politica-cookies.component';
+import { ConsentimientoCookiesComponent } from './pages/footer-pages/consentimiento-cookies/consentimiento-cookies.component';
 
 export const routes: Routes = [
  {path: 'addProduct', component: AddProductComponent , canActivate: [AuthGuard], data: { role: 'admin' }},
@@ -31,6 +42,19 @@ export const routes: Routes = [
  { path: 'register', component: RegisterComponent },
  {path:'carrito', component: CarritoComponent},
  { path: 'producto/:id', component: DetalleProductoComponent },
+ 
+ // Rutas para las páginas del footer
+ { path: 'conocenos', component: ConocenosComponent },
+ { path: 'nuestras-tiendas', component: NuestrasTiendasComponent },
+ { path: 'trabaja-con-nosotros', component: TrabajaConNosotrosComponent },
+ { path: 'preguntas-frecuentes', component: PreguntasFrecuentesComponent },
+ { path: 'condiciones-compra', component: CondicionesCompraComponent },
+ { path: 'politica-devolucion', component: PoliticaDevolucionComponent },
+ { path: 'aviso-legal', component: AvisoLegalComponent },
+ { path: 'politica-privacidad', component: PoliticaPrivacidadComponent },
+ { path: 'terminos-servicio', component: TerminosServicioComponent },
+ { path: 'politica-cookies', component: PoliticaCookiesComponent },
+ { path: 'consentimiento-cookies', component: ConsentimientoCookiesComponent },
  {path: '', redirectTo: 'main', pathMatch: 'full'},
  {path: '**', redirectTo: 'main', pathMatch: 'full'},
 ];

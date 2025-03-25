@@ -42,32 +42,40 @@
 <!-- Componente para mostrar productos -->
 <app-mostrar-products></app-mostrar-products>
 
-<!-- Sección de invitación y "Nuestra Historia" -->
-<div>
-  <div class="invitation">
-    <p>Conoce nuestra historia...</p>
-    <span class="material-icons toggle-btn" (click)="toggleHistory()">
-      {{ showHistory ? 'fast_forward' : 'fast_rewind' }}
-    </span>
-  </div>
-
-  <!-- Sección "Nuestra Historia" -->
-  <div class="container my-5 historia-section" *ngIf="showHistory">
-    <div class="row justify-content-center">
-      <div class="col-md-8">
-        <div class="card p-4 shadow-sm" style="background-color: var(--color-secundario);">
-          <h2 class="card-title text-center mb-3" style="color: var(--color-primario);">
-            Nuestra Historia
-          </h2>
-          <p class="card-text text-center" style="color: var(--color-texto);">
-            Mundo Nómada es una tienda de moda y complementos en Baena, Córdoba, ubicada en la Avenida Cervantes, 5.
-            Nos especializamos en prendas y accesorios de alta calidad, combinando tendencias actuales con un servicio
-            al cliente excepcional. En nuestra tienda, encontrarás desde chaquetas reversibles hasta faldas de raso y
-            una gran variedad de vaqueros y complementos, siempre siguiendo las últimas tendencias.
-            Incorporamos novedades constantemente para ofrecer a nuestros clientes opciones modernas y versátiles.
-            ¡Visítanos y descubre nuestra colección!
-          </p>
+<!-- Sección de Servicios y Ventajas -->
+<div class="service-features">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3 col-sm-6 service-item">
+        <div class="service-icon">
+          <i class="fas fa-undo"></i>
         </div>
+        <h4>Cambio y devoluciones</h4>
+        <p>En un plazo de 30 días naturales desde la fecha de la compra del producto.</p>
+      </div>
+      
+      <div class="col-md-3 col-sm-6 service-item">
+        <div class="service-icon">
+          <i class="fas fa-store"></i>
+        </div>
+        <h4>Recogida y Devolución en tienda</h4>
+        <p>Recogidas y devoluciones gratuitas en todas nuestras tiendas.</p>
+      </div>
+      
+      <div class="col-md-3 col-sm-6 service-item">
+        <div class="service-icon">
+          <i class="fas fa-envelope"></i>
+        </div>
+        <h4>Recogida en Oficina de Correos</h4>
+        <p>Recoge y devuelve tus pedidos fácilmente en tu oficina de Correos más cercana.</p>
+      </div>
+      
+      <div class="col-md-3 col-sm-6 service-item">
+        <div class="service-icon">
+          <i class="fas fa-credit-card"></i>
+        </div>
+        <h4>Pagos seguros</h4>
+        <p>Todos tus pagos se realizan de forma segura a través de tarjeta de crédito, Paypal o ScalaPay</p>
       </div>
     </div>
   </div>

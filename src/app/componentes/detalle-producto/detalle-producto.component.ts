@@ -7,6 +7,7 @@ import { AuthService } from '../../services/auth.service';
 import { CarritoService } from '../../services/carrito.service';
 import { Carrito } from '../../../models/Carrito';
 import { User } from '../../../models/Users';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-detalle-producto',
@@ -22,13 +23,16 @@ export class DetalleProductoComponent implements OnInit {
   error: string = '';
   // Propiedad para notificaciones: type puede ser 'success', 'warning', 'danger', etc.
   notification: { message: string; type: string } | null = null;
+  
+ 
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private productosService: ProductosService,
     private authService: AuthService,
-    private carritoService: CarritoService
+    private carritoService: CarritoService,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
@@ -52,8 +56,20 @@ export class DetalleProductoComponent implements OnInit {
     this.loading = true;
     this.productosService.seleccionarPorID(productoID).subscribe({
       next: (producto: Producto) => {
+        // Asegurarse de que stock es un número
+        if (producto) {
+          // Normalizar el valor del stock a número
+          producto.stock = Number(producto.stock);
+          
+          // Si es NaN, asignar 0
+          if (isNaN(producto.stock)) {
+            producto.stock = 0;
+          }
+        }
+        
         this.producto = producto;
         this.loading = false;
+        
       },
       error: (err) => {
         console.error(err);
@@ -63,12 +79,38 @@ export class DetalleProductoComponent implements OnInit {
     });
   }
 
+  // Método para volver a la página anterior
+  goBack(): void {
+    this.location.back();
+  }
+
+  // Métodos auxiliares para el control de stock
+  hasStock(producto: Producto): boolean {
+    const result = producto && Number(producto.stock) > 5;
+    console.log(`DEBUG - hasStock: ${result}, stock: ${producto?.stock}`);
+    return result;
+  }
+
+  hasLowStock(producto: Producto): boolean {
+    const result = producto && Number(producto.stock) <= 5 && Number(producto.stock) > 0;
+    console.log(`DEBUG - hasLowStock: ${result}, stock: ${producto?.stock}`);
+    return result;
+  }
+
+  isOutOfStock(producto: Producto): boolean {
+    if (!producto) return true;
+    const stockNum = Number(producto.stock);
+    const result = isNaN(stockNum) || stockNum === 0;
+    console.log(`DEBUG - isOutOfStock: ${result}, stock: ${producto?.stock}, stockNum: ${stockNum}`);
+    return result;
+  }
+
   addToCart(producto: Producto): void {
     // Si no hay usuario logueado, se tratará como invitado (userId = 0)
     const userId = this.currentUser ? this.currentUser.id : 0;
 
     // Verificar stock disponible
-    if (producto.stock === 0) {
+    if (this.isOutOfStock(producto)) {
       this.notification = {
         message: 'El producto no tiene stock disponible.',
         type: 'warning',
@@ -85,11 +127,20 @@ export class DetalleProductoComponent implements OnInit {
       this.carritoService.verificarStockActualizado(producto.ProductoID).subscribe({
         next: (productoActualizado) => {
           this.loading = false;
+          
+          // Normalizar el stock aquí también
+          if (productoActualizado) {
+            productoActualizado.stock = Number(productoActualizado.stock);
+            if (isNaN(productoActualizado.stock)) {
+              productoActualizado.stock = 0;
+            }
+          }
+          
           // Actualizar la vista con el stock real
           this.producto = productoActualizado;
           
           // Si no hay stock, mostrar mensaje y salir
-          if (productoActualizado.stock === 0) {
+          if (this.isOutOfStock(productoActualizado)) {
             this.notification = {
               message: 'El producto ya no tiene stock disponible.',
               type: 'warning',

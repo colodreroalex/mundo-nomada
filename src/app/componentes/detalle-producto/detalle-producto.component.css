@@ -1,48 +1,102 @@
-.detalle-producto-container {
-    background-color: var(--color-secundario);
-    color: var(--color-texto);
-    padding: 2rem 0;
-  }
-  
-  .producto-imagen {
-    max-height: 500px;
-    max-width: fit-content;
-    width: 100%;
-    object-fit: cover;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+.bg-secundario {
+  background-color: var(--color-secundario);
+}
+
+.producto-detalle-card {
+  transition: all 0.3s ease;
+  border-radius: 8px;
+}
+
+.product-image-container {
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.producto-imagen {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.producto-imagen:hover {
+  transform: scale(1.05);
+}
+
+.producto-nombre {
+  color: var(--color-primario);
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid var(--color-secundario);
+  padding-bottom: 0.5rem;
+}
+
+.producto-precio {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--color-texto);
+}
+
+.producto-descripcion {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--color-texto);
+}
+
+.producto-caracteristicas li {
+  display: flex;
+  align-items: center;
+}
+
+.btn-custom {
+  background-color: var(--color-primario);
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.btn-custom:hover {
+  background-color: var(--color-hover);
+}
+
+.btn-custom:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
+}
+
+/* Animaciones */
+.fade-in-out {
+  animation: fadeInOut 2s ease-in-out;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* Estilos específicos para móviles */
+@media (max-width: 767.98px) {
+  .product-image-container {
+    height: 300px;
+    margin-bottom: 2rem;
   }
   
   .producto-nombre {
-    color: var(--color-primario);
-    font-size: 2rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
+    font-size: 1.5rem;
   }
   
   .producto-precio {
-    font-size: 1.5rem;
-    font-weight: 500;
-    margin-bottom: 1rem;
+    font-size: 1.4rem;
   }
-  
-  .producto-stock {
-    margin-bottom: 1rem;
-  }
-  
-  .producto-descripcion {
-    font-size: 1rem;
-    line-height: 1.5;
-  }
-  
-  .btn-agregar-carrito {
-    background-color: var(--color-primario);
-    color: #fff;
-    border: none;
-    transition: background-color 0.3s ease;
-  }
-  
-  .btn-agregar-carrito:hover {
-    background-color: var(--color-hover);
-  }
-  
+}

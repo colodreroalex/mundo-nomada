@@ -1,62 +1,192 @@
-<div class="container my-5">
-  <h2 class="mb-4 text-center">Productos Disponibles</h2>
-
-  <!-- Bloque para notificaciones -->
-  <div *ngIf="notification" class="alert alert-{{ notification.type }} text-center" role="alert">
-    {{ notification.message }}
-  </div>
-
-  <!-- Campo para filtrar por nombre -->
-  <div class="mb-4">
-    <input
-      type="text"
-      class="form-control"
-      placeholder="Buscar producto por nombre"
-      [(ngModel)]="filterName"
-    >
-  </div>
-
-  <!-- Indicador de carga -->
-  <div *ngIf="loading" class="d-flex justify-content-center my-4">
-    <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Cargando...</span>
-    </div>
-  </div>
-
-  <!-- Mensaje de error -->
-  <div *ngIf="error" class="alert alert-danger text-center" role="alert">
-    {{ error }}
-  </div>
-
-  <!-- Mostrar productos filtrados si existen -->
-  <div *ngIf="filteredProducts && filteredProducts.length > 0; else noProducts">
-    <div class="row">
-      <div class="col-md-4 mb-4" *ngFor="let producto of filteredProducts">
-        <!-- Card completa clicable -->
-        <div class="card h-100 shadow-sm" (click)="verDetalleProducto(producto)">
-          <img *ngIf="producto.imagen" 
-               [src]="producto.imagen" 
-               alt="{{ producto.nombre }}" 
-               class="card-img-top" 
-               style="height: 400px; object-fit: cover;">
-          <div class="card-body d-flex flex-column">
-            <h5 class="card-title">{{ producto.nombre }}</h5>
-            <p class="card-text">{{ producto.descripcion }}</p>
-            <p class="card-text fw-bold mt-auto">
-              {{ producto.precio | currency:'EUR' }}
-            </p>
+<div class="products-container">
+  <!-- Header con título y buscador -->
+  <div class="bg-primario text-secundario py-4 mb-5 rounded-header shadow">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <h2 class="text-secundario mb-0 display-5 fw-bold">Descubre Nuestros Productos</h2>
+          <p class="lead mb-0 mt-2 text-secundario opacity-75">Ropa de mujer, complementos, bisuteria...</p>
+        </div>
+        <div class="col-md-6">
+          <div class="input-group search-container">
+            <span class="input-group-text bg-secundario border-0">
+              <i class="bi bi-search text-primario"></i>
+            </span>
+            <input type="text" class="form-control form-control-lg border-0 shadow-none" 
+                   placeholder="Buscar productos por nombre..." 
+                   [(ngModel)]="filterName">
           </div>
-          <!-- Footer de la card -->
-          
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Mensaje cuando no hay productos -->
-  <ng-template #noProducts>
-    <div class="alert alert-warning text-center" role="alert">
-      No hay productos disponibles.
+  <div class="container">
+    <!-- Notificaciones -->
+    <div *ngIf="notification" class="notification-banner alert alert-{{ notification.type }} text-center fade-in-out shadow-sm" role="alert">
+      <i class="bi" [ngClass]="{
+        'bi-check-circle-fill': notification.type === 'success',
+        'bi-exclamation-triangle-fill': notification.type === 'warning',
+        'bi-x-circle-fill': notification.type === 'danger'
+      }"></i>
+      {{ notification.message }}
     </div>
-  </ng-template>
+
+    <!-- Loading spinner con estilo personalizado -->
+    <div *ngIf="loading" class="loading-container text-center py-5">
+      <div class="spinner">
+        <div class="double-bounce1 bg-primario"></div>
+        <div class="double-bounce2 bg-primario"></div>
+      </div>
+      <p class="text-primario mt-3">Cargando experiencias para ti...</p>
+    </div>
+
+    <!-- Mensaje de error con estilo personalizado -->
+    <div *ngIf="error" class="error-banner text-center py-4 rounded shadow-sm">
+      <i class="bi bi-emoji-frown text-primario display-4"></i>
+      <p class="lead mt-3">{{ error }}</p>
+      <button class="btn-custom mt-2" (click)="loadProducts()">
+        <i class="bi bi-arrow-repeat me-2"></i>Reintentar
+      </button>
+    </div>
+
+    <!-- Grid de productos con animación -->
+    <div *ngIf="filteredProducts && filteredProducts.length > 0; else noProducts" class="product-grid">
+      <div class="filters-bar mb-4 p-3 bg-secundario rounded shadow-sm">
+        <div class="row align-items-center">
+          <div class="col">
+            <span class="badge bg-primario rounded-pill">
+              {{ filteredProducts.length }} productos encontrados
+            </span>
+          </div>
+          <div class="col-auto">
+            <span class="text-muted me-2">Ordenar por:</span>
+            <div class="btn-group">
+              <button class="btn-custom btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {{ sortOption === 'relevance' ? 'Relevancia' : 
+                   sortOption === 'price-asc' ? 'Precio: menor a mayor' : 
+                   sortOption === 'price-desc' ? 'Precio: mayor a menor' : 
+                   sortOption === 'newest' ? 'Más recientes' : 'Relevancia' }}
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#" (click)="$event.preventDefault(); sortProducts('relevance')">Relevancia</a></li>
+                <li><a class="dropdown-item" href="#" (click)="$event.preventDefault(); sortProducts('price-asc')">Precio: menor a mayor</a></li>
+                <li><a class="dropdown-item" href="#" (click)="$event.preventDefault(); sortProducts('price-desc')">Precio: mayor a menor</a></li>
+                <li><a class="dropdown-item" href="#" (click)="$event.preventDefault(); sortProducts('newest')">Más recientes</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-4 product-item" *ngFor="let producto of paginatedProducts">
+          <div class="product-card" (click)="verDetalleProducto(producto)">
+            <!-- Imagen con overlay y etiquetas -->
+            <div class="product-image-container">
+              <img *ngIf="producto.imagen" 
+                   [src]="producto.imagen" 
+                   alt="{{ producto.nombre }}" 
+                   class="product-image">
+              <div class="product-overlay">
+                <button class="btn-quickview" (click)="verDetalleProducto(producto)">
+                  <i class="bi bi-eye-fill"></i>
+                </button>
+                <button class="btn-addcart" (click)="addToCart($event, producto)">
+                  <i class="bi bi-bag-plus-fill"></i>
+                </button>
+              </div>
+              <!-- Etiquetas condicionales (estos podrían ser dinámicos) -->
+              <span class="product-tag bg-primario">Nuevo</span>
+            </div>
+            
+            <!-- Detalles del producto -->
+            <div class="product-details">
+              <h3 class="product-title text-primario">{{ producto.nombre }}</h3>
+              <div class="product-rating">
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-half"></i>
+                <span class="rating-count">(16)</span>
+              </div>
+              <p class="product-description">{{ producto.descripcion | slice:0:80 }}{{ producto.descripcion.length > 80 ? '...' : '' }}</p>
+              <div class="product-price-container">
+                <span class="product-price">{{ producto.precio | currency:'EUR' }}</span>
+                <!-- Opcional: Precio anterior para ofertas -->
+                <!-- <span class="product-price-old">{{ (producto.precio * 1.2) | currency:'EUR' }}</span> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Paginación para muchos productos -->
+      <div class="pagination-container text-center mt-5" *ngIf="totalPages > 1">
+        <nav aria-label="Navegación de páginas">
+          <ul class="pagination justify-content-center">
+            <li class="page-item" [class.disabled]="currentPage === 1">
+              <a class="page-link" href="#" (click)="$event.preventDefault(); goToPage(currentPage - 1)" aria-label="Anterior">
+                <i class="bi bi-chevron-left"></i>
+              </a>
+            </li>
+            
+            <!-- Primera página siempre visible -->
+            <li class="page-item" [class.active]="currentPage === 1">
+              <a class="page-link" href="#" (click)="$event.preventDefault(); goToPage(1)">1</a>
+            </li>
+            
+            <!-- Elipsis inicial si hay muchas páginas -->
+            <li class="page-item disabled" *ngIf="currentPage > 3">
+              <a class="page-link">...</a>
+            </li>
+            
+            <!-- Página anterior si no es la primera ni la segunda -->
+            <li class="page-item" *ngIf="currentPage > 2">
+              <a class="page-link" href="#" (click)="$event.preventDefault(); goToPage(currentPage - 1)">{{ currentPage - 1 }}</a>
+            </li>
+            
+            <!-- Página actual si no es la primera ni la última -->
+            <li class="page-item active" *ngIf="currentPage !== 1 && currentPage !== totalPages">
+              <a class="page-link" href="#">{{ currentPage }}</a>
+            </li>
+            
+            <!-- Página siguiente si no es la penúltima ni la última -->
+            <li class="page-item" *ngIf="currentPage < totalPages - 1">
+              <a class="page-link" href="#" (click)="$event.preventDefault(); goToPage(currentPage + 1)">{{ currentPage + 1 }}</a>
+            </li>
+            
+            <!-- Elipsis final si hay muchas páginas -->
+            <li class="page-item disabled" *ngIf="currentPage < totalPages - 2">
+              <a class="page-link">...</a>
+            </li>
+            
+            <!-- Última página siempre visible si hay más de una página -->
+            <li class="page-item" [class.active]="currentPage === totalPages" *ngIf="totalPages > 1">
+              <a class="page-link" href="#" (click)="$event.preventDefault(); goToPage(totalPages)">{{ totalPages }}</a>
+            </li>
+            
+            <li class="page-item" [class.disabled]="currentPage === totalPages">
+              <a class="page-link" href="#" (click)="$event.preventDefault(); goToPage(currentPage + 1)" aria-label="Siguiente">
+                <i class="bi bi-chevron-right"></i>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Mensaje de no productos encontrados, con estilo -->
+    <ng-template #noProducts>
+      <div class="no-products-container text-center py-5">
+        <img src="assets/img/no-products.svg" alt="No hay productos" class="mb-4" style="max-width: 150px;">
+        <h3 class="text-primario">No hemos encontrado productos</h3>
+        <p class="text-muted">Prueba con otra búsqueda o categoría</p>
+        <button class="btn-custom mt-3" (click)="filterName = ''; loadProducts()">
+          <i class="bi bi-arrow-repeat me-2"></i>Ver todos los productos
+        </button>
+      </div>
+    </ng-template>
+  </div>
 </div>

@@ -23,6 +23,9 @@ export class MostrarProductsComponent implements OnInit {
   loading: boolean = false;
   error: string = '';
   currentUser: User | null = null;
+  currentPage: number = 1;
+  itemsPerPage: number = 10;
+  sortOption: string = 'relevance';
 
   // Propiedad para notificaciones: type puede ser 'success', 'warning', 'danger', etc.
   notification: { message: string; type: string } | null = null;
@@ -58,6 +61,7 @@ export class MostrarProductsComponent implements OnInit {
 
   loadProducts(): void {
     this.loading = true;
+    this.currentPage = 1; // Reiniciar la página al cargar nuevos productos
     if (this.filterCategory !== null) {
       this.productosService.getProductsByCategory(this.filterCategory).subscribe({
         next: (data) => {
@@ -87,41 +91,111 @@ export class MostrarProductsComponent implements OnInit {
 
   // Método para ver el detalle del producto al hacer clic en la tarjeta
   verDetalleProducto(producto: Producto): void {
-    // Supongamos que la ruta de detalle es '/producto/:id'
     this.router.navigate(['/producto', producto.ProductoID]);
   }
 
   // Método para añadir el producto al carrito
-  // Si no hay usuario logueado, redirige a login
   addToCart(event: Event, producto: Producto): void {
     // Evitar que el click en el botón se propague al contenedor (card)
     event.stopPropagation();
 
-    if (!this.currentUser) {
-      // Redirigir a login si no hay usuario
-      this.router.navigate(['/login']);
+    // Si no hay usuario logueado, se tratará como invitado (userId = 0)
+    const userId = this.currentUser ? this.currentUser.id : 0;
+
+    // Verificar stock disponible
+    if (producto.stock === 0) {
+      this.notification = {
+        message: 'El producto no tiene stock disponible.',
+        type: 'warning',
+      };
+      setTimeout(() => this.notification = null, 2000);
       return;
     }
 
-    // Si hay usuario logueado, añade el producto al carrito
-    const carritoItem: Carrito = new Carrito(
-      0, // El ID lo genera la base de datos
-      this.currentUser.id,
-      producto.ProductoID,
-      1,
-      producto
-    );
-
-    this.carritoService.addToCart(carritoItem).subscribe({
-      next: () => {
-        this.notification = { message: 'Producto añadido o actualizado en el carrito', type: 'success' };
+    // Para usuarios invitados, solicitar verificación en tiempo real del stock
+    if (userId === 0) {
+      this.loading = true;
+      this.carritoService.verificarStockActualizado(producto.ProductoID).subscribe({
+        next: (productoActualizado) => {
+          this.loading = false;
+          
+          // Si no hay stock, mostrar mensaje y salir
+          if (productoActualizado.stock === 0) {
+            this.notification = {
+              message: 'El producto ya no tiene stock disponible.',
+              type: 'warning',
+            };
+            setTimeout(() => this.notification = null, 2000);
+            return;
+          }
+          
+          // Continuar con el proceso de agregar al carrito con la información actualizada
+          this.procesarAgregarAlCarrito(userId, productoActualizado);
+        },
+        error: (err) => {
+          this.loading = false;
+          console.error('Error al verificar stock actualizado:', err);
+          // Continuar con el proceso usando los datos actuales, aunque no sean los más recientes
+          this.procesarAgregarAlCarrito(userId, producto);
+        }
+      });
+    } else {
+      // Para usuarios registrados, continuar normalmente
+      this.procesarAgregarAlCarrito(userId, producto);
+    }
+  }
+  
+  // Método auxiliar para continuar el proceso de agregar al carrito
+  procesarAgregarAlCarrito(userId: number, producto: Producto): void {
+    // Consultar el carrito actual (para validar si ya está añadido, etc.)
+    this.carritoService.getCart(userId).subscribe((cartItems: Carrito[]) => {
+      const existingCartItem = cartItems.find(
+        (item) => item.producto_id === producto.ProductoID
+      );
+      const currentQuantity = existingCartItem ? existingCartItem.cantidad : 0;
+      if (currentQuantity >= producto.stock) {
+        this.notification = {
+          message: 'No quedan más unidades disponibles para este producto.',
+          type: 'warning',
+        };
         setTimeout(() => this.notification = null, 2000);
-      },
-      error: (err) => {
-        console.error(err);
-        this.notification = { message: 'Ocurrió un error al añadir el producto al carrito', type: 'danger' };
-        setTimeout(() => this.notification = null, 2000);
+        return;
       }
+
+      // Crear el objeto Carrito y añadirlo
+      const carritoItem: Carrito = new Carrito(
+        0,              // ID (se asignará en backend o se genera para localStorage)
+        userId,         // 0 si es invitado
+        producto.ProductoID,
+        1,              // Se añade 1 unidad
+        producto        // Objeto completo del producto
+      );
+
+      this.carritoService.addToCart(carritoItem).subscribe({
+        next: (response: any) => {
+          // Se espera que el backend devuelva un objeto con la propiedad "resultado"
+          if (response && response.resultado === 'OK') {
+            this.notification = {
+              message: 'Producto añadido al carrito',
+              type: 'success',
+            };
+          } else {
+            this.notification = {
+              message: 'Producto añadido al carrito',
+              type: 'success',
+            };
+          }
+          setTimeout(() => this.notification = null, 2000);
+        },
+        error: (err) => {
+          console.error(err);
+          this.notification = {
+            message: 'Ocurrió un error al añadir el producto al carrito',
+            type: 'danger',
+          };
+          setTimeout(() => this.notification = null, 2000);
+        }
+      });
     });
   }
 
@@ -133,5 +207,66 @@ export class MostrarProductsComponent implements OnInit {
     return this.products.filter(producto =>
       producto.nombre.toLowerCase().includes(this.filterName.toLowerCase())
     );
+  }
+
+  // Métodos para la ordenación de productos
+  sortProducts(option: string): void {
+    this.sortOption = option;
+    this.currentPage = 1; // Volver a la primera página cuando se ordena
+    
+    let sortedProducts = [...this.products];
+    
+    switch(option) {
+      case 'price-asc':
+        sortedProducts.sort((a, b) => a.precio - b.precio);
+        break;
+      case 'price-desc':
+        sortedProducts.sort((a, b) => b.precio - a.precio);
+        break;
+      case 'newest':
+        // Ordenar por ID asumiendo que IDs más altos son productos más recientes
+        sortedProducts.sort((a, b) => b.ProductoID - a.ProductoID);
+        break;
+      case 'relevance':
+      default:
+        // Por defecto, no hacemos ordenación especial
+        break;
+    }
+    
+    this.products = sortedProducts;
+  }
+
+  // Métodos para la paginación
+  goToPage(page: number): void {
+    if (page > 0 && page <= this.totalPages) {
+      this.currentPage = page;
+      
+      // Desplazar al inicio de la sección de productos de manera segura
+      const productGrid = document.querySelector('.product-grid');
+      if (productGrid) {
+        window.scrollTo({
+          top: productGrid.getBoundingClientRect().top + window.scrollY - 100,
+          behavior: 'smooth'
+        });
+      }
+    }
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.filteredProducts.length / this.itemsPerPage);
+  }
+
+  get paginatedProducts(): Producto[] {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.filteredProducts.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  // Método para limpiar filtros
+  clearFilters(): void {
+    this.filterName = '';
+    this.filterCategory = null;
+    this.sortOption = 'relevance';
+    this.currentPage = 1;
+    this.loadProducts();
   }
 }
