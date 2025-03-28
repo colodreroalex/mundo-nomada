@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { tap, catchError, map, mergeMap } from 'rxjs/operators';
 import { CarritoService } from './carrito.service'; // Import the CarritoService
 import { User } from '../../models/Users'; // Asegúrate de importar la clase User correctamente
 
@@ -85,5 +85,52 @@ export class AuthService {
   isAdmin(): boolean {
     return this.getRole() === 'admin';
   }
-}
 
+  // Método para actualizar el perfil del usuario
+  updateUserProfile(userId: number, name: string, email: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}updateProfile.php`, {
+      userId,
+      name,
+      email
+    }, {
+      withCredentials: true
+    });
+  }
+
+
+  // Método para cambiar la contraseña
+  changePassword(userId: number, currentPassword: string, newPassword: string): Observable<any> {
+    // Verificar la longitud de la contraseña antes de enviar al servidor
+    if (newPassword.length < 6) {
+      return throwError(() => new Error('La nueva contraseña debe tener al menos 6 caracteres.'));
+    }
+    
+    // Definir una interfaz para la respuesta
+    interface PasswordChangeResponse {
+      success: boolean;
+      message: string;
+      password_updated_at?: string;
+    }
+    
+    return this.http.post<PasswordChangeResponse>(`${this.apiUrl}changePassword.php`, { 
+      userId, 
+      oldPassword: currentPassword,
+      newPassword 
+    }, { 
+      withCredentials: true
+    }).pipe(
+      tap((response: PasswordChangeResponse) => {
+        // Si hay un usuario actual y la operación fue exitosa, actualizamos su información
+        if (this.currentUserSubject.value && response.success) {
+          const currentUser = this.currentUserSubject.value;
+          if (response.password_updated_at) {
+            // Actualizamos la fecha de actualización de contraseña
+            currentUser.password_updated_at = new Date(response.password_updated_at);
+            // Actualizamos el BehaviorSubject con el usuario modificado
+            this.currentUserSubject.next(currentUser);
+          }
+        }
+      })
+    );
+  }
+}

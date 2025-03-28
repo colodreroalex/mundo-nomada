@@ -14,6 +14,7 @@ import { CarritoComponent } from './componentes/carrito/carrito.component';
 import { DeleteCategoriaComponent } from './componentes/delete-categoria/delete-categoria.component';
 import { DetalleProductoComponent } from './componentes/detalle-producto/detalle-producto.component';
 import { CheckoutComponent } from './componentes/checkout/checkout.component';
+import { PerfilUsuarioComponent } from './componentes/perfil-usuario/perfil-usuario.component';
 import { ConocenosComponent } from './pages/footer-pages/conocenos/conocenos.component';
 import { NuestrasTiendasComponent } from './pages/footer-pages/nuestras-tiendas/nuestras-tiendas.component';
 import { TrabajaConNosotrosComponent } from './pages/footer-pages/trabaja-con-nosotros/trabaja-con-nosotros.component';
@@ -42,6 +43,7 @@ export const routes: Routes = [
  { path: 'register', component: RegisterComponent },
  {path:'carrito', component: CarritoComponent},
  { path: 'producto/:id', component: DetalleProductoComponent },
+ { path: 'perfil', component: PerfilUsuarioComponent, canActivate: [AuthGuard] },
  
  // Rutas para las páginas del footer
  { path: 'conocenos', component: ConocenosComponent },

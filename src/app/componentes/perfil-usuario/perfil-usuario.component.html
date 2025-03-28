@@ -1,0 +1,390 @@
+<div class="profile-container">
+  <div class="container py-5">
+    <!-- Header mejorado -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="profile-header bg-white p-4 rounded-3 shadow-sm">
+          <div class="d-flex align-items-center">
+            <div class="profile-avatar me-4">
+              <div class="avatar-circle">
+                <span class="initials">{{ getUserInitial() }}</span>
+              </div>
+            </div>
+            <div>
+              <h1 class="profile-title">{{ currentUser?.name }}</h1>
+              <p class="profile-subtitle text-muted">
+                <i class="bi bi-envelope-fill me-1"></i>{{ currentUser?.email }}
+              </p>
+              <p class="profile-subtitle text-muted" *ngIf="currentUser?.created_at">
+                <i class="bi bi-calendar-event me-1"></i> Miembro desde: {{ formatDate(currentUser?.created_at || '') }}
+              </p>
+            </div>
+            <div class="ms-auto d-none d-md-block">
+              <button class="btn btn-outline-secondary rounded-pill px-3" [routerLink]="['/dashboard']" *ngIf="currentUser?.role === 'admin'">
+                <i class="bi bi-speedometer2 me-2"></i> Panel de Control
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Layout mejorado con dos columnas -->
+    <div class="row">
+      <!-- Menú lateral mejorado -->
+      <div class="col-lg-3 mb-4">
+        <div class="card border-0 shadow-sm">
+          <div class="card-header bg-light py-3">
+            <h5 class="mb-0 fw-semibold"><i class="bi bi-person-gear me-2"></i>Gestión de Cuenta</h5>
+          </div>
+          <div class="list-group profile-menu border-0">
+            <button type="button" class="list-group-item list-group-item-action border-0" 
+                    [ngClass]="{'active': activeSection === 'profile'}" 
+                    (click)="setActiveSection('profile')">
+              <i class="bi bi-person-vcard me-2"></i>Información Personal
+            </button>
+            <button type="button" class="list-group-item list-group-item-action border-0" 
+                    [ngClass]="{'active': activeSection === 'security'}" 
+                    (click)="setActiveSection('security')">
+              <i class="bi bi-shield-lock me-2"></i>Seguridad
+            </button>
+            <button type="button" class="list-group-item list-group-item-action border-0" 
+                    [ngClass]="{'active': activeSection === 'activity'}" 
+                    (click)="setActiveSection('activity')">
+              <i class="bi bi-activity me-2"></i>Actividad
+            </button>
+          </div>
+        </div>
+        
+        <!-- Tarjeta de estadísticas -->
+        <div class="card border-0 shadow-sm mt-4">
+          <div class="card-header bg-light py-3">
+            <h5 class="mb-0 fw-semibold"><i class="bi bi-bar-chart-line me-2"></i>Estadísticas</h5>
+          </div>
+          <div class="card-body">
+            <div class="d-flex align-items-center mb-3">
+              <div class="stat-icon bg-light rounded-circle p-2 me-3">
+                <i class="bi bi-calendar-check text-primary"></i>
+              </div>
+              <div>
+                <div class="small text-muted">Estado de la cuenta</div>
+                <div class="fw-semibold">
+                  <span class="badge bg-success">Activa</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="d-flex align-items-center mb-3">
+              <div class="stat-icon bg-light rounded-circle p-2 me-3">
+                <i class="bi bi-stopwatch text-warning"></i>
+              </div>
+              <div>
+                <div class="small text-muted">Último acceso</div>
+                <div class="fw-semibold">{{ getLastLoginDate() }}</div>
+              </div>
+            </div>
+            
+            <div class="d-flex align-items-center">
+              <div class="stat-icon bg-light rounded-circle p-2 me-3">
+                <i class="bi bi-shield-check text-success"></i>
+              </div>
+              <div>
+                <div class="small text-muted">Nivel de seguridad</div>
+                <div class="fw-semibold">{{ getSecurityLevel() }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contenido principal mejorado -->
+      <div class="col-lg-9">
+        <!-- Sección de Información Personal -->
+        <div *ngIf="activeSection === 'profile'" class="animated-section">
+          <div class="card border-0 shadow-sm">
+            <div class="card-header bg-light py-3 d-flex justify-content-between align-items-center">
+              <h2 class="h5 mb-0 fw-semibold"><i class="bi bi-person-lines-fill me-2"></i>Datos Personales</h2>
+              <span class="badge bg-light text-dark">Última actualización: {{ getLastProfileUpdate() }}</span>
+            </div>
+            <div class="card-body">
+              <form [formGroup]="profileForm" (ngSubmit)="updateProfile()">
+                
+                <!-- Alertas mejoradas -->
+                <div *ngIf="profileUpdateSuccess" class="alert alert-success d-flex align-items-center" role="alert">
+                  <i class="bi bi-check-circle-fill me-2"></i>
+                  <div>Tus datos han sido actualizados correctamente.</div>
+                  <button type="button" class="btn-close ms-auto" (click)="profileUpdateSuccess = false"></button>
+                </div>
+                
+                <div *ngIf="profileUpdateError" class="alert alert-danger d-flex align-items-center" role="alert">
+                  <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                  <div>{{ profileUpdateError }}</div>
+                  <button type="button" class="btn-close ms-auto" (click)="profileUpdateError = ''"></button>
+                </div>
+                
+                <div class="row g-4">
+                  <!-- Campo Nombre mejorado -->
+                  <div class="col-md-6">
+                    <label for="name" class="form-label">Nombre</label>
+                    <div class="input-group">
+                      <span class="input-group-text bg-light"><i class="bi bi-person"></i></span>
+                      <input 
+                        type="text" 
+                        class="form-control" 
+                        id="name" 
+                        formControlName="name"
+                        placeholder="Tu nombre completo"
+                      >
+                    </div>
+                    <div *ngIf="profileForm.get('name')?.invalid && profileForm.get('name')?.touched" class="text-danger mt-1 small">
+                      <i class="bi bi-info-circle me-1"></i>El nombre es obligatorio (mínimo 3 caracteres).
+                    </div>
+                  </div>
+                  
+                  <!-- Campo Email mejorado -->
+                  <div class="col-md-6">
+                    <label for="email" class="form-label">Email</label>
+                    <div class="input-group">
+                      <span class="input-group-text bg-light"><i class="bi bi-envelope"></i></span>
+                      <input 
+                        type="email" 
+                        class="form-control" 
+                        id="email" 
+                        formControlName="email"
+                        placeholder="ejemplo@correo.com"
+                      >
+                    </div>
+                    <div *ngIf="profileForm.get('email')?.invalid && profileForm.get('email')?.touched" class="text-danger mt-1 small">
+                      <i class="bi bi-info-circle me-1"></i>Introduce un email válido.
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Información adicional del usuario -->
+                <div class="mt-4 p-3 bg-light rounded-3">
+                  <h6 class="mb-3"><i class="bi bi-info-circle me-2"></i>Información de la cuenta</h6>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <ul class="list-unstyled mb-0">
+                        <li class="mb-2">
+                          <span class="text-muted me-2">Estado:</span>
+                          <span class="badge bg-success">Activo</span>
+                        </li>
+                        <li class="mb-2">
+                          <span class="text-muted me-2">Fecha de registro:</span>
+                          <span class="fw-semibold">{{ formatDate(currentUser?.created_at) }}</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="text-end mt-4">
+                  <button 
+                    type="button" 
+                    class="btn btn-outline-secondary me-2" 
+                    (click)="profileForm.reset()"
+                  >
+                    <i class="bi bi-arrow-counterclockwise me-1"></i>Restablecer
+                  </button>
+                  <button 
+                    type="submit" 
+                    class="btn-custom" 
+                    [disabled]="profileForm.invalid || profileForm.pristine"
+                  >
+                    <i class="bi bi-check2 me-1"></i>Guardar Cambios
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sección de Seguridad -->
+        <div *ngIf="activeSection === 'security'" class="animated-section">
+          <div class="card border-0 shadow-sm">
+            <div class="card-header bg-light py-3">
+              <h2 class="h5 mb-0 fw-semibold"><i class="bi bi-key-fill me-2"></i>Cambiar Contraseña</h2>
+            </div>
+            <div class="card-body">
+              <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+                
+                <!-- Alertas mejoradas -->
+                <div *ngIf="passwordUpdateSuccess" class="alert alert-success d-flex align-items-center" role="alert">
+                  <i class="bi bi-check-circle-fill me-2"></i>
+                  <div>Tu contraseña ha sido actualizada correctamente.</div>
+                  <button type="button" class="btn-close ms-auto" (click)="passwordUpdateSuccess = false"></button>
+                </div>
+                
+                <div *ngIf="passwordUpdateError" class="alert alert-danger d-flex align-items-center" role="alert">
+                  <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                  <div>{{ passwordUpdateError }}</div>
+                  <button type="button" class="btn-close ms-auto" (click)="passwordUpdateError = ''"></button>
+                </div>
+                
+                <div class="row g-4">
+                  <!-- Campo Contraseña Actual mejorado -->
+                  <div class="col-md-12">
+                    <label for="currentPassword" class="form-label">Contraseña Actual</label>
+                    <div class="input-group">
+                      <span class="input-group-text bg-light"><i class="bi bi-lock"></i></span>
+                      <input 
+                        [type]="showCurrentPassword ? 'text' : 'password'" 
+                        class="form-control" 
+                        id="currentPassword" 
+                        formControlName="currentPassword"
+                        placeholder="Tu contraseña actual"
+                      >
+                      <button class="btn btn-outline-secondary" type="button" (click)="showCurrentPassword = !showCurrentPassword">
+                        <i class="bi" [ngClass]="showCurrentPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+                      </button>
+                    </div>
+                    <div *ngIf="passwordForm.get('currentPassword')?.invalid && passwordForm.get('currentPassword')?.touched" class="text-danger mt-1 small">
+                      <i class="bi bi-info-circle me-1"></i>La contraseña actual es obligatoria.
+                    </div>
+                  </div>
+
+                  <!-- Campo Nueva Contraseña mejorado -->
+                  <div class="col-md-6">
+                    <label for="newPassword" class="form-label">Nueva Contraseña</label>
+                    <div class="input-group">
+                      <span class="input-group-text bg-light"><i class="bi bi-shield"></i></span>
+                      <input 
+                        [type]="showNewPassword ? 'text' : 'password'" 
+                        class="form-control" 
+                        id="newPassword" 
+                        formControlName="newPassword"
+                        placeholder="Nueva contraseña"
+                      >
+                      <button class="btn btn-outline-secondary" type="button" (click)="showNewPassword = !showNewPassword">
+                        <i class="bi" [ngClass]="showNewPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+                      </button>
+                    </div>
+                    <div *ngIf="passwordForm.get('newPassword')?.value">
+                      <div class="password-strength" 
+                          [ngClass]="passwordForm.get('newPassword')?.value.length < 6 ? 'strength-weak' : 
+                                    passwordForm.get('newPassword')?.value.length < 10 ? 'strength-medium' : 'strength-strong'">
+                      </div>
+                      <small class="text-muted mt-1 d-block">
+                        <span *ngIf="passwordForm.get('newPassword')?.value.length < 6">Débil</span>
+                        <span *ngIf="passwordForm.get('newPassword')?.value.length >= 6 && passwordForm.get('newPassword')?.value.length < 10">Media</span>
+                        <span *ngIf="passwordForm.get('newPassword')?.value.length >= 10">Fuerte</span>
+                      </small>
+                    </div>
+                    <div *ngIf="passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched" class="text-danger mt-1 small">
+                      <i class="bi bi-info-circle me-1"></i>La contraseña debe tener al menos 6 caracteres.
+                    </div>
+                  </div>
+                  
+                  <!-- Campo Confirmar Contraseña mejorado -->
+                  <div class="col-md-6">
+                    <label for="confirmPassword" class="form-label">Confirmar Contraseña</label>
+                    <div class="input-group">
+                      <span class="input-group-text bg-light"><i class="bi bi-check-circle"></i></span>
+                      <input 
+                        [type]="showConfirmPassword ? 'text' : 'password'" 
+                        class="form-control" 
+                        id="confirmPassword" 
+                        formControlName="confirmPassword"
+                        placeholder="Confirma tu nueva contraseña"
+                      >
+                      <button class="btn btn-outline-secondary" type="button" (click)="showConfirmPassword = !showConfirmPassword">
+                        <i class="bi" [ngClass]="showConfirmPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+                      </button>
+                    </div>
+                    <div *ngIf="passwordForm.hasError('notMatching')" class="text-danger mt-1 small">
+                      <i class="bi bi-info-circle me-1"></i>Las contraseñas no coinciden.
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Consejos de seguridad -->
+                <div class="alert alert-light mt-4 border">
+                  <h6 class="mb-2"><i class="bi bi-lightbulb-fill me-2 text-warning"></i>Consejos para crear una contraseña segura:</h6>
+                  <ul class="mb-0 ps-4">
+                    <li>Usa al menos 8 caracteres</li>
+                    <li>Combina letras mayúsculas y minúsculas</li>
+                    <li>Incluye números y símbolos</li>
+                    <li>Evita información personal fácil de adivinar</li>
+                  </ul>
+                </div>
+                
+                <div class="text-end mt-4">
+                  <button 
+                    type="button" 
+                    class="btn btn-outline-secondary me-2" 
+                    (click)="passwordForm.reset()"
+                  >
+                    <i class="bi bi-arrow-counterclockwise me-1"></i>Cancelar
+                  </button>
+                  <button 
+                    type="submit" 
+                    class="btn-custom" 
+                    [disabled]="passwordForm.invalid"
+                  >
+                    <i class="bi bi-shield-check me-1"></i>Actualizar Contraseña
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Sección de Actividad -->
+        <div *ngIf="activeSection === 'activity'" class="animated-section">
+          <div class="card border-0 shadow-sm">
+            <div class="card-header bg-light py-3">
+              <h2 class="h5 mb-0 fw-semibold"><i class="bi bi-clock-history me-2"></i>Historial de Actividad</h2>
+            </div>
+            <div class="card-body">
+              <!-- Información de actividad reciente -->
+              <div class="mb-4">
+                <h6 class="mb-3">Actividad Reciente</h6>
+                
+                <div class="timeline">
+                  <div class="timeline-item">
+                    <div class="timeline-marker bg-success"></div>
+                    <div class="timeline-content">
+                      <div class="d-flex justify-content-between mb-1">
+                        <span class="fw-semibold">Sesión iniciada</span>
+                        <small class="text-muted">{{ getLastLoginDate() }}</small>
+                      </div>
+                      <p class="text-muted small mb-0">Has iniciado sesión desde {{ getCurrentDevice() }}</p>
+                    </div>
+                  </div>
+                  
+                  <div class="timeline-item">
+                    <div class="timeline-marker bg-primary"></div>
+                    <div class="timeline-content">
+                      <div class="d-flex justify-content-between mb-1">
+                        <span class="fw-semibold">Perfil actualizado</span>
+                        <small class="text-muted">{{ getLastProfileUpdate() }}</small>
+                      </div>
+                      <p class="text-muted small mb-0">Has actualizado tu información de perfil</p>
+                    </div>
+                  </div>
+                  
+                  <div class="timeline-item">
+                    <div class="timeline-marker bg-warning"></div>
+                    <div class="timeline-content">
+                      <div class="d-flex justify-content-between mb-1">
+                        <span class="fw-semibold">Contraseña actualizada</span>
+                        <small class="text-muted">{{ getLastPasswordUpdate() }}</small>
+                      </div>
+                      <p class="text-muted small mb-0">Has cambiado tu contraseña</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="alert alert-light border">
+                <i class="bi bi-info-circle me-2"></i>
+                Se registran todas tus actividades importantes por motivos de seguridad. Los registros se conservan durante 90 días.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

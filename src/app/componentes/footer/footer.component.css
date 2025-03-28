@@ -3,7 +3,10 @@ footer {
     background-color: #f0f0f0;
     padding: 40px 0 20px;
     font-family: 'Montserrat', sans-serif;
+    margin-top: 200px;
 }
+
+
 
 .footer-container {
     max-width: 1200px;

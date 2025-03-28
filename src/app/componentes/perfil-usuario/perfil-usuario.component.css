@@ -1,0 +1,282 @@
+/* Estilos modernos para el perfil */
+.profile-container {
+  min-height: 80vh;
+  background-color: #f9f9f9;
+}
+
+/* Cabecera de perfil */
+.profile-header {
+  transition: all 0.3s ease;
+  border-color: #e9e9e9 !important;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+/* Avatar del usuario */
+.avatar-circle {
+  width: 70px;
+  height: 70px;
+  background-color: #791515;
+  background-image: linear-gradient(135deg, #791515, #a02020);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 1.8rem;
+  font-weight: 600;
+  box-shadow: 0 3px 10px rgba(121, 21, 21, 0.2);
+  transition: transform 0.3s ease;
+}
+
+.avatar-circle:hover {
+  transform: scale(1.05);
+}
+
+/* Títulos y subtítulos */
+.profile-title {
+  font-weight: 600;
+  font-size: 1.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.profile-subtitle {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+/* Menú de navegación */
+.profile-menu {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.list-group-item {
+  padding: 0.85rem 1.25rem;
+  transition: all 0.2s ease;
+  border-left: 4px solid transparent;
+}
+
+.list-group-item.active {
+  background-color: #791515;
+  border-color: #791515;
+  font-weight: 500;
+  box-shadow: 0 2px 5px rgba(121, 21, 21, 0.2);
+  transform: translateX(3px);
+}
+
+.list-group-item:not(.active):hover {
+  background-color: #f8f9fa;
+  border-left-color: #791515;
+  transform: translateX(3px);
+}
+
+.list-group-item i {
+  margin-right: 10px;
+  transition: transform 0.2s ease;
+}
+
+.list-group-item:hover i {
+  transform: translateX(2px);
+}
+
+/* Tarjetas para formularios */
+.card {
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  border: none;
+  overflow: hidden;
+}
+
+.card:hover {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08) !important;
+}
+
+.card-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 1rem 1.5rem;
+}
+
+.card-body {
+  padding: 2rem !important;
+}
+
+/* Estilos para formularios */
+.form-control {
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  transition: all 0.3s ease;
+  border: 1px solid #dee2e6;
+  font-size: 0.95rem;
+}
+
+.form-control:focus {
+  box-shadow: 0 0 0 0.15rem rgba(121, 21, 21, 0.25);
+  border-color: #791515;
+}
+
+.form-label {
+  font-weight: 500;
+  color: #444;
+  margin-bottom: 0.5rem;
+}
+
+/* Botones personalizados */
+.btn-custom {
+  background-color: #791515;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(121, 21, 21, 0.2);
+}
+
+.btn-custom:hover {
+  background-color: #5d1010;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(121, 21, 21, 0.25);
+}
+
+.btn-custom:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 3px rgba(121, 21, 21, 0.2);
+}
+
+.btn-custom:disabled {
+  background-color: #b98383;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Alertas estilizadas */
+.alert {
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.alert-success {
+  background-color: #e7f7ed;
+  color: #157a39;
+}
+
+.alert-danger {
+  background-color: #f7e7e7;
+  color: #7a1515;
+}
+
+/* Indicador de fuerza de contraseña */
+.password-strength {
+  height: 5px;
+  border-radius: 10px;
+  margin-top: 5px;
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.strength-weak {
+  background-color: #dc3545;
+  width: 25%;
+}
+
+.strength-medium {
+  background-color: #ffc107;
+  width: 50%;
+}
+
+.strength-strong {
+  background-color: #28a745;
+  width: 100%;
+}
+
+/* Estadísticas de usuario */
+.stat-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+/* Timeline para historial de actividad */
+.timeline {
+  position: relative;
+  padding-left: 30px;
+  margin-bottom: 20px;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 9px;
+  width: 2px;
+  background-color: #e9ecef;
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 25px;
+}
+
+.timeline-marker {
+  position: absolute;
+  left: -30px;
+  top: 0;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.timeline-content {
+  padding-bottom: 15px;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.timeline-item:last-child .timeline-content {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+/* Animaciones */
+.animated-section {
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mejoras responsive */
+@media (max-width: 767px) {
+  .avatar-circle {
+    width: 50px;
+    height: 50px;
+    font-size: 1.4rem;
+  }
+  
+  .profile-title {
+    font-size: 1.2rem;
+  }
+  
+  .card-body {
+    padding: 1.25rem !important;
+  }
+  
+  .row.g-4 {
+    row-gap: 1rem !important;
+  }
+}

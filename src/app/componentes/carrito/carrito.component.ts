@@ -20,6 +20,13 @@ export class CarritoComponent implements OnInit {
   loading: boolean = false;
   error: string = '';
   total: number = 0;
+  subtotal: number = 0;
+  iva: number = 0;
+  envio: number = 0;
+  totalConIvaYEnvio: number = 0;
+  envioGratisMinimo: number = 60; // Mínimo para envío gratis
+  costoEnvioNormal: number = 3.5; // Costo de envío cuando no se alcanza el mínimo
+  ivaPorcentaje: number = 21; // IVA para productos de moda (21%)
 
   // Propiedad para notificaciones: type puede ser 'success', 'warning', 'danger', etc.
   notification: { message: string; type: string } | null = null;
@@ -217,7 +224,8 @@ export class CarritoComponent implements OnInit {
   loadTotal(userId: number): void {
     this.carritoService.getTotal(userId).subscribe({
       next: (data) => {
-        this.total = data;
+        this.subtotal = data;
+        this.calcularTotales();
       },
       error: (err) => {
         console.error(err);
@@ -225,6 +233,21 @@ export class CarritoComponent implements OnInit {
         setTimeout(() => this.notification = null, 2000);
       },
     });
+  }
+
+  // Método para calcular todos los totales: IVA, envío y total final
+  calcularTotales(): void {
+    // Calcular el IVA (21% del subtotal)
+    this.iva = this.subtotal * (this.ivaPorcentaje / 100);
+    
+    // Determinar si aplica costo de envío
+    this.envio = this.subtotal >= this.envioGratisMinimo ? 0 : this.costoEnvioNormal;
+    
+    // Calcular el total final (subtotal + IVA + envío)
+    this.totalConIvaYEnvio = this.subtotal + this.iva + this.envio;
+    
+    // Mantener el total actual para compatibilidad con el código existente
+    this.total = this.subtotal;
   }
 
   // Verifica si hay productos con stock 0 y muestra un mensaje
