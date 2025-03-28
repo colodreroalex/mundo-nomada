@@ -33,7 +33,6 @@ export class PerfilUsuarioComponent implements OnInit {
 
   // Datos de actividad reciente
   lastLogin: Date = new Date();
-  lastProfileUpdateDate: Date = new Date();
   lastPasswordUpdateDate: Date | null = null;
 
   constructor(
@@ -42,7 +41,6 @@ export class PerfilUsuarioComponent implements OnInit {
   ) {
     // Inicializar datos simulados para actividad
     this.lastLogin = new Date();
-    this.lastProfileUpdateDate = new Date();
   }
 
   ngOnInit(): void {
@@ -100,13 +98,9 @@ export class PerfilUsuarioComponent implements OnInit {
       this.authService.updateUserProfile(this.currentUser.id, userData.name, userData.email).subscribe({
         next: (response) => {
           this.profileUpdateSuccess = true;
-          this.lastProfileUpdateDate = new Date();
           
-          // Actualizamos la información del usuario en la sesión local
-          if (this.currentUser) {
-            this.currentUser.name = userData.name;
-            this.currentUser.email = userData.email;
-          }
+          // El AuthService ya se encargó de actualizar el objeto currentUser
+          // No es necesario actualizarlo manualmente aquí
         },
         error: (error) => {
           this.profileUpdateError = error.message || 'Error al actualizar el perfil';
@@ -155,15 +149,27 @@ export class PerfilUsuarioComponent implements OnInit {
   }
 
   // Formateo de fechas seguras para el template
-  formatDate(date: string | Date | null | undefined): string {
+  formatDate(date: string | Date | null | undefined, includeTime: boolean = false): string {
     if (!date) return 'No disponible';
     
     const dateObj = typeof date === 'string' ? new Date(date) : date as Date;
-    return dateObj.toLocaleDateString('es-ES', {
-      day: '2-digit',
-      month: 'long',
-      year: 'numeric'
-    });
+    
+    if (includeTime) {
+      return dateObj.toLocaleDateString('es-ES', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
+    } else {
+      return dateObj.toLocaleDateString('es-ES', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric'
+      });
+    }
   }
 
   // Información de actividad
@@ -172,7 +178,12 @@ export class PerfilUsuarioComponent implements OnInit {
   }
 
   getLastProfileUpdate(): string {
-    return this.formatDate(this.lastProfileUpdateDate);
+    // Usar la fecha del objeto currentUser si está disponible,
+    // de lo contrario devolver 'No disponible'
+    if (this.currentUser && this.currentUser.updated_at) {
+      return this.formatDate(this.currentUser.updated_at, true);
+    }
+    return 'No disponible';
   }
 
   getLastPasswordUpdate(): string {
@@ -236,5 +247,75 @@ export class PerfilUsuarioComponent implements OnInit {
     } else {
       return 'Bajo';
     }
+  }
+
+  // Evaluar la fortaleza de la contraseña (de 0 a 100)
+  evaluatePasswordStrength(password: string): number {
+    if (!password) return 0;
+    
+    let strength = 0;
+    const lengthScore = Math.min(password.length * 2, 40); // Máximo 40 puntos por longitud
+    strength += lengthScore;
+    
+    // Verificar caracteres especiales (20 puntos)
+    const patterns = [
+      /[A-Z]/, // Mayúsculas
+      /[a-z]/, // Minúsculas
+      /[0-9]/, // Números
+      /[^A-Za-z0-9]/ // Símbolos
+    ];
+    
+    patterns.forEach(pattern => {
+      if (pattern.test(password)) {
+        strength += 15;
+      }
+    });
+    
+    // Limitar a 100 puntos como máximo
+    return Math.min(strength, 100);
+  }
+  
+  // Obtener la etiqueta de fortaleza de la contraseña
+  getPasswordStrengthLabel(password: string): string {
+    const strength = this.evaluatePasswordStrength(password);
+    
+    if (strength < 30) return 'Muy débil';
+    if (strength < 50) return 'Débil';
+    if (strength < 75) return 'Media';
+    if (strength < 90) return 'Fuerte';
+    return 'Muy fuerte';
+  }
+  
+  // Obtener la clase CSS para la barra de fortaleza
+  getPasswordStrengthClass(password: string): string {
+    const strength = this.evaluatePasswordStrength(password);
+    
+    if (strength < 30) return 'strength-very-weak';
+    if (strength < 50) return 'strength-weak';
+    if (strength < 75) return 'strength-medium';
+    if (strength < 90) return 'strength-strong';
+    return 'strength-very-strong';
+  }
+  
+  // Calcular el porcentaje de fortaleza para la barra de progreso
+  getPasswordStrengthPercentage(password: string): number {
+    return this.evaluatePasswordStrength(password);
+  }
+
+  // Métodos auxiliares para validación de contraseña
+  hasMinLength(password: string): boolean {
+    return password ? password.length >= 8 : false;
+  }
+  
+  hasMixedCase(password: string): boolean {
+    return password ? /[A-Z]/.test(password) && /[a-z]/.test(password) : false;
+  }
+  
+  hasNumbers(password: string): boolean {
+    return password ? /[0-9]/.test(password) : false;
+  }
+  
+  hasSymbols(password: string): boolean {
+    return password ? /[^A-Za-z0-9]/.test(password) : false;
   }
 }

@@ -15,6 +15,8 @@
         <th>Precio</th>
         <th>Descripción</th>
         <th>Stock</th>
+        <th>Color</th>
+        <th>Talla</th>
         <th>Seleccionar</th>
       </tr>
     </thead>
@@ -25,6 +27,8 @@
         <td>{{ prod.precio }}</td>
         <td>{{ prod.descripcion }}</td>
         <td>{{ prod.stock }}</td>
+        <td>{{ prod.color || 'N/A' }}</td>
+        <td>{{ prod.talla || 'N/A' }}</td>
         <td>
           <button class="btn btn-primary btn-sm" 
                   (click)="seleccionarProducto(prod)" 
@@ -71,6 +75,26 @@
           El stock es obligatorio.
         </div>
       </div>
+      
+      <!-- Color (Opcional) -->
+      <div class="mb-3">
+        <label class="form-label">Color (Opcional):</label>
+        <input type="text" class="form-control" [ngModel]="productoSeleccionado && productoSeleccionado.color" 
+               (ngModelChange)="productoSeleccionado && (productoSeleccionado.color = $event)" name="color" />
+        <small class="form-text text-muted">Deje este campo en blanco si el producto no tiene un color específico.</small>
+      </div>
+      
+      <!-- Talla (Opcional) -->
+      <div class="mb-3">
+        <label class="form-label">Talla (Opcional):</label>
+        <select class="form-control" [ngModel]="productoSeleccionado && productoSeleccionado.talla"
+               (ngModelChange)="productoSeleccionado && (productoSeleccionado.talla = $event)" name="talla">
+          <option value="">Sin talla específica</option>
+          <option *ngFor="let talla of tallasDisponibles" [value]="talla">{{ talla }}</option>
+        </select>
+        <small class="form-text text-muted">Seleccione una talla si corresponde para este producto.</small>
+      </div>
+      
       <button class="btn btn-warning" type="submit">Modificar</button>
     </form>
   </div>

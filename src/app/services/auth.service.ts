@@ -94,9 +94,39 @@ export class AuthService {
       email
     }, {
       withCredentials: true
-    });
+    }).pipe(
+      tap((response: any) => {
+        // Si hay un usuario actual y la operación fue exitosa, actualizamos su información
+        if (this.currentUserSubject.value && response.success) {
+          const currentUser = this.currentUserSubject.value;
+          // Actualizamos los datos básicos
+          currentUser.name = name;
+          currentUser.email = email;
+          
+          // Actualizamos la fecha de actualización del perfil si viene en la respuesta
+          if (response.updated_at) {
+            currentUser.updated_at = new Date(response.updated_at);
+          }
+          
+          // Actualizamos el BehaviorSubject con el usuario modificado
+          this.currentUserSubject.next(currentUser);
+        }
+      })
+    );
   }
 
+  // Método para verificar si la sesión está activa
+  checkSessionActive(): Observable<any> {
+    console.log('AuthService: Verificando si hay sesión activa');
+    return this.http.get(`${this.apiUrl}check_session.php`, {
+      withCredentials: true
+    }).pipe(
+      catchError(error => {
+        console.error('AuthService: Error verificando sesión:', error);
+        return throwError(() => new Error('Error verificando sesión'));
+      })
+    );
+  }
 
   // Método para cambiar la contraseña
   changePassword(userId: number, currentPassword: string, newPassword: string): Observable<any> {

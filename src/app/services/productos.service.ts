@@ -69,4 +69,22 @@ export class ProductosService {
       { headers: { 'Content-Type': 'application/json' } }
     );
   }
+
+  // Verificar si existe un producto con el mismo nombre, color y talla
+  verificarProductoDuplicado(producto: Producto): Observable<boolean> {
+    return this.recuperarTodos().pipe(
+      map(productos => {
+        // Filtramos por productos con el mismo nombre, color y talla
+        // Pero ignoramos el producto actual en caso de modificación
+        const duplicados = productos.filter(p => 
+          p.nombre.toLowerCase() === producto.nombre.toLowerCase() &&
+          p.color?.toLowerCase() === producto.color?.toLowerCase() &&
+          p.talla?.toLowerCase() === producto.talla?.toLowerCase() &&
+          p.ProductoID !== producto.ProductoID // Ignorar el mismo producto en caso de modificación
+        );
+        
+        return duplicados.length > 0;
+      })
+    );
+  }
 }

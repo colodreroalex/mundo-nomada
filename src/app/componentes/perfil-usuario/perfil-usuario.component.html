@@ -261,15 +261,54 @@
                       </button>
                     </div>
                     <div *ngIf="passwordForm.get('newPassword')?.value">
-                      <div class="password-strength" 
-                          [ngClass]="passwordForm.get('newPassword')?.value.length < 6 ? 'strength-weak' : 
-                                    passwordForm.get('newPassword')?.value.length < 10 ? 'strength-medium' : 'strength-strong'">
+                      <!-- Barra de progreso de seguridad -->
+                      <div class="mt-2">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                          <small>Nivel de seguridad:</small>
+                          <small class="fw-semibold" 
+                                [ngClass]="{
+                                  'text-danger': getPasswordStrengthLabel(passwordForm.get('newPassword')?.value) === 'Muy débil' || getPasswordStrengthLabel(passwordForm.get('newPassword')?.value) === 'Débil',
+                                  'text-warning': getPasswordStrengthLabel(passwordForm.get('newPassword')?.value) === 'Media',
+                                  'text-success': getPasswordStrengthLabel(passwordForm.get('newPassword')?.value) === 'Fuerte' || getPasswordStrengthLabel(passwordForm.get('newPassword')?.value) === 'Muy fuerte'
+                                }">
+                            {{ getPasswordStrengthLabel(passwordForm.get('newPassword')?.value) }}
+                          </small>
+                        </div>
+                        <div class="progress" style="height: 6px;">
+                          <div class="progress-bar" 
+                               [style.width.%]="getPasswordStrengthPercentage(passwordForm.get('newPassword')?.value)"
+                               [ngClass]="{
+                                 'bg-danger': getPasswordStrengthLabel(passwordForm.get('newPassword')?.value) === 'Muy débil' || getPasswordStrengthLabel(passwordForm.get('newPassword')?.value) === 'Débil',
+                                 'bg-warning': getPasswordStrengthLabel(passwordForm.get('newPassword')?.value) === 'Media',
+                                 'bg-success': getPasswordStrengthLabel(passwordForm.get('newPassword')?.value) === 'Fuerte' || getPasswordStrengthLabel(passwordForm.get('newPassword')?.value) === 'Muy fuerte'
+                               }">
+                          </div>
+                        </div>
+                        
+                        <!-- Indicadores de requisitos cumplidos -->
+                        <div class="mt-2">
+                          <small class="d-flex align-items-center mb-1" 
+                                [ngClass]="{'text-success': hasMinLength(passwordForm.get('newPassword')?.value), 'text-muted': !hasMinLength(passwordForm.get('newPassword')?.value)}">
+                            <i class="bi" [ngClass]="hasMinLength(passwordForm.get('newPassword')?.value) ? 'bi-check-circle-fill' : 'bi-circle'"></i>
+                            <span class="ms-2">Al menos 8 caracteres</span>
+                          </small>
+                          <small class="d-flex align-items-center mb-1" 
+                                [ngClass]="{'text-success': hasMixedCase(passwordForm.get('newPassword')?.value), 'text-muted': !hasMixedCase(passwordForm.get('newPassword')?.value)}">
+                            <i class="bi" [ngClass]="hasMixedCase(passwordForm.get('newPassword')?.value) ? 'bi-check-circle-fill' : 'bi-circle'"></i>
+                            <span class="ms-2">Combina mayúsculas y minúsculas</span>
+                          </small>
+                          <small class="d-flex align-items-center mb-1" 
+                                [ngClass]="{'text-success': hasNumbers(passwordForm.get('newPassword')?.value), 'text-muted': !hasNumbers(passwordForm.get('newPassword')?.value)}">
+                            <i class="bi" [ngClass]="hasNumbers(passwordForm.get('newPassword')?.value) ? 'bi-check-circle-fill' : 'bi-circle'"></i>
+                            <span class="ms-2">Incluye números</span>
+                          </small>
+                          <small class="d-flex align-items-center" 
+                                [ngClass]="{'text-success': hasSymbols(passwordForm.get('newPassword')?.value), 'text-muted': !hasSymbols(passwordForm.get('newPassword')?.value)}">
+                            <i class="bi" [ngClass]="hasSymbols(passwordForm.get('newPassword')?.value) ? 'bi-check-circle-fill' : 'bi-circle'"></i>
+                            <span class="ms-2">Incluye símbolos</span>
+                          </small>
+                        </div>
                       </div>
-                      <small class="text-muted mt-1 d-block">
-                        <span *ngIf="passwordForm.get('newPassword')?.value.length < 6">Débil</span>
-                        <span *ngIf="passwordForm.get('newPassword')?.value.length >= 6 && passwordForm.get('newPassword')?.value.length < 10">Media</span>
-                        <span *ngIf="passwordForm.get('newPassword')?.value.length >= 10">Fuerte</span>
-                      </small>
                     </div>
                     <div *ngIf="passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched" class="text-danger mt-1 small">
                       <i class="bi bi-info-circle me-1"></i>La contraseña debe tener al menos 6 caracteres.

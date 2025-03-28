@@ -23,8 +23,6 @@ export class DetalleProductoComponent implements OnInit {
   error: string = '';
   // Propiedad para notificaciones: type puede ser 'success', 'warning', 'danger', etc.
   notification: { message: string; type: string } | null = null;
-  
- 
 
   constructor(
     private route: ActivatedRoute,

@@ -50,6 +50,24 @@
       </div>
     </div>
 
+    <!-- Color (Opcional) -->
+    <div class="mb-3">
+      <label for="color" class="form-label">Color (Opcional)</label>
+      <input type="text" name="color" [(ngModel)]="prod.color" id="color" class="form-control"
+        placeholder="Especifique el color del producto">
+      <small class="form-text text-muted">Deje este campo en blanco si el producto no tiene un color específico.</small>
+    </div>
+
+    <!-- Talla (Opcional) -->
+    <div class="mb-3">
+      <label for="talla" class="form-label">Talla (Opcional)</label>
+      <select name="talla" [(ngModel)]="prod.talla" id="talla" class="form-control">
+        <option value="">Sin talla específica</option>
+        <option *ngFor="let talla of tallasDisponibles" [value]="talla">{{ talla }}</option>
+      </select>
+      <small class="form-text text-muted">Seleccione una talla si corresponde para este producto.</small>
+    </div>
+
     <!-- Categoría -->
     <div class="mb-3">
       <label for="categoriaID" class="form-label">Categoría</label>

@@ -77,3 +77,17 @@
     border-color: var(--color-hover);
     color: var(--color-secundario);
   }
+  
+  .btn-volver {
+    width: 200px;
+    margin-bottom: 30px;
+    background-color: var(--color-terciario);
+    border-color: var(--color-terciario);
+    color: var(--color-secundario);
+  }
+  
+  .btn-volver:hover {
+    background-color: var(--color-hover);
+    border-color: var(--color-hover);
+    color: var(--color-secundario);
+  }

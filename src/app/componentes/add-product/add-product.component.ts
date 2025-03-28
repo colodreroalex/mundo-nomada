@@ -1,23 +1,27 @@
 import { Component, OnInit } from '@angular/core';
-import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ProductosService } from '../../services/productos.service';
-import { CategoriasService } from '../../services/categorias.service';
-import { Producto } from '../../../models/Producto';
-import { Categoria } from '../../../models/Categoria';
+import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Producto } from '../../../models/Producto';
+import { ProductosService } from '../../services/productos.service';
+import { Categoria } from '../../../models/Categoria';
+import { CategoriasService } from '../../services/categorias.service';
 
 @Component({
   selector: 'app-add-product',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './add-product.component.html',
   styleUrls: ['./add-product.component.css'],
 })
 export class AddProductComponent implements OnInit {
-  prod: Producto = new Producto(0, '', 0, '', 0, 0, '');
+  prod: Producto = new Producto(0, '', 0, '', 0, 0, '', '', null);
   categorias: Categoria[] = [];
   notification: { message: string; type: string } | null = null;
+  imagenBase64: string = '';
+
+  // Opciones disponibles para tallas
+  tallasDisponibles: string[] = ['Unica', 'S', 'M', 'L', 'XL'];
 
   constructor(
     private productosService: ProductosService,
@@ -25,54 +29,84 @@ export class AddProductComponent implements OnInit {
     private router: Router
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.cargarCategorias();
   }
 
   onFileChange(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.prod.imagen = reader.result as string;
-      };
+    const reader = new FileReader();
+
+    if (event.target.files && event.target.files.length) {
+      const [file] = event.target.files;
       reader.readAsDataURL(file);
+
+      reader.onload = () => {
+        this.imagenBase64 = reader.result as string;
+      };
     }
   }
 
   cargarCategorias() {
-    this.categoriasService.getCategorias().subscribe((data: Categoria[]) => {
-      this.categorias = data;
-    });
+    this.categoriasService.getCategorias().subscribe(
+      (res: Categoria[]) => {
+        this.categorias = res;
+      },
+      (error) => {
+        console.error('Error al cargar categorías:', error);
+        this.notification = {
+          message: 'Error al cargar las categorías',
+          type: 'danger',
+        };
+      }
+    );
   }
 
   addProduct(form: NgForm) {
-    // Verifica si el formulario es válido antes de enviar
     if (form.invalid) {
       this.notification = { message: 'Por favor, corrige los errores en el formulario.', type: 'warning' };
-      setTimeout(() => this.notification = null, 2000);
       return;
     }
     
-    console.log(this.prod);
-    this.productosService.addProduct(this.prod).subscribe(
-      (datos: any) => {
-        if (datos['resultado'] === 'OK') {
-          this.notification = { message: datos['mensaje'], type: 'success' };
-          setTimeout(() => {
-            this.notification = null;
-            this.router.navigate(['/agregarProducto']);
-          }, 1000);
-        } else {
-          this.notification = { message: datos['mensaje'], type: 'warning' };
-          setTimeout(() => this.notification = null, 1000);
-        }
-      },
-      (error: any) => {
-        console.error(error);
-        this.notification = { message: 'Error al agregar el producto. Intenta nuevamente.', type: 'danger' };
-        setTimeout(() => this.notification = null, 1000);
+    const producto: Producto = {
+      ProductoID: 0, 
+      nombre: form.value.nombre,
+      precio: form.value.precio,
+      descripcion: form.value.descripcion,
+      stock: form.value.stock,
+      categoriaID: form.value.categoriaID,
+      imagen: this.imagenBase64,
+      color: form.value.color || null,  
+      talla: form.value.talla || null   
+    };
+    
+    // Verificar si ya existe un producto con la misma combinación de nombre, color y talla
+    this.productosService.verificarProductoDuplicado(producto).subscribe(existeDuplicado => {
+      if (existeDuplicado) {
+        this.notification = { 
+          message: 'Ya existe un producto con el mismo nombre, color y talla. Por favor, modifique alguno de estos valores para crear un producto distinto.', 
+          type: 'danger' 
+        };
+        return;
       }
-    );
+      
+      // Si no hay duplicados, procedemos a guardar el producto
+      this.productosService.addProduct(producto).subscribe({
+        next: (response: any) => {
+          if (response.resultado === 'OK') {
+            this.notification = { message: 'Producto agregado con éxito', type: 'success' };
+            // Redirigir a otra página después de un tiempo
+            setTimeout(() => {
+              this.router.navigate(['/dashboard']);
+            }, 2000);
+          } else {
+            this.notification = { message: 'Error al agregar el producto', type: 'danger' };
+          }
+        },
+        error: (error) => {
+          console.error('Error al agregar producto:', error);
+          this.notification = { message: 'Error al agregar el producto', type: 'danger' };
+        }
+      });
+    });
   }
 }

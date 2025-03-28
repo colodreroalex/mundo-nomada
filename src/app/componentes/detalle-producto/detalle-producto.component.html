@@ -73,6 +73,23 @@
             <p>{{ producto.descripcion }}</p>
           </div>
 
+          <!-- Información de Color y Talla -->
+          <div class="producto-opciones mb-4">
+            <div class="row">
+              <!-- Color (si está disponible) -->
+              <div class="col-md-6 mb-3" *ngIf="producto.color">
+                <h5 class="mb-2 text-primario">Color</h5>
+                <span>{{ producto.color }}</span>
+              </div>
+              
+              <!-- Talla (si está disponible) -->
+              <div class="col-md-6 mb-3" *ngIf="producto.talla">
+                <h5 class="mb-2 text-primario">Talla</h5>
+                <span class="badge bg-light text-dark border p-2">{{ producto.talla }}</span>
+              </div>
+            </div>
+          </div>
+
           <!-- Características del producto -->
           <div class="producto-caracteristicas mb-4">
             <h5 class="mb-2 text-primario">Características</h5>
