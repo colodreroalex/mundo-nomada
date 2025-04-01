@@ -1,0 +1,46 @@
+<div class="container mt-5">
+  <div class="card p-4 shadow-sm" style="background-color: var(--color-secundario, #f7f7f7);">
+    <h2 class="card-title text-center mb-4" style="color: var(--color-primario, #791515);">
+      Eliminar Usuario
+    </h2>
+
+    <div *ngIf="loadingData" class="text-center py-4">
+      <div class="spinner-border" style="color: var(--color-primario, #791515);" role="status">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
+      <p class="mt-2">Cargando datos del usuario...</p>
+    </div>
+
+    <div *ngIf="success" class="alert alert-success">
+      <i class="fas fa-check-circle me-2"></i> {{ success }}
+    </div>
+
+    <div *ngIf="error" class="alert alert-danger">
+      <i class="fas fa-exclamation-circle me-2"></i> {{ error }}
+      <div class="mt-2">
+        <button type="button" class="btn btn-custom" (click)="retry()">
+          <i class="fas fa-sync-alt"></i> Reintentar
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="!loadingData && !error && user" class="text-center">
+      <div class="alert alert-warning">
+        <i class="fas fa-exclamation-triangle fs-1 mb-3"></i>
+        <h4 class="alert-heading">¿Estás seguro?</h4>
+        <p>Estás a punto de eliminar al usuario <strong>{{ user.name }}</strong> con email <strong>{{ user.email }}</strong>.</p>
+        <p class="mb-0">Esta acción no se puede deshacer.</p>
+      </div>
+
+      <div class="d-flex justify-content-center gap-3 mt-4">
+        <button type="button" class="btn btn-outline-secondary" (click)="cancelDelete()">
+          <i class="fas fa-times me-1"></i> Cancelar
+        </button>
+        <button type="button" class="btn btn-custom" [disabled]="loading" (click)="confirmDelete()">
+          <span *ngIf="loading" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+          <i *ngIf="!loading" class="fas fa-trash-alt me-1"></i> Eliminar Usuario
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

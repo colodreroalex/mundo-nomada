@@ -63,33 +63,23 @@ export class ModificarProductComponent {
       talla: this.productoSeleccionado.talla || null
     };
 
-    // Verificar si ya existe un producto con la misma combinación de nombre, color y talla
-    this.productosService.verificarProductoDuplicado(productoModificado).subscribe(existeDuplicado => {
-      if (existeDuplicado) {
-        this.notification = { 
-          message: 'Ya existe otro producto con el mismo nombre, color y talla. Por favor, modifique alguno de estos valores para crear un producto distinto.', 
-          type: 'danger' 
-        };
-        return;
-      }
-      
-      // Si no hay duplicados, procedemos a modificar el producto
-      this.productosService.modificarProducto(productoModificado).subscribe({
-        next: (response: any) => {
-          if (response.resultado === 'OK') {
-            this.notification = { message: 'Producto modificado correctamente', type: 'success' };
-            this.recuperarTodos(); // Actualizamos la lista de productos
-            this.productoSeleccionado = null; // Limpiar la selección después de modificar
-          } else {
-            console.error('Error al modificar:', response);
-            this.notification = { message: 'Error al modificar el producto: ' + (response.mensaje || 'Error desconocido'), type: 'danger' };
-          }
-        },
-        error: (error) => {
-          console.error('Error en la comunicación:', error);
-          this.notification = { message: 'Error en la comunicación con el servidor', type: 'danger' };
+    // Procedemos directamente a modificar el producto sin verificar duplicados
+    // ya que estamos editando un producto existente, no creando uno nuevo
+    this.productosService.modificarProducto(productoModificado).subscribe({
+      next: (response: any) => {
+        if (response.resultado === 'OK') {
+          this.notification = { message: 'Producto modificado correctamente', type: 'success' };
+          this.recuperarTodos(); // Actualizamos la lista de productos
+          this.productoSeleccionado = null; // Limpiar la selección después de modificar
+        } else {
+          console.error('Error al modificar:', response);
+          this.notification = { message: 'Error al modificar el producto: ' + (response.mensaje || 'Error desconocido'), type: 'danger' };
         }
-      });
+      },
+      error: (error) => {
+        console.error('Error en la comunicación:', error);
+        this.notification = { message: 'Error en la comunicación con el servidor', type: 'danger' };
+      }
     });
   }
 }

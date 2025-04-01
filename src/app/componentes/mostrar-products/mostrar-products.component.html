@@ -180,11 +180,11 @@
     <!-- Mensaje de no productos encontrados, con estilo -->
     <ng-template #noProducts>
       <div class="no-products-container text-center py-5">
-        <img src="img/sin-imagen.png" alt="No hay productos" class="mb-4" style="max-width: 150px;">
+        <img src="img/sin-imagen.png" alt="No hay productos" class="mb-4 mx-auto d-block" style="max-width: 150px;">
         <h3 class="text-primario">No hemos encontrado productos</h3>
         <p class="text-muted">Prueba con otra búsqueda o categoría</p>
-        <button class="btn-custom mt-3" (click)="filterName = ''; loadProducts()">
-          <i class="bi bi-arrow-repeat me-2"></i>Ver todos los productos
+        <button class="btn-custom mt-3" (click)="filterName = ''; loadProducts()" [routerLink]="['/mostrarProductos']">
+          <i class="bi bi-arrow-repeat me-2"></i>Ver todos los productos 
         </button>
       </div>
     </ng-template>

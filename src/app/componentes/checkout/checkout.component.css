@@ -91,6 +91,7 @@
 /* Estilos para el resumen del carrito */
 .cart-summary-container {
   margin-bottom: 3rem;
+  transition: all 0.3s ease;
 }
 
 .cart-summary, .payment-summary, .secure-payment {
@@ -227,6 +228,89 @@
 #paypal-button-container {
   min-height: 150px;
   margin-top: 20px;
+}
+
+/* Animaciones para mejorar la experiencia de usuario */
+.fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+.fade-out {
+  animation: fadeOut 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* Transiciones suaves para cambios de estado */
+.receipt-container {
+  transition: all 0.3s ease;
+}
+
+/* Estilos para el formulario de envío */
+.shipping-form {
+  border-radius: 8px;
+  background-color: #ffffff;
+  margin-bottom: 20px;
+}
+
+.shipping-form .section-title {
+  color: #791515;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 12px;
+}
+
+.shipping-form label {
+  font-weight: 500;
+  color: #333;
+}
+
+.shipping-form .form-control:focus {
+  border-color: rgba(121, 21, 21, 0.5);
+  box-shadow: 0 0 0 0.2rem rgba(121, 21, 21, 0.25);
+}
+
+.shipping-form .btn-custom {
+  background-color: #791515;
+  color: #f7f7f7;
+  border: none;
+  padding: 10px 20px;
+  font-weight: 500;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.shipping-form .btn-custom:hover {
+  background-color: #9a1a1a;
+}
+
+.paypal-button-disabled {
+  border-radius: 4px;
+  border: 1px dashed #ddd;
+  padding: 15px;
+}
+
+/* Animación de fade-in para mensajes de confirmación */
+.alert-success, .alert-warning {
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Responsive design */

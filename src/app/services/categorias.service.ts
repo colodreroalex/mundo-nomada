@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 import { Categoria } from '../../models/Categoria';
 
 @Injectable({
@@ -12,19 +13,59 @@ export class CategoriasService {
   constructor(private http: HttpClient) {}
 
   getCategorias(): Observable<Categoria[]> {
-    return this.http.get<Categoria[]>(`${this.url}getCategorias.php/list`);
+    return this.http.get<any>(`${this.url}getCategorias.php`, { withCredentials: true })
+      .pipe(
+        map(response => {
+          if (response && response.result === 'OK') {
+            return response.categorias;
+          } else {
+            throw new Error(response?.mensaje || 'Error al obtener categorías');
+          }
+        }),
+        catchError((error: HttpErrorResponse) => {
+          console.error('Error en getCategorias:', error);
+          return throwError(() => error);
+        })
+      );
   }
 
   addCategoria(categoria: Categoria): Observable<any> {
-    return this.http.post(`${this.url}addCategoria.php`, categoria);
-  }
-
-  eliminarCategoria(categoriaID: number): Observable<any> {
-    return this.http.post(
-      `${this.url}deleteCategoria.php`, { CategoriaID: categoriaID }
+    return this.http.post<any>(
+      `${this.url}addCategoria.php`, 
+      categoria, 
+      { withCredentials: true }
+    ).pipe(
+      map(response => {
+        if (response && response.resultado === 'OK') {
+          return response;
+        } else {
+          throw new Error(response?.mensaje || 'Error al agregar categoría');
+        }
+      }),
+      catchError((error: HttpErrorResponse) => {
+        console.error('Error en addCategoria:', error);
+        return throwError(() => error);
+      })
     );
   }
 
-  
-
+  eliminarCategoria(categoriaID: number): Observable<any> {
+    return this.http.post<any>(
+      `${this.url}deleteCategoria.php`, 
+      { CategoriaID: categoriaID },
+      { withCredentials: true }
+    ).pipe(
+      map(response => {
+        if (response && response.resultado === 'OK') {
+          return response;
+        } else {
+          throw new Error(response?.mensaje || 'Error al eliminar categoría');
+        }
+      }),
+      catchError((error: HttpErrorResponse) => {
+        console.error('Error en eliminarCategoria:', error);
+        return throwError(() => error);
+      })
+    );
+  }
 }

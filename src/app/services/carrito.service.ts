@@ -1,10 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Carrito } from '../../models/Carrito';
-import { map, Observable, switchMap, throwError, interval } from 'rxjs';
+import { map, Observable, switchMap, throwError, of, forkJoin, Subject } from 'rxjs';
+import { tap, catchError } from 'rxjs/operators';
 import { Producto } from '../../models/Producto';
-import { tap } from 'rxjs/operators';
-import { forkJoin, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -12,6 +11,20 @@ import { forkJoin, of } from 'rxjs';
 export class CarritoService {
   url = 'http://localhost/mundonomada/api_php/Carrito/';
   private LOCAL_CART_KEY = 'guestCart';
+  
+  // Constantes para cálculos
+  public readonly IVA_PORCENTAJE: number = 21;
+  public readonly ENVIO_GRATIS_MINIMO: number = 60;
+  public readonly COSTO_ENVIO_NORMAL: number = 3.5;
+
+  // Subject para notificar cuando se completa una compra para usuario invitado
+  private guestPurchaseCompleted = new Subject<void>();
+  
+  // Observable para suscribirse a la finalización de compra de invitado
+  public guestPurchaseCompleted$ = this.guestPurchaseCompleted.asObservable();
+
+  // Registro de productos comprados por usuarios invitados para evitar que reaparezcan
+  private readonly GUEST_PURCHASED_KEY = 'guestPurchasedProducts';
 
   constructor(private http: HttpClient) {}
 
@@ -26,14 +39,22 @@ export class CarritoService {
   }
 
   /**
+   * Elimina completamente el carrito de localStorage
+   * Este método es más definitivo que saveLocalCart([])
+   */
+  public removeLocalCart(): void {
+    localStorage.removeItem(this.LOCAL_CART_KEY);
+  }
+
+  /**
    * Verifica el stock actualizado para un producto específico.
    * Esta función obtiene la información más reciente del servidor.
    */
   verificarStockActualizado(productoID: number): Observable<Producto> {
-    return this.http.post<any>(`${this.url}getUpdatedProducts.php`, { ids: [productoID] })
+    return this.http.post<any>(`${this.url}getUpdatedProducts.php`, { ids: [productoID] }, { withCredentials: true })
       .pipe(
         map(response => {
-          if (response && response.products && response.products.length > 0) {
+          if (response && response.resultado === 'OK' && response.products && response.products.length > 0) {
             const p = response.products[0];
             return new Producto(
               p.ProductoID,
@@ -47,8 +68,12 @@ export class CarritoService {
           } else {
             // Si el producto ya no existe o no está disponible, lanzamos un error
             console.error('Producto no disponible en servidor:', productoID);
-            throw new Error('Producto no disponible. Puede haber sido eliminado.');
+            throw new Error(response?.mensaje || 'Producto no disponible. Puede haber sido eliminado.');
           }
+        }),
+        catchError((error: HttpErrorResponse) => {
+          console.error('Error en verificarStockActualizado:', error);
+          return throwError(() => error);
         })
       );
   }
@@ -103,7 +128,20 @@ export class CarritoService {
       );
     } else {
       // Usuario autenticado: usar backend
-      return this.http.post<any>(`${this.url}addToCart.php`, carrito);
+      return this.http.post<any>(`${this.url}addToCart.php`, carrito, { withCredentials: true })
+        .pipe(
+          map(response => {
+            if (response && response.resultado === 'OK') {
+              return response;
+            } else {
+              throw new Error(response?.mensaje || 'Error al añadir al carrito');
+            }
+          }),
+          catchError((error: HttpErrorResponse) => {
+            console.error('Error en addToCart:', error);
+            return throwError(() => error);
+          })
+        );
     }
   }
 
@@ -113,74 +151,33 @@ export class CarritoService {
    */
   getCart(userId: number): Observable<Carrito[]> {
     if (!userId || userId === 0) {
-      let guestCart = this.getLocalCart();
-      // Extraer los IDs de los productos en el carrito
-      const ids = guestCart.map((item) => item.producto_id);
-
-      if (ids.length === 0) {
-        return new Observable((observer) => {
-          observer.next([]);
-          observer.complete();
-        });
+      const guestCart = this.getLocalCart();
+      // Filtrar productos que ya fueron comprados
+      const purchasedIds = this.getGuestPurchasedProducts();
+      const filteredCart = guestCart.filter(item => !purchasedIds.includes(item.producto_id));
+      
+      // Si se removieron elementos, actualizar el localStorage
+      if (filteredCart.length !== guestCart.length) {
+        console.log('Se han filtrado productos previamente comprados del carrito');
+        this.saveLocalCart(filteredCart);
       }
-
-      // Llamar al endpoint para obtener datos actualizados de los productos
-      return this.http
-        .post<any>(`${this.url}getUpdatedProducts.php`, { ids })
-        .pipe(
-          map((response) => {
-            console.log('Respuesta de getUpdatedProducts:', response);
-            
-            // Si no hay productos o el array está vacío, limpiar el carrito del invitado
-            if (!response || !response.products || response.products.length === 0) {
-              console.warn('No se encontraron productos en el servidor. Limpiando carrito local.');
-              this.saveLocalCart([]);
-              return [];
-            }
-            
-            const productsMap = new Map<number, Producto>();
-            response.products.forEach((p: any) => {
-              const prod = new Producto(
-                p.ProductoID,
-                p.nombre,
-                p.precio,
-                p.descripcion,
-                p.stock,
-                p.categoriaID,
-                p.imagen
-              );
-              productsMap.set(p.ProductoID, prod);
-            });
-
-            // Actualizar cada item del carrito con la información actualizada
-            // Y filtrar los que ya no existen en el servidor
-            const updatedCart = guestCart.filter(item => {
-              // Si el producto existe en la respuesta del servidor
-              if (productsMap.has(item.producto_id)) {
-                // Actualizar el producto con la información más reciente
-                item.producto = productsMap.get(item.producto_id);
-                // Mantener solo productos con stock
-                return item.producto && item.producto.stock > 0;
-              } 
-              // Si el producto no existe en el servidor, eliminarlo del carrito
-              return false;
-            });
-
-            // Actualizar el carrito en localStorage
-            if (JSON.stringify(updatedCart) !== JSON.stringify(guestCart)) {
-              console.log('Carrito de invitado actualizado por cambios en stock:', updatedCart);
-              this.saveLocalCart(updatedCart);
-            }
-
-            return updatedCart;
-          })
-        );
+      
+      return new Observable((observer) => {
+        observer.next(filteredCart);
+        observer.complete();
+      });
     } else {
       // Usuario autenticado: obtener carrito del backend
       return this.http
-        .get<any>(`${this.url}getCarrito.php?user_id=${userId}`)
+        .get<any>(`${this.url}getCarrito.php?user_id=${userId}`, { withCredentials: true })
         .pipe(
-          map((response) => response.datos),
+          map((response) => {
+            if (response && response.resultado === 'OK') {
+              return response.datos;
+            } else {
+              throw new Error(response?.mensaje || 'Error al obtener el carrito');
+            }
+          }),
           map((items: any[]) => {
             return items
               .map((item) => {
@@ -202,6 +199,10 @@ export class CarritoService {
                 );
               })
               .filter((item) => item.producto && item.producto.stock > 0);
+          }),
+          catchError((error: HttpErrorResponse) => {
+            console.error('Error en getCart:', error);
+            return throwError(() => error);
           })
         );
     }
@@ -246,7 +247,20 @@ export class CarritoService {
       return this.http.post<any>(`${this.url}updateCartItem.php`, {
         id: item.id,
         cantidad: item.cantidad,
-      });
+      }, { withCredentials: true })
+        .pipe(
+          map(response => {
+            if (response && response.resultado === 'OK') {
+              return response;
+            } else {
+              throw new Error(response?.mensaje || 'Error al actualizar el carrito');
+            }
+          }),
+          catchError((error: HttpErrorResponse) => {
+            console.error('Error en updateCart:', error);
+            return throwError(() => error);
+          })
+        );
     }
   }
 
@@ -271,7 +285,20 @@ export class CarritoService {
     } else {
       return this.http.post<any>(`${this.url}removeItemFromCart.php`, {
         id: cartId,
-      });
+      }, { withCredentials: true })
+        .pipe(
+          map(response => {
+            if (response && response.resultado === 'OK') {
+              return response;
+            } else {
+              throw new Error(response?.mensaje || 'Error al eliminar item del carrito');
+            }
+          }),
+          catchError((error: HttpErrorResponse) => {
+            console.error('Error en removeItem:', error);
+            return throwError(() => error);
+          })
+        );
     }
   }
 
@@ -292,8 +319,20 @@ export class CarritoService {
       });
     } else {
       return this.http
-        .get<any>(`${this.url}getTotalPrecioCarrito.php?user_id=${userId}`)
-        .pipe(map((response) => response.total));
+        .get<any>(`${this.url}getTotalPrecioCarrito.php?user_id=${userId}`, { withCredentials: true })
+        .pipe(
+          map((response) => {
+            if (response && response.resultado === 'OK') {
+              return response.total;
+            } else {
+              throw new Error(response?.mensaje || 'Error al obtener el total del carrito');
+            }
+          }),
+          catchError((error: HttpErrorResponse) => {
+            console.error('Error en getTotal:', error);
+            return throwError(() => error);
+          })
+        );
     }
   }
 
@@ -308,9 +347,13 @@ export class CarritoService {
 
     // Primero verificar el stock actualizado directamente desde el servidor para todos los productos
     return this.http
-      .post<any>(`${this.url}getUpdatedProducts.php`, { ids: productIds })
+      .post<any>(`${this.url}getUpdatedProducts.php`, { ids: productIds }, { withCredentials: true })
       .pipe(
         switchMap((response) => {
+          if (!response || response.resultado !== 'OK') {
+            return throwError(() => new Error(response?.mensaje || 'Error al verificar stock'));
+          }
+
           const updatedProducts = new Map<number, Producto>();
           response.products.forEach((p: any) => {
             const prod = new Producto(
@@ -356,15 +399,34 @@ export class CarritoService {
           return this.http
             .post<any>(`${this.url}finalizePurchase.php`, {
               cart: availableItems,
-            })
+            }, { withCredentials: true })
             .pipe(
-              tap((response: any) => {
-                // Si se trata de un usuario invitado, limpiar el carrito en localStorage
-                if (cart.length > 0 && (!cart[0].user_id || cart[0].user_id === 0)) {
-                  this.saveLocalCart([]);
+              map(response => {
+                if (response && response.resultado === 'OK') {
+                  // Si se trata de un usuario invitado, limpiar el carrito en localStorage
+                  if (cart.length > 0 && (!cart[0].user_id || cart[0].user_id === 0)) {
+                    // Registrar estos productos como comprados para evitar que reaparezcan
+                    const compradosIds = cart.map(item => item.producto_id);
+                    this.saveGuestPurchasedProducts(compradosIds);
+                    
+                    // Limpiar el carrito
+                    this.saveLocalCart([]);
+                    this.guestPurchaseCompleted.next();
+                  }
+                  return response;
+                } else {
+                  throw new Error(response?.mensaje || 'Error al finalizar la compra');
                 }
+              }),
+              catchError((error: HttpErrorResponse) => {
+                console.error('Error en finalizePurchase:', error);
+                return throwError(() => error);
               })
             );
+        }),
+        catchError((error: HttpErrorResponse) => {
+          console.error('Error en verificación de stock:', error);
+          return throwError(() => error);
         })
       );
   }
@@ -378,14 +440,129 @@ export class CarritoService {
     // Para cada ítem del carrito, actualizamos el user_id y lo agregamos al backend
     const migrationObservables = guestCart.map((item) => {
       item.user_id = userId;
-      return this.http.post<any>(`${this.url}addToCart.php`, item);
+      return this.http.post<any>(`${this.url}addToCart.php`, item, { withCredentials: true });
     });
 
     return forkJoin(migrationObservables).pipe(
       tap(() => {
         // Una vez migrados, limpiamos el carrito local
         this.saveLocalCart([]);
+      }),
+      catchError((error: HttpErrorResponse) => {
+        console.error('Error en migrateGuestCart:', error);
+        return throwError(() => error);
       })
     );
+  }
+
+  /**
+   * Limpia el carrito completamente (sin necesidad de un nuevo endpoint)
+   * @param userId ID del usuario (si es 0, limpia el carrito local)
+   * @returns Observable con el resultado de la operación
+   */
+  clearCart(userId: number = 0): Observable<any> {
+    if (userId === 0) {
+      // Para invitados, limpiar localStorage
+      this.removeLocalCart();
+      this.guestPurchaseCompleted.next(); // Notificar que se ha limpiado el carrito
+      return of({ resultado: 'OK', mensaje: 'Carrito limpiado correctamente.' });
+    } else {
+      // Para usuarios registrados, usamos el API existente eliminando cada ítem
+      return this.getCart(userId).pipe(
+        switchMap(items => {
+          if (items.length === 0) {
+            return of({ resultado: 'OK', mensaje: 'Carrito ya está vacío.' });
+          }
+          
+          // Crear observables para eliminar cada ítem del carrito
+          const deleteObservables = items.map(item => 
+            this.removeItem(item.id, userId)
+          );
+          
+          // Ejecutar todas las eliminaciones en paralelo
+          return forkJoin(deleteObservables).pipe(
+            map(() => ({ resultado: 'OK', mensaje: 'Carrito limpiado correctamente.' })),
+            catchError((error: HttpErrorResponse) => {
+              console.error('Error al limpiar el carrito:', error);
+              return throwError(() => error);
+            })
+          );
+        })
+      );
+    }
+  }
+
+  /**
+   * Calcula el IVA sobre un importe dado
+   * @param importe Importe sobre el que calcular el IVA
+   * @returns El importe del IVA calculado
+   */
+  calcularIVA(importe: number): number {
+    return importe * (this.IVA_PORCENTAJE / 100);
+  }
+
+  /**
+   * Calcula el coste de envío según el subtotal
+   * @param subtotal Subtotal del pedido
+   * @returns Coste de envío (0 si supera el mínimo para envío gratis)
+   */
+  calcularEnvio(subtotal: number): number {
+    return subtotal >= this.ENVIO_GRATIS_MINIMO ? 0 : this.COSTO_ENVIO_NORMAL;
+  }
+
+  /**
+   * Calcula todos los valores del pedido (subtotal, IVA, envío y total)
+   * @param subtotal Subtotal del pedido (suma de productos sin IVA ni envío)
+   * @returns Objeto con todos los importes calculados
+   */
+  calcularTotalesPedido(subtotal: number): { 
+    subtotal: number; 
+    iva: number; 
+    envio: number; 
+    totalConIvaYEnvio: number; 
+  } {
+    const iva = this.calcularIVA(subtotal);
+    const envio = this.calcularEnvio(subtotal);
+    const totalConIvaYEnvio = subtotal + iva + envio;
+    
+    return {
+      subtotal,
+      iva,
+      envio,
+      totalConIvaYEnvio
+    };
+  }
+
+  /**
+   * Obtiene el listado de productos que ya han sido comprados por el usuario invitado
+   * @returns Array de IDs de productos comprados
+   */
+  getGuestPurchasedProducts(): number[] {
+    const purchasedProductsStr = localStorage.getItem(this.GUEST_PURCHASED_KEY);
+    return purchasedProductsStr ? JSON.parse(purchasedProductsStr) : [];
+  }
+
+  /**
+   * Guarda productos en el registro de comprados para evitar que reaparezcan en el carrito
+   * @param productIds Array de IDs de productos a marcar como comprados
+   */
+  saveGuestPurchasedProducts(productIds: number[]): void {
+    if (!productIds || productIds.length === 0) return;
+    
+    // Obtener los productos ya registrados y añadir los nuevos
+    const currentPurchased = this.getGuestPurchasedProducts();
+    const updatedPurchased = [...new Set([...currentPurchased, ...productIds])];
+    
+    // Guardar el listado actualizado en localStorage
+    localStorage.setItem(this.GUEST_PURCHASED_KEY, JSON.stringify(updatedPurchased));
+    console.log('Productos marcados como comprados:', updatedPurchased);
+  }
+
+  /**
+   * Limpia el registro de productos comprados
+   * Útil cuando un usuario invitado se registra o inicia sesión
+   */
+  clearGuestPurchasedProducts(): void {
+    localStorage.removeItem(this.GUEST_PURCHASED_KEY);
   }
 }

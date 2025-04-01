@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CarritoService } from '../../services/carrito.service';
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
@@ -7,6 +7,7 @@ import { User } from '../../../models/Users';
 import { RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Producto } from '../../../models/Producto';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-carrito',
@@ -14,7 +15,7 @@ import { Producto } from '../../../models/Producto';
   templateUrl: './carrito.component.html',
   styleUrls: ['./carrito.component.css'],
 })
-export class CarritoComponent implements OnInit {
+export class CarritoComponent implements OnInit, OnDestroy {
   carrito: Carrito[] = [];
   currentUser: User | null = null;
   loading: boolean = false;
@@ -28,8 +29,13 @@ export class CarritoComponent implements OnInit {
   costoEnvioNormal: number = 3.5; // Costo de envío cuando no se alcanza el mínimo
   ivaPorcentaje: number = 21; // IVA para productos de moda (21%)
 
+  // Propiedad para controlar el intervalo de actualización
+  private refreshIntervalId: any = null;
+
   // Propiedad para notificaciones: type puede ser 'success', 'warning', 'danger', etc.
   notification: { message: string; type: string } | null = null;
+
+  private subscription: Subscription = new Subscription();
 
   constructor(private carritoService: CarritoService, private authService: AuthService, private http: HttpClient) {}
 
@@ -42,10 +48,23 @@ export class CarritoComponent implements OnInit {
   
       // Actualización más frecuente para invitados (10 segundos) y normal para usuarios (30 segundos)
       const refreshInterval = !user ? 10000 : 30000;
-      setInterval(() => {
+      this.refreshIntervalId = setInterval(() => {
         this.refreshCart(userId);
       }, refreshInterval);
     });
+    
+    // Subscribirse a la notificación de finalización de compra de invitado
+    this.subscription.add(
+      this.carritoService.guestPurchaseCompleted$.subscribe(() => {
+        console.log('Carrito: Recibida notificación de compra completada');
+        // Detener la actualización automática
+        this.stopCartRefresh();
+        // Limpiar carrito en la vista
+        this.carrito = [];
+        // Recalcular totales
+        this.calcularTotales();
+      })
+    );
   }
   
   refreshCart(userId: number): void {
@@ -53,6 +72,10 @@ export class CarritoComponent implements OnInit {
     if (userId === 0 && this.carrito.length > 0) {
       // Obtener IDs de productos en el carrito
       const productIds = this.carrito.map(item => item.producto_id);
+      
+      // Obtener productos que ya han sido comprados previamente
+      const purchasedProductIds = this.carritoService.getGuestPurchasedProducts();
+      console.log('Productos previamente comprados:', purchasedProductIds);
       
       // Llamar directamente a la API para obtener información actualizada
       this.http.post<any>('http://localhost/mundonomada/api_php/Carrito/getUpdatedProducts.php', { ids: productIds })
@@ -94,6 +117,13 @@ export class CarritoComponent implements OnInit {
             // Verificar si hay cambios en el stock
             let stockChanged = false;
             const cartaActualizado = this.carrito.filter(item => {
+              // Filtrar productos que ya han sido comprados
+              if (purchasedProductIds.includes(item.producto_id)) {
+                console.log(`Producto ${item.producto_id} ya fue comprado, eliminando del carrito.`);
+                stockChanged = true;
+                return false;
+              }
+              
               // Si el producto existe en la respuesta del servidor
               if (productsMap.has(item.producto_id)) {
                 const productoActualizado = productsMap.get(item.producto_id);
@@ -164,6 +194,15 @@ export class CarritoComponent implements OnInit {
           console.error('Error al actualizar el carrito automáticamente:', err);
         }
       });
+    }
+  }
+
+  // Detiene la actualización automática del carrito
+  public stopCartRefresh(): void {
+    if (this.refreshIntervalId) {
+      clearInterval(this.refreshIntervalId);
+      this.refreshIntervalId = null;
+      console.log('Actualización automática del carrito detenida');
     }
   }
 
@@ -322,5 +361,12 @@ export class CarritoComponent implements OnInit {
         setTimeout(() => this.notification = null, 2000);
       },
     });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+    if (this.refreshIntervalId) {
+      clearInterval(this.refreshIntervalId);
+    }
   }
 }

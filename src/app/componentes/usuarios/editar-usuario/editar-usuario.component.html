@@ -1,0 +1,77 @@
+<div class="container mt-5">
+  <div class="card p-4 shadow-sm" style="background-color: var(--color-secundario, #f7f7f7);">
+    <h2 class="card-title text-center mb-4" style="color: var(--color-primario, #791515);">
+      Editar Usuario
+    </h2>
+
+    <div *ngIf="loadingData" class="text-center py-4">
+      <div class="spinner-border" style="color: var(--color-primario, #791515);" role="status">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
+      <p class="mt-2">Cargando datos del usuario...</p>
+    </div>
+
+    <div *ngIf="success" class="alert alert-success">
+      <i class="fas fa-check-circle me-2"></i> {{ success }}
+    </div>
+
+    <div *ngIf="error" class="alert alert-danger">
+      <i class="fas fa-exclamation-circle me-2"></i> {{ error }}
+      <div class="mt-2">
+        <button type="button" class="btn btn-custom" (click)="retry()">
+          <i class="fas fa-sync-alt"></i> Reintentar
+        </button>
+      </div>
+    </div>
+
+    <form *ngIf="!loadingData && !error" [formGroup]="userForm" (ngSubmit)="onSubmit()">
+      <div class="mb-3">
+        <label for="name" class="form-label">Nombre</label>
+        <input type="text" class="form-control" id="name" formControlName="name"
+              [ngClass]="{'is-invalid': userForm.get('name')?.invalid && userForm.get('name')?.touched}">
+        <div *ngIf="userForm.get('name')?.invalid && userForm.get('name')?.touched" class="invalid-feedback">
+          <span *ngIf="userForm.get('name')?.errors?.['required']">El nombre es obligatorio</span>
+          <span *ngIf="userForm.get('name')?.errors?.['minlength']">El nombre debe tener al menos 3 caracteres</span>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="email" formControlName="email"
+              [ngClass]="{'is-invalid': userForm.get('email')?.invalid && userForm.get('email')?.touched}">
+        <div *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched" class="invalid-feedback">
+          <span *ngIf="userForm.get('email')?.errors?.['required']">El email es obligatorio</span>
+          <span *ngIf="userForm.get('email')?.errors?.['email']">Introduce un email válido</span>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="password" class="form-label">Contraseña <span class="text-muted">(Dejar en blanco para mantener la actual)</span></label>
+        <input type="password" class="form-control" id="password" formControlName="password">
+        <div class="form-text">Si no desea cambiar la contraseña, deje este campo en blanco.</div>
+      </div>
+
+      <div class="mb-3">
+        <label for="role" class="form-label">Rol</label>
+        <select class="form-select" id="role" formControlName="role"
+              [ngClass]="{'is-invalid': userForm.get('role')?.invalid && userForm.get('role')?.touched}">
+          <option value="user">Usuario</option>
+          <option value="admin">Administrador</option>
+        </select>
+        <div *ngIf="userForm.get('role')?.invalid && userForm.get('role')?.touched" class="invalid-feedback">
+          <span *ngIf="userForm.get('role')?.errors?.['required']">El rol es obligatorio</span>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between mt-4">
+        <button type="button" class="btn btn-outline-secondary" [routerLink]="['/lista-usuarios']">
+          <i class="fas fa-arrow-left me-1"></i> Volver
+        </button>
+        <button type="submit" class="btn btn-custom" [disabled]="loading" [ngClass]="{'disabled': userForm.invalid && !loading}">
+          <span *ngIf="loading" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+          <i *ngIf="!loading" class="fas fa-save me-1"></i> Guardar Cambios
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

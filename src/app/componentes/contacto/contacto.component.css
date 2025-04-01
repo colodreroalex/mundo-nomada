@@ -1,65 +1,127 @@
-/* Estilos generales para el componente de contacto */
+/* Estilos para el componente de contacto */
 .container {
-  max-width: 960px;
-  background-color: var(--color-secundario); /* Fondo claro */
-  padding: 20px;
+  max-width: 1200px;
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  margin-bottom: 90px;
+}
+
+h1, h3, h4, h5 {
+  color: var(--color-primario);
+}
+
+/* Excepción para los headers en card-header */
+.card-header.bg-primario h1,
+.card-header.bg-primario h2,
+.card-header.bg-primario h3,
+.card-header.bg-primario h4,
+.card-header.bg-primario h5 {
+  color: white !important; /* Usamos !important para asegurar que sobrescriba otros estilos */
+}
+
+/* Efectos de tarjetas */
+.card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Estilos para los iconos de contacto */
+.contact-icon {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.contact-icon:hover {
+  transform: scale(1.1);
+  background-color: var(--color-primario) !important;
+}
+
+.contact-icon:hover i {
+  color: white !important;
+}
+
+/* Estilizado del formulario */
+.form-control, .input-group-text {
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: 90px; 
+  padding: 12px 15px;
+  transition: box-shadow 0.3s ease;
 }
 
-h2,
-h4 {
-  margin-top: 20px;
-  color: var(--color-primario); /* Encabezados en color primario */
+.form-control:focus {
+  border-color: var(--color-primario);
+  box-shadow: 0 0 0 0.2rem rgba(121, 21, 21, 0.25);
 }
 
-/* Personalización del formulario */
-form {
-  margin-top: 20px;
-  background-color: var(--color-secundario); /* Mantiene el fondo claro */
-  padding: 20px;
-  border-radius: 8px;
-  /* Opcional: puedes agregar un borde sutil con el color primario
-     border: 1px solid var(--color-primario); */
-}
-
-/* Opcional: Realzar la sombra de los elementos */
-.shadow-sm {
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-/* Asegura que el iframe del mapa tenga bordes redondeados */
-iframe {
-  border-radius: 8px;
-}
-
-/* Sección izquierda (por ejemplo, datos de contacto) */
-.left-section {
-  margin-right: 30px;
-}
-
-/* Opcional: Estilos para inputs y botones dentro del formulario */
-input,
-textarea {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-button {
+/* Estilo para el botón */
+.btn-custom {
   background-color: var(--color-primario);
-  color: #fff;
-  padding: 10px 20px;
+  color: white;
   border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
 }
 
-button:hover {
-  background-color: var(--color-hover);
+.btn-custom:hover {
+  background-color: #9a1a1a; /* Un tono más claro del color primario */
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(121, 21, 21, 0.3);
+}
+
+.btn-custom:active {
+  transform: translateY(0);
+}
+
+/* Estilizado para los mensajes de error y éxito */
+.alert {
+  border-radius: 8px;
+}
+
+.alert-success {
+  background-color: #e8f5e9;
+  border-color: #c8e6c9;
+  color: #2e7d32;
+}
+
+.alert-danger {
+  background-color: #ffebee;
+  border-color: #ffcdd2;
+  color: #c62828;
+}
+
+/* Estilo para los mensajes de validación */
+.text-danger {
+  font-size: 0.85rem;
+}
+
+/* Mejoras para dispositivos móviles */
+@media (max-width: 768px) {
+  .container {
+    padding: 20px;
+  }
+  
+  .contact-icon {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .card-body {
+    padding: 20px;
+  }
+}
+
+/* Estilos para el mapa */
+.ratio-1x1 {
+  border-radius: 0 0 8px 8px;
+  overflow: hidden;
 }

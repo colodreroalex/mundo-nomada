@@ -3,6 +3,19 @@ import { Carrito } from '../../../models/Carrito';
 import { User } from '../../../models/Users';
 import { PdfService } from '../../services/pdf.service';
 import { CommonModule } from '@angular/common';
+import { CarritoService } from '../../services/carrito.service';
+
+// Interfaz para datos de envío
+export interface DatosEnvio {
+  nombre: string;
+  apellidos: string;
+  direccion: string;
+  codigoPostal: string;
+  ciudad: string;
+  provincia: string;
+  telefono: string;
+  email: string;
+}
 
 @Component({
   selector: 'app-receipt',
@@ -17,16 +30,36 @@ export class ReceiptComponent implements OnInit {
   @Input() user: User | null = null;
   @Input() orderId: string = '';
   @Input() showButtons: boolean = true;
+  @Input() iva: number = 0;
+  @Input() envio: number = 0;
+  @Input() totalConIvaYEnvio: number = 0;
+  @Input() datosEnvio: DatosEnvio | null = null; // Nuevo campo para datos de envío
 
+  subtotal: number = 0;
   fechaCompra: Date = new Date();
   loading: boolean = false;
   downloadComplete: boolean = false;
 
-  constructor(private pdfService: PdfService) { }
+  constructor(
+    private pdfService: PdfService,
+    private carritoService: CarritoService
+  ) { }
 
   ngOnInit(): void {
     if (!this.orderId) {
       this.orderId = `ORD-${new Date().getTime()}`;
+    }
+    
+    // Asegurar que tenemos todos los valores calculados
+    // En caso de no recibir los valores como Input, calcularlos
+    this.subtotal = this.total; // Usaremos el total como subtotal si no viene el subtotal específicamente
+    
+    // Si no tenemos valores de IVA o envío, calcularlos
+    if (this.iva === 0 && this.envio === 0 && this.totalConIvaYEnvio === 0) {
+      const totales = this.carritoService.calcularTotalesPedido(this.subtotal);
+      this.iva = totales.iva;
+      this.envio = totales.envio;
+      this.totalConIvaYEnvio = totales.totalConIvaYEnvio;
     }
   }
 
@@ -53,7 +86,16 @@ export class ReceiptComponent implements OnInit {
   downloadDirectPdf(): void {
     this.loading = true;
     try {
-      this.pdfService.generateReceiptPdf(this.items, this.total, this.user, this.orderId);
+      this.pdfService.generateReceiptPdf(
+        this.items, 
+        this.subtotal, 
+        this.user, 
+        this.orderId,
+        this.iva,
+        this.envio,
+        this.totalConIvaYEnvio,
+        this.datosEnvio // Añadimos los datos de envío
+      );
       this.loading = false;
       this.downloadComplete = true;
       setTimeout(() => this.downloadComplete = false, 3000);
@@ -61,12 +103,5 @@ export class ReceiptComponent implements OnInit {
       console.error('Error al generar PDF directo:', error);
       this.loading = false;
     }
-  }
-
-  /**
-   * Imprimir el recibo directamente en la impresora
-   */
-  printReceipt(): void {
-    window.print();
   }
 }

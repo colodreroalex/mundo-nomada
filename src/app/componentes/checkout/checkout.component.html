@@ -33,42 +33,12 @@
       </div>
     </div>
 
-    <!-- Sección de recibo (aparece después de completar la compra) -->
-    <div *ngIf="orderCompleted" class="purchase-success mt-4">
-      <div class="success-card shadow-sm p-4 mb-4">
-        <div class="text-center mb-3">
-          <i class="bi bi-check-circle-fill success-icon"></i>
-        </div>
-        <h4 class="alert-heading text-center">¡Compra realizada con éxito!</h4>
-        <p class="text-center">Tu pedido con número <strong class="order-number">{{ orderId }}</strong> ha sido procesado correctamente.</p>
-      </div>
-      
-      <div class="text-center mb-4 action-buttons">
-        <button class="btn btn-outline-primario me-2" (click)="downloadReceipt()">
-          <i class="bi bi-file-earmark-pdf me-2"></i> Descargar Recibo
-        </button>
-        <button class="btn btn-primario" (click)="goToHome()">
-          <i class="bi bi-house-door me-2"></i> Volver al Inicio
-        </button>
-      </div>
-      
-      <!-- Componente de recibo -->
-      <div class="receipt-container shadow-sm">
-        <app-receipt 
-          [items]="carrito" 
-          [total]="total" 
-          [user]="currentUser" 
-          [orderId]="orderId">
-        </app-receipt>
-      </div>
-    </div>
-
     <!-- Resumen del carrito (se muestra solo si no se ha completado la compra) -->
     <div *ngIf="!loading && carrito && carrito.length > 0 && !orderCompleted" class="cart-summary-container">
       <div class="row">
-        <!-- Columna izquierda: Lista de productos -->
+        <!-- Columna izquierda: Lista de productos y formulario de envío -->
         <div class="col-lg-7 mb-4">
-          <div class="cart-summary shadow-sm p-4">
+          <div class="cart-summary shadow-sm p-4 mb-4">
             <h4 class="section-title mb-4"><i class="bi bi-cart-check me-2"></i>Resumen de tu compra</h4>
             <ul class="cart-items-list">
               <li class="cart-item" *ngFor="let item of carrito">
@@ -85,6 +55,116 @@
               </li>
             </ul>
           </div>
+          
+          <!-- Formulario de datos de envío -->
+          <div class="shipping-form shadow-sm p-4">
+            <h4 class="section-title mb-4"><i class="bi bi-geo-alt me-2"></i>Datos de envío</h4>
+            <form [formGroup]="shippingForm" (ngSubmit)="updatePayPalButtonState()" class="row g-3" novalidate>
+              <!-- Nombre -->
+              <div class="col-md-6">
+                <label for="nombre" class="form-label">Nombre *</label>
+                <input type="text" class="form-control" id="nombre" formControlName="nombre" 
+                      [ngClass]="{'is-invalid': formSubmitted && f['nombre'].errors}">
+                <div *ngIf="formSubmitted && f['nombre'].errors" class="invalid-feedback">
+                  <div *ngIf="f['nombre'].errors['required']">El nombre es obligatorio</div>
+                  <div *ngIf="f['nombre'].errors['minlength']">El nombre debe tener al menos 3 caracteres</div>
+                </div>
+              </div>
+              
+              <!-- Apellidos -->
+              <div class="col-md-6">
+                <label for="apellidos" class="form-label">Apellidos *</label>
+                <input type="text" class="form-control" id="apellidos" formControlName="apellidos"
+                      [ngClass]="{'is-invalid': formSubmitted && f['apellidos'].errors}">
+                <div *ngIf="formSubmitted && f['apellidos'].errors" class="invalid-feedback">
+                  <div *ngIf="f['apellidos'].errors['required']">Los apellidos son obligatorios</div>
+                  <div *ngIf="f['apellidos'].errors['minlength']">Los apellidos deben tener al menos 3 caracteres</div>
+                </div>
+              </div>
+              
+              <!-- Dirección -->
+              <div class="col-12">
+                <label for="direccion" class="form-label">Dirección *</label>
+                <input type="text" class="form-control" id="direccion" formControlName="direccion" placeholder="Calle, número, piso..."
+                      [ngClass]="{'is-invalid': formSubmitted && f['direccion'].errors}">
+                <div *ngIf="formSubmitted && f['direccion'].errors" class="invalid-feedback">
+                  <div *ngIf="f['direccion'].errors['required']">La dirección es obligatoria</div>
+                  <div *ngIf="f['direccion'].errors['minlength']">La dirección debe tener al menos 5 caracteres</div>
+                </div>
+              </div>
+              
+              <!-- Código Postal -->
+              <div class="col-md-4">
+                <label for="codigoPostal" class="form-label">Código Postal *</label>
+                <input type="text" class="form-control" id="codigoPostal" formControlName="codigoPostal"
+                      [ngClass]="{'is-invalid': formSubmitted && f['codigoPostal'].errors}">
+                <div *ngIf="formSubmitted && f['codigoPostal'].errors" class="invalid-feedback">
+                  <div *ngIf="f['codigoPostal'].errors['required']">El código postal es obligatorio</div>
+                  <div *ngIf="f['codigoPostal'].errors['pattern']">El código postal debe ser de 5 dígitos</div>
+                </div>
+              </div>
+              
+              <!-- Ciudad -->
+              <div class="col-md-4">
+                <label for="ciudad" class="form-label">Ciudad *</label>
+                <input type="text" class="form-control" id="ciudad" formControlName="ciudad"
+                      [ngClass]="{'is-invalid': formSubmitted && f['ciudad'].errors}">
+                <div *ngIf="formSubmitted && f['ciudad'].errors" class="invalid-feedback">
+                  <div *ngIf="f['ciudad'].errors['required']">La ciudad es obligatoria</div>
+                </div>
+              </div>
+              
+              <!-- Provincia -->
+              <div class="col-md-4">
+                <label for="provincia" class="form-label">Provincia *</label>
+                <input type="text" class="form-control" id="provincia" formControlName="provincia"
+                      [ngClass]="{'is-invalid': formSubmitted && f['provincia'].errors}">
+                <div *ngIf="formSubmitted && f['provincia'].errors" class="invalid-feedback">
+                  <div *ngIf="f['provincia'].errors['required']">La provincia es obligatoria</div>
+                </div>
+              </div>
+              
+              <!-- Teléfono -->
+              <div class="col-md-6">
+                <label for="telefono" class="form-label">Teléfono *</label>
+                <input type="tel" class="form-control" id="telefono" formControlName="telefono"
+                      [ngClass]="{'is-invalid': formSubmitted && f['telefono'].errors}">
+                <div *ngIf="formSubmitted && f['telefono'].errors" class="invalid-feedback">
+                  <div *ngIf="f['telefono'].errors['required']">El teléfono es obligatorio</div>
+                  <div *ngIf="f['telefono'].errors['pattern']">El teléfono debe tener 9 dígitos</div>
+                </div>
+              </div>
+              
+              <!-- Email -->
+              <div class="col-md-6">
+                <label for="email" class="form-label">Email *</label>
+                <input type="email" class="form-control" id="email" formControlName="email"
+                      [ngClass]="{'is-invalid': formSubmitted && f['email'].errors}">
+                <div *ngIf="formSubmitted && f['email'].errors" class="invalid-feedback">
+                  <div *ngIf="f['email'].errors['required']">El email es obligatorio</div>
+                  <div *ngIf="f['email'].errors['email']">El formato del email no es válido</div>
+                </div>
+              </div>
+              
+              <div class="col-12">
+                <button type="submit" class="btn btn-custom w-100">Confirmar datos de envío</button>
+              </div>
+              
+              <div class="col-12 mt-3" *ngIf="!isFormValid() && formSubmitted">
+                <div class="alert alert-warning">
+                  <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                  Completa todos los campos obligatorios para continuar
+                </div>
+              </div>
+              
+              <div class="col-12 mt-3" *ngIf="isFormValid() && formSubmitted">
+                <div class="alert alert-success">
+                  <i class="bi bi-check-circle-fill me-2"></i>
+                  ¡Datos de envío confirmados! Puedes proceder con el pago
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
         
         <!-- Columna derecha: Total y pago -->
@@ -93,26 +173,41 @@
             <h4 class="section-title mb-4"><i class="bi bi-credit-card me-2"></i>Pago</h4>
             <div class="total-container mb-4">
               <div class="d-flex justify-content-between align-items-center">
-                <span class="total-label">Subtotal:</span>
-                <span class="total-value">{{ total | currency:'EUR' }}</span>
+                <span class="total-label text-start">Subtotal:</span>
+                <span class="total-value text-end">{{ subtotal | currency:'EUR' }}</span>
               </div>
               <div class="d-flex justify-content-between align-items-center mt-2">
-                <span class="total-label">Envío:</span>
-                <span class="shipping-free">Gratis</span>
+                <span class="total-label text-start">IVA (21%):</span>
+                <span class="total-value text-end">{{ iva | currency:'EUR' }}</span>
+              </div>
+              <div class="d-flex justify-content-between align-items-center mt-2">
+                <span class="total-label text-start">Envío:</span>
+                <span class="shipping-value text-end" [ngClass]="{'shipping-free': envio === 0}">
+                  {{ envio === 0 ? 'Gratis' : (envio | currency:'EUR') }}
+                </span>
               </div>
               <hr class="my-3">
               <div class="d-flex justify-content-between align-items-center">
-                <span class="total-label fw-bold">Total:</span>
-                <span class="final-total">{{ total | currency:'EUR' }}</span>
+                <span class="total-label fw-bold text-start">Total:</span>
+                <span class="final-total text-end">{{ totalConIvaYEnvio | currency:'EUR' }}</span>
               </div>
             </div>
             
             <div class="payment-method">
               <h5 class="payment-title">Método de pago</h5>
-              <p class="payment-description">Selecciona PayPal para completar tu compra de forma segura.</p>
               
-              <!-- Contenedor para el botón de PayPal -->
-              <div id="paypal-button-container" class="mt-3"></div>
+              <!-- Estado del método de pago -->
+              <div *ngIf="!formSubmitted || !isFormValid()" class="alert alert-warning">
+                <i class="bi bi-info-circle-fill me-2"></i>
+                <strong>Completa primero tus datos de envío</strong>
+                <p class="mb-0 small">Pulsa el botón "Confirmar datos de envío" después de rellenar el formulario</p>
+              </div>
+              
+              <div *ngIf="formSubmitted && isFormValid()">
+                <p class="payment-description">Selecciona PayPal para completar tu compra de forma segura.</p>
+                <!-- Contenedor para el botón de PayPal -->
+                <div id="paypal-button-container" class="mt-3"></div>
+              </div>
             </div>
           </div>
           
@@ -137,6 +232,127 @@
       <button class="btn btn-primario" (click)="goToHome()">
         <i class="bi bi-shop me-2"></i> Ir a comprar
       </button>
+    </div>
+
+    <!-- Recibo después de completar la compra - Versión única y mejorada -->
+    <div *ngIf="orderCompleted" class="receipt-container my-5">
+      <div class="purchase-success text-center mb-4">
+        <div class="success-icon">
+          <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
+        </div>
+        <h3 class="text-primario my-3">¡Compra realizada con éxito!</h3>
+        <p class="lead">Gracias por tu compra. Hemos enviado un correo con todos los detalles.</p>
+        <div class="d-flex justify-content-center mb-3">
+          <button class="btn btn-primario btn-lg" (click)="downloadReceipt()">
+            <i class="bi bi-file-earmark-pdf-fill me-2"></i> Descargar Recibo PDF
+          </button>
+        </div>
+      </div>
+      
+      <!-- Contenido del recibo visual directamente en la página -->
+      <div class="receipt-content shadow-sm p-4 rounded border mb-4">
+        <div class="text-center mb-4 border-bottom pb-3">
+          <h2 class="text-primario mb-1">MUNDO NÓMADA</h2>
+          <p class="mb-0">Recibo de Compra</p>
+        </div>
+        
+        <div class="d-flex justify-content-between small mb-4">
+          <div>
+            <p class="mb-1"><strong>Fecha:</strong> {{orderData?.date | date:'dd/MM/yyyy'}}</p>
+            <p class="mb-0"><strong>Hora:</strong> {{orderData?.date | date:'HH:mm:ss'}}</p>
+          </div>
+          <div class="text-end">
+            <p class="mb-0"><strong>Número de orden:</strong> {{orderId}}</p>
+          </div>
+        </div>
+        
+        <div class="row mb-4">
+          <!-- Información del cliente -->
+          <div class="col-md-6 mb-3 mb-md-0">
+            <div class="customer-info p-3 border rounded h-100">
+              <h5 class="text-primario mb-3">
+                <i class="bi bi-person-circle me-2"></i>Información del cliente
+              </h5>
+              <p class="mb-1"><strong>Cliente:</strong> {{orderData?.user ? orderData?.user.name : 'Usuario invitado'}}</p>
+              <p class="mb-0"><strong>Email:</strong> {{orderData?.user ? orderData?.user.email : 'No disponible'}}</p>
+            </div>
+          </div>
+          
+          <!-- Datos de envío -->
+          <div class="col-md-6" *ngIf="orderData?.datosEnvio">
+            <div class="shipping-info p-3 border rounded h-100">
+              <h5 class="text-primario mb-3">
+                <i class="bi bi-geo-alt me-2"></i>Datos de envío
+              </h5>
+              <p class="mb-1"><strong>Nombre:</strong> {{orderData?.datosEnvio.nombre}} {{orderData?.datosEnvio.apellidos}}</p>
+              <p class="mb-1"><strong>Dirección:</strong> {{orderData?.datosEnvio.direccion}}</p>
+              <p class="mb-1"><strong>CP:</strong> {{orderData?.datosEnvio.codigoPostal}} - {{orderData?.datosEnvio.ciudad}}, {{orderData?.datosEnvio.provincia}}</p>
+              <p class="mb-1"><strong>Teléfono:</strong> {{orderData?.datosEnvio.telefono}}</p>
+              <p class="mb-0"><strong>Email:</strong> {{orderData?.datosEnvio.email}}</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Detalle de productos -->
+        <div class="products-detail mb-4">
+          <h5 class="text-primario mb-3">
+            <i class="bi bi-cart-check me-2"></i>Detalle de productos
+          </h5>
+          <div class="table-responsive">
+            <table class="table">
+              <thead class="table-light">
+                <tr>
+                  <th>Producto</th>
+                  <th class="text-center">Cantidad</th>
+                  <th class="text-end">Precio/ud</th>
+                  <th class="text-end">Subtotal</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of orderData?.items">
+                  <td>{{item.producto?.nombre || 'Producto no disponible'}}</td>
+                  <td class="text-center">{{item.cantidad}}</td>
+                  <td class="text-end">{{item.producto?.precio | currency:'EUR':'symbol':'1.2-2'}}</td>
+                  <td class="text-end">{{(item.producto?.precio * item.cantidad) | currency:'EUR':'symbol':'1.2-2'}}</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="3" class="text-end"><strong>Subtotal</strong></td>
+                  <td class="text-end">{{orderData?.total | currency:'EUR':'symbol':'1.2-2'}}</td>
+                </tr>
+                <tr>
+                  <td colspan="3" class="text-end"><strong>IVA (21%)</strong></td>
+                  <td class="text-end">{{orderData?.iva | currency:'EUR':'symbol':'1.2-2'}}</td>
+                </tr>
+                <tr>
+                  <td colspan="3" class="text-end"><strong>Gastos de envío</strong></td>
+                  <td class="text-end">{{orderData?.envio | currency:'EUR':'symbol':'1.2-2'}}</td>
+                </tr>
+                <tr class="table-light">
+                  <td colspan="3" class="text-end"><strong>Total</strong></td>
+                  <td class="text-end text-primario fw-bold">{{orderData?.totalConIvaYEnvio | currency:'EUR':'symbol':'1.2-2'}}</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+        
+        <!-- Pie del recibo -->
+        <div class="receipt-footer text-center border-top pt-3">
+          <p class="thank-you fw-bold mb-1">¡Gracias por tu compra!</p>
+          <p class="contact-info small mb-1">Si tienes alguna pregunta sobre tu pedido, por favor contáctanos a:</p>
+          <p class="email text-primario small mb-1">mundonomadabaena&#64;gmail.com</p>
+          <p class="copyright small text-muted">© 2025 Mundo Nómada - Todos los derechos reservados</p>
+        </div>
+      </div>
+      
+      <!-- Botones de navegación -->
+      <div class="text-center mt-4">
+        <button class="btn btn-lg btn-secundario" (click)="goToHome()">
+          <i class="bi bi-house-fill me-2"></i> Volver a la tienda
+        </button>
+      </div>
     </div>
   </div>
 </div>

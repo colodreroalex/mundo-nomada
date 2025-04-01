@@ -26,6 +26,10 @@ import { PoliticaPrivacidadComponent } from './pages/footer-pages/politica-priva
 import { TerminosServicioComponent } from './pages/footer-pages/terminos-servicio/terminos-servicio.component';
 import { PoliticaCookiesComponent } from './pages/footer-pages/politica-cookies/politica-cookies.component';
 import { ConsentimientoCookiesComponent } from './pages/footer-pages/consentimiento-cookies/consentimiento-cookies.component';
+import { ListaUsuariosComponent } from './componentes/usuarios/lista-usuarios/lista-usuarios.component';
+import { CrearUsuarioComponent } from './componentes/usuarios/crear-usuario/crear-usuario.component';
+import { EditarUsuarioComponent } from './componentes/usuarios/editar-usuario/editar-usuario.component';
+import { EliminarUsuarioComponent } from './componentes/usuarios/eliminar-usuario/eliminar-usuario.component';
 
 export const routes: Routes = [
  {path: 'addProduct', component: AddProductComponent , canActivate: [AuthGuard], data: { role: 'admin' }},
@@ -44,6 +48,12 @@ export const routes: Routes = [
  {path:'carrito', component: CarritoComponent},
  { path: 'producto/:id', component: DetalleProductoComponent },
  { path: 'perfil', component: PerfilUsuarioComponent, canActivate: [AuthGuard] },
+ 
+ // Rutas para la gestión de usuarios (solo para administradores)
+ { path: 'lista-usuarios', component: ListaUsuariosComponent, canActivate: [AuthGuard], data: { role: 'admin' } },
+ { path: 'crear-usuario', component: CrearUsuarioComponent, canActivate: [AuthGuard], data: { role: 'admin' } },
+ { path: 'editar-usuario/:id', component: EditarUsuarioComponent, canActivate: [AuthGuard], data: { role: 'admin' } },
+ { path: 'eliminar-usuario/:id', component: EliminarUsuarioComponent, canActivate: [AuthGuard], data: { role: 'admin' } },
  
  // Rutas para las páginas del footer
  { path: 'conocenos', component: ConocenosComponent },
