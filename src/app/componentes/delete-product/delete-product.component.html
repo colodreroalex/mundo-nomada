@@ -1,6 +1,33 @@
 <div class="container my-5">
   <h2 class="mb-4 text-center">Eliminar Productos</h2>
 
+  <!-- Sección de filtros -->
+  <div class="row mb-4">
+    <div class="col-md-4 mb-2">
+      <div class="input-group">
+        <span class="input-group-text bg-primario text-white"><i class="bi bi-search"></i></span>
+        <input type="text" class="form-control" placeholder="Buscar por nombre..." 
+               [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange()">
+      </div>
+    </div>
+    <div class="col-md-4 mb-2">
+      <div class="input-group">
+        <span class="input-group-text bg-primario text-white"><i class="bi bi-filter"></i></span>
+        <select class="form-select" [(ngModel)]="selectedCategoryId" (change)="onCategoryChange()">
+          <option [ngValue]="null">Todas las categorías</option>
+          <option *ngFor="let categoria of categorias" [ngValue]="categoria.CategoriaID">
+            {{ categoria.Nombre }}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="col-md-4 mb-2">
+      <button class="btn btn-custom w-100" (click)="clearFilters()">
+        <i class="bi bi-x-circle"></i> Limpiar filtros
+      </button>
+    </div>
+  </div>
+
   <!-- Indicador de carga -->
   <div *ngIf="loading" class="d-flex justify-content-center my-4">
     <div class="spinner-border text-primary" role="status">
@@ -19,9 +46,9 @@
   </div>
 
   <!-- Mostrar productos si existen -->
-  <div *ngIf="products && products.length > 0; else noProducts">
+  <div *ngIf="filteredProducts && filteredProducts.length > 0; else noProducts">
     <div class="row">
-      <div class="col-md-4 mb-4" *ngFor="let producto of products">
+      <div class="col-md-4 mb-4" *ngFor="let producto of filteredProducts">
         <div class="card h-100 shadow-sm">
           <!-- Mostrar imagen si existe -->
           <img *ngIf="producto.imagen" 
@@ -49,7 +76,8 @@
   <!-- Mensaje cuando no hay productos -->
   <ng-template #noProducts>
     <div class="alert alert-warning text-center" role="alert">
-      No hay productos disponibles.
+      <span *ngIf="products.length === 0">No hay productos disponibles.</span>
+      <span *ngIf="products.length > 0 && filteredProducts.length === 0">No se encontraron productos con los filtros seleccionados.</span>
     </div>
   </ng-template>
 </div>

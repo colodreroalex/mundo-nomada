@@ -108,8 +108,19 @@ export class ProductosService {
         }
       }),
       catchError((error: HttpErrorResponse) => {
-        console.error('Error en modificarProducto:', error);
-        return throwError(() => error);
+        // Si el backend devuelve un mensaje de error específico, lo mostramos
+        if (error.error && typeof error.error === 'object' && error.error.mensaje) {
+          return throwError(() => new Error(error.error.mensaje));
+        }
+        // Si el error es un string JSON (caso raro)
+        try {
+          const errObj = JSON.parse(error.error);
+          if (errObj && errObj.mensaje) {
+            return throwError(() => new Error(errObj.mensaje));
+          }
+        } catch {}
+        // Otro error
+        return throwError(() => new Error('Error al modificar producto. Verifica los datos e inténtalo de nuevo.'));
       })
     );
   }
@@ -156,47 +167,25 @@ export class ProductosService {
   }
 
   // Eliminar un producto por ID
-  eliminarProducto(id: number): Observable<any> {
-    console.log('Intentando eliminar el producto con ID:', id);
-    
-    // Crear un objeto con el ID para enviarlo como body
-    const body = { id: id };
-    
-    // Configuramos los headers correctos
-    const headers = new HttpHeaders()
-      .set('Content-Type', 'application/json');
-    
-    // Usamos POST con un body JSON como parecen esperar otros endpoints
+  eliminarProducto(ProductoID: number): Observable<any> {
+    // El backend espera un parámetro 'id' pero nuestro modelo usa 'ProductoID'
     return this.http.post<any>(
       `${this.url}deleteProduct.php`,
-      body,
-      { 
-        withCredentials: true,
-        headers: headers,
-        responseType: 'json'
-      }
+      { id: ProductoID },  // Enviamos explícitamente el ID con el nombre que espera el backend
+      { withCredentials: true }
     ).pipe(
       map(response => {
-        console.log('Respuesta completa del servidor:', response);
-        if (response && (response.resultado === 'OK' || response.success === true)) {
-          return response;
+        if (response && response.resultado === 'OK') {
+          return {
+            resultado: 'OK',
+            mensaje: 'Producto eliminado correctamente'
+          };
         }
-        throw new Error(response?.mensaje || 'Error desconocido al eliminar producto');
+        throw new Error('Error al eliminar producto');
       }),
-      catchError((error: HttpErrorResponse) => {
-        console.error('Error en eliminarProducto:', error);
-        console.log('Estado HTTP:', error.status);
-        console.log('Mensaje del error:', error.message);
-        
-        // Verificamos si hay algún error específico del backend
-        if (error.error && typeof error.error === 'object') {
-          console.log('Error del backend:', error.error);
-          if (error.error.mensaje) {
-            return throwError(() => new Error(error.error.mensaje));
-          }
-        }
-        
-        return throwError(() => new Error('Error al eliminar producto. Verifica que estés autenticado como administrador.'));
+      catchError((error) => {
+        console.error('Error al eliminar:', error);
+        return throwError(() => new Error('Error al eliminar producto. Verificar permisos de administrador.'));
       })
     );
   }
