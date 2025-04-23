@@ -171,25 +171,41 @@
 }
 
 /* Indicador de fuerza de contraseña */
-.password-strength {
-  height: 5px;
-  border-radius: 10px;
-  margin-top: 5px;
-  transition: width 0.3s ease, background-color 0.3s ease;
+.password-strength-bar {
+  height: 6px;
+  border-radius: 3px;
+  margin-top: 8px;
+  transition: all 0.3s ease;
+  background-color: #e9ecef;
+}
+
+.password-strength-bar .progress-bar {
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+
+.strength-very-weak {
+  background-color: #dc3545;
+  width: 20%;
 }
 
 .strength-weak {
-  background-color: #dc3545;
-  width: 25%;
+  background-color: #ffc107;
+  width: 40%;
 }
 
 .strength-medium {
-  background-color: #ffc107;
-  width: 50%;
+  background-color: #fd7e14;
+  width: 60%;
 }
 
 .strength-strong {
-  background-color: #28a745;
+  background-color: #20c997;
+  width: 80%;
+}
+
+.strength-very-strong {
+  background-color: #198754;
   width: 100%;
 }
 
@@ -200,48 +216,107 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
+}
+
+.stat-icon i {
+  font-size: 1.25rem;
 }
 
 /* Timeline para historial de actividad */
 .timeline {
   position: relative;
-  padding-left: 30px;
-  margin-bottom: 20px;
+  padding: 0;
+  list-style: none;
 }
 
-.timeline::before {
-  content: '';
+.timeline:before {
+  content: "";
   position: absolute;
   top: 0;
   bottom: 0;
-  left: 9px;
+  left: 7px;
   width: 2px;
   background-color: #e9ecef;
 }
 
 .timeline-item {
   position: relative;
-  margin-bottom: 25px;
+  padding-left: 30px;
+  padding-bottom: 20px;
 }
 
 .timeline-marker {
   position: absolute;
-  left: -30px;
-  top: 0;
-  width: 16px;
-  height: 16px;
+  left: 0;
+  top: 5px;
+  width: 15px;
+  height: 15px;
   border-radius: 50%;
 }
 
 .timeline-content {
-  padding-bottom: 15px;
+  padding-bottom: 10px;
   border-bottom: 1px solid #f5f5f5;
 }
 
 .timeline-item:last-child .timeline-content {
   border-bottom: none;
   padding-bottom: 0;
+}
+
+/* Estilos para modal */
+.modal {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-backdrop {
+  z-index: 1040;
+}
+
+/* Estilos para sección de pedidos */
+.empty-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+}
+
+.empty-state i {
+  font-size: 3rem;
+  color: #ccc;
+}
+
+/* Animaciones para el modal */
+.modal.show {
+  display: block;
+  animation: fadeInModal 0.3s ease-in-out;
+}
+
+@keyframes fadeInModal {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Estilos específicos para historial de pedidos */
+.badge.bg-warning {
+  background-color: #ffc107 !important;
+  color: #000;
+}
+
+.badge.bg-info {
+  background-color: #0dcaf0 !important;
+}
+
+.badge.bg-success {
+  background-color: #198754 !important;
+}
+
+.badge.bg-danger {
+  background-color: #dc3545 !important;
 }
 
 /* Animaciones */

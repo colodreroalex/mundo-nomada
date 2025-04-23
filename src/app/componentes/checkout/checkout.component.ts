@@ -316,7 +316,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     const productIds = this.carrito.map(item => item.producto_id);
     
     // Obtener la información más reciente de stock directamente del servidor
-    this.http.post<any>('http://localhost/mundonomada/api_php2/Carrito/getUpdatedProducts.php', { ids: productIds })
+    this.http.post<any>('http://localhost/mundonomada/api_php/Carrito/getUpdatedProducts.php', { ids: productIds })
       .subscribe({
         next: (response) => {
           // Crear un mapa con la información actualizada de los productos
@@ -365,6 +365,13 @@ export class CheckoutComponent implements OnInit, OnDestroy {
             return;
           }
           
+          // Asegurarnos de que cada item del carrito tenga el user_id actualizado antes de enviar al backend
+          if (this.currentUser && this.currentUser.id) {
+            this.carrito.forEach(item => {
+              item.user_id = this.currentUser!.id;
+            });
+          }
+
           // Si todo está bien, proceder con la compra - aceleramos el tiempo de muestra del recibo
           this.carritoService.finalizePurchase(this.carrito).subscribe({
             next: (response) => {
