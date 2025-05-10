@@ -150,16 +150,40 @@ export class UsuariosService {
         catchError((error: HttpErrorResponse) => {
           console.error('Error en deleteUser:', error);
           
+          // Mensaje por defecto para cualquier error
+          let errorMessage = 'Error al eliminar el usuario';
+          
+          // Manejo específico según el código de estado
+          if (error.status === 400) {
+            // Verificar si hay un error específico retornado por el backend
+            if (error.error && error.error.error) {
+              // Usar el mensaje del backend
+              errorMessage = error.error.error;
+            } else {
+              // Mensaje genérico para error 400
+              errorMessage = 'No se puede eliminar este usuario';
+            }
+          } else if (error.status === 403) {
+            errorMessage = 'No tienes permisos para eliminar usuarios';
+          } else if (error.status === 404) {
+            errorMessage = 'El usuario que intentas eliminar no existe';
+          } else if (error.status === 500) {
+            errorMessage = 'Error del servidor al procesar la solicitud';
+          }
+          
+          // Intentar parsear el error si viene como string
           if (typeof error.error === 'string') {
             try {
               const parsedError = JSON.parse(error.error);
-              return throwError(() => new Error(parsedError.mensaje || 'Error desconocido'));
+              if (parsedError.error) {
+                errorMessage = parsedError.error;
+              }
             } catch (e) {
               // No es un JSON válido
             }
           }
           
-          return throwError(() => error);
+          return throwError(() => new Error(errorMessage));
         })
       );
   }

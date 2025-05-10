@@ -1,7 +1,23 @@
 .save-button {
-    margin-bottom: 60px; 
-  }
+  background-color: var(--color-primario);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
 
-  .container {
-    padding-top: 50px;
-  }
+.save-button:hover {
+  background-color: #9a1a1a;
+  /* Un tono más claro del color primario */
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(121, 21, 21, 0.3);
+}
+
+.save-button:active {
+  transform: translateY(0);
+}
+
+.container {
+  padding-top: 50px;
+}

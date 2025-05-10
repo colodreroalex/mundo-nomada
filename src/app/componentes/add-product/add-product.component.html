@@ -1,5 +1,15 @@
 <div class="container mt-4">
+
+<!-- Añadir este código al principio del formulario o donde consideres más visible -->
+  <div class="alert alert-info mb-3" role="alert">
+    <i class="bi bi-info-circle-fill me-2"></i>
+    <strong>Información importante:</strong> No se puede crear un producto con la misma combinación de nombre, color y
+    talla.
+  </div>
+
   <h2>Añadir Nuevo Producto</h2>
+
+  
 
   <!-- Bloque para notificaciones -->
   <div *ngIf="notification" class="alert alert-{{ notification.type }} text-center" role="alert">
@@ -71,7 +81,8 @@
     <!-- Categoría -->
     <div class="mb-3">
       <label for="categoriaID" class="form-label">Categoría</label>
-      <select name="categoriaID" [(ngModel)]="prod.categoriaID" id="categoriaID" class="form-control" required #categoriaID="ngModel">
+      <select name="categoriaID" [(ngModel)]="prod.categoriaID" id="categoriaID" class="form-control" required
+        #categoriaID="ngModel">
         <option value="">Seleccione una categoría</option>
         <option *ngFor="let categoria of categorias" [value]="categoria.CategoriaID">
           {{ categoria.Nombre }}
@@ -85,7 +96,8 @@
     <!-- Imagen del Producto -->
     <div class="mb-3">
       <label for="imagen" class="form-label">Imagen del Producto</label>
-      <input type="file" name="imagen" id="imagen" class="form-control" accept="image/*" (change)="onFileChange($event)">
+      <input type="file" name="imagen" id="imagen" class="form-control" accept="image/*"
+        (change)="onFileChange($event)">
       <!-- Si deseas validar que se seleccione un archivo, podrías agregar una variable booleana y mostrar un mensaje aquí -->
     </div>
 

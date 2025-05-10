@@ -152,18 +152,10 @@ export class CarritoService {
   getCart(userId: number): Observable<Carrito[]> {
     if (!userId || userId === 0) {
       const guestCart = this.getLocalCart();
-      // Filtrar productos que ya fueron comprados
-      const purchasedIds = this.getGuestPurchasedProducts();
-      const filteredCart = guestCart.filter(item => !purchasedIds.includes(item.producto_id));
-      
-      // Si se removieron elementos, actualizar el localStorage
-      if (filteredCart.length !== guestCart.length) {
-        console.log('Se han filtrado productos previamente comprados del carrito');
-        this.saveLocalCart(filteredCart);
-      }
+      // Ya no filtramos productos previamente comprados para permitir recompras
       
       return new Observable((observer) => {
-        observer.next(filteredCart);
+        observer.next(guestCart);
         observer.complete();
       });
     } else {
@@ -405,10 +397,7 @@ export class CarritoService {
                 if (response && response.resultado === 'OK') {
                   // Si se trata de un usuario invitado, limpiar el carrito en localStorage
                   if (cart.length > 0 && (!cart[0].user_id || cart[0].user_id === 0)) {
-                    // Registrar estos productos como comprados para evitar que reaparezcan
-                    const compradosIds = cart.map(item => item.producto_id);
-                    this.saveGuestPurchasedProducts(compradosIds);
-                    
+                    // Ya no guardamos los productos como comprados para permitir recompras
                     // Limpiar el carrito
                     this.saveLocalCart([]);
                     this.guestPurchaseCompleted.next();
@@ -445,8 +434,23 @@ export class CarritoService {
 
     return forkJoin(migrationObservables).pipe(
       tap(() => {
-        // Una vez migrados, limpiamos el carrito local
-        this.saveLocalCart([]);
+        // Limpieza completa de datos de invitado
+        this.removeLocalCart(); // Usar removeLocalCart en lugar de saveLocalCart para eliminar completamente
+        this.clearGuestPurchasedProducts(); // Limpiar registro de productos comprados
+        localStorage.removeItem('lastCartSync'); // Eliminar cualquier timestamp de sincronización
+        
+        // Limpiar cualquier otro dato de localStorage relacionado con el carrito
+        // que pueda estar causando problemas
+        try {
+          for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key && (key.includes('cart') || key.includes('Cart') || key.includes('producto'))) {
+              localStorage.removeItem(key);
+            }
+          }
+        } catch (e) {
+          console.error('Error al limpiar datos adicionales de localStorage:', e);
+        }
       }),
       catchError((error: HttpErrorResponse) => {
         console.error('Error en migrateGuestCart:', error);

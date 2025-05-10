@@ -21,11 +21,42 @@ export class RegisterComponent {
   constructor(private authService: AuthService, private router: Router) {}
 
   register() {
+    // Validación básica en el cliente
+    if (!this.name || !this.email || !this.password) {
+      this.notification = { 
+        message: 'Por favor, completa todos los campos del formulario.', 
+        type: 'danger' 
+      };
+      return;
+    }
+
+    // Validación simple de formato de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(this.email)) {
+      this.notification = { 
+        message: 'Por favor, ingresa un correo electrónico válido.', 
+        type: 'danger' 
+      };
+      return;
+    }
+
+    // Validación de contraseña (mínimo 6 caracteres)
+    if (this.password.length < 6) {
+      this.notification = { 
+        message: 'La contraseña debe tener al menos 6 caracteres.', 
+        type: 'danger' 
+      };
+      return;
+    }
+
     this.authService.register(this.name, this.email, this.password).subscribe({
       next: (response) => {
         console.log('Registro exitoso', response);
         // Mostramos la notificación de éxito
-        this.notification = { message: 'Te has registrado exitosamente! Por favor, inicia sesión.', type: 'success' };
+        this.notification = { 
+          message: 'Te has registrado exitosamente! Por favor, inicia sesión.', 
+          type: 'success' 
+        };
         // Limpiamos la notificación y redirigimos después de 3 segundos
         setTimeout(() => {
           this.notification = null;
@@ -34,12 +65,15 @@ export class RegisterComponent {
       },
       error: (error) => {
         console.error('Registro fallido', error);
-        // Notificación de error
-        this.notification = { message: 'Error en el registro. Por favor, intenta nuevamente.', type: 'danger' };
-        // Limpiar la notificación después de 3 segundos
-        setTimeout(() => {
-          this.notification = null;
-        }, 3000);
+        
+        // Mostrar el mensaje específico del error
+        this.notification = { 
+          message: error.message || 'Error en el registro. Por favor, intenta nuevamente.', 
+          type: 'danger' 
+        };
+        
+        // No eliminamos automáticamente el mensaje de error para que el usuario pueda leerlo
+        // Solo lo eliminamos si es exitoso
       }
     });
   }

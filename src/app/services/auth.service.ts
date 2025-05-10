@@ -42,7 +42,25 @@ export class AuthService {
   
 
   register(name: string, email: string, password: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}register.php`, { name, email, password }, { withCredentials: true });
+    return this.http.post(`${this.apiUrl}register.php`, { name, email, password }, { withCredentials: true })
+      .pipe(
+        catchError((error: HttpErrorResponse) => {
+          // Extraer mensaje específico del error de la respuesta del backend
+          let errorMessage = 'Error al registrar usuario';
+          
+          if (error.status === 409) {
+            errorMessage = 'El correo electrónico ya está registrado. Por favor, utiliza otro email.';
+          } else if (error.status === 400) {
+            errorMessage = 'Datos de registro incompletos. Por favor, completa todos los campos requeridos.';
+          } else if (error.error && error.error.error) {
+            // Si el servidor devuelve un objeto de error con un mensaje
+            errorMessage = error.error.error;
+          }
+          
+          // Rethrow con el mensaje específico
+          return throwError(() => ({ message: errorMessage, status: error.status }));
+        })
+      );
   }
 
   logout(): Observable<any> {

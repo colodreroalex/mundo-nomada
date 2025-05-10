@@ -16,6 +16,9 @@ export class ListaUsuariosComponent implements OnInit {
   users: User[] = [];
   loading = false;
   error = '';
+  
+  // Propiedad para notificaciones
+  notification: { message: string; type: string } | null = null;
 
   constructor(private usuariosService: UsuariosService) { }
 
@@ -51,9 +54,26 @@ export class ListaUsuariosComponent implements OnInit {
       });
   }
 
+  // Mostrar notificación
+  showNotification(message: string, type: 'success' | 'danger' | 'warning') {
+    this.notification = { message, type };
+    // Limpiar la notificación después de 5 segundos
+    setTimeout(() => {
+      this.notification = null;
+    }, 5000);
+  }
+
+  // Cerrar notificación manualmente
+  closeNotification() {
+    this.notification = null;
+  }
+
   deleteUser(userId: number) {
     if (confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
       this.loading = true;
+      // Limpiar cualquier notificación anterior
+      this.notification = null;
+      
       this.usuariosService.deleteUser(userId)
         .subscribe({
           next: (response) => {
@@ -61,15 +81,27 @@ export class ListaUsuariosComponent implements OnInit {
             if (response && (response.success || response.result === 'OK')) {
               // Eliminar el usuario de la lista local
               this.users = this.users.filter(user => user.id !== userId);
-              alert('Usuario eliminado correctamente');
+              // Mostrar notificación de éxito
+              this.showNotification('Usuario eliminado correctamente', 'success');
             } else {
-              alert(response?.mensaje || response?.message || 'Error al eliminar usuario');
+              // Mostrar mensaje de la respuesta o uno genérico
+              const message = response?.mensaje || response?.message || 'Error al eliminar usuario';
+              this.showNotification(message, 'warning');
             }
           },
           error: (err) => {
             this.loading = false;
             console.error('Error al eliminar usuario:', err);
-            alert(err.message || 'Error al eliminar usuario. Por favor, inténtalo de nuevo.');
+            
+            // Mensajes detallados para casos específicos
+            if (err.message.includes('No puedes eliminar tu propia cuenta')) {
+              this.showNotification('No puedes eliminar tu propia cuenta de administrador', 'danger');
+            } else if (err.message.includes('único administrador')) {
+              this.showNotification('No se puede eliminar al único administrador del sistema', 'danger');
+            } else {
+              // Mensaje genérico o desde el servidor
+              this.showNotification(err.message || 'Error al eliminar usuario. Por favor, inténtalo de nuevo.', 'danger');
+            }
           }
         });
     }
