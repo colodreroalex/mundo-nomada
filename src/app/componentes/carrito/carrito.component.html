@@ -13,13 +13,13 @@
 
   <div class="container cart-content">
     <!-- Notificaciones globales -->
-    <div *ngIf="notification" class="notification-banner alert alert-{{ notification.type }} text-center shadow-sm mb-4" role="alert">
+    <div *ngIf="notification" class="notification-banner alert alert-{{ notification.type }} text-center fade-in-out shadow-sm" role="alert">
       <i class="bi" [ngClass]="{
         'bi-check-circle-fill': notification.type === 'success',
         'bi-exclamation-triangle-fill': notification.type === 'warning',
         'bi-x-circle-fill': notification.type === 'danger'
       }"></i>
-      <span class="ms-2">{{ notification.message }}</span>
+      {{ notification.message }}
     </div>
 
     <!-- Indicador de carga -->
@@ -33,8 +33,8 @@
     </div>
 
     <!-- Mensaje de error -->
-    <div *ngIf="error" class="notification-banner alert alert-danger text-center shadow-sm mb-4" role="alert">
-      <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    <div *ngIf="error" class="notification-banner alert alert-danger text-center fade-in-out shadow-sm" role="alert">
+      <i class="bi bi-x-circle-fill"></i>
       {{ error }}
     </div>
 

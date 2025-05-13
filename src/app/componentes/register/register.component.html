@@ -6,12 +6,13 @@
     </div>
     
     <!-- Bloque de notificación mejorado -->
-    <div *ngIf="notification" class="alert alert-{{ notification.type }} mb-4 shadow-sm text-center" role="alert">
-      <div class="d-flex align-items-center justify-content-center">
-        <i *ngIf="notification.type === 'danger'" class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
-        <i *ngIf="notification.type === 'success'" class="bi bi-check-circle-fill me-2 fs-5"></i>
-        <div>{{ notification.message }}</div>
-      </div>
+    <div *ngIf="notification" class="notification-banner alert alert-{{ notification.type }} text-center fade-in-out shadow-sm" role="alert">
+      <i class="bi" [ngClass]="{
+        'bi-check-circle-fill': notification.type === 'success',
+        'bi-exclamation-triangle-fill': notification.type === 'warning',
+        'bi-x-circle-fill': notification.type === 'danger'
+      }"></i>
+      {{ notification.message }}
     </div>
 
     <form (ngSubmit)="register()">

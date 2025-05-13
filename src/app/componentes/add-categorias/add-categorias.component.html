@@ -2,7 +2,12 @@
   <h2>Añadir Nueva Categoría</h2>
   
   <!-- Bloque para notificaciones -->
-  <div *ngIf="notification" class="alert alert-{{ notification.type }} text-center" role="alert">
+  <div *ngIf="notification" class="notification-banner alert alert-{{ notification.type }} text-center fade-in-out shadow-sm" role="alert">
+    <i class="bi" [ngClass]="{
+      'bi-check-circle-fill': notification.type === 'success',
+      'bi-exclamation-triangle-fill': notification.type === 'warning',
+      'bi-x-circle-fill': notification.type === 'danger'
+    }"></i>
     {{ notification.message }}
   </div>
   

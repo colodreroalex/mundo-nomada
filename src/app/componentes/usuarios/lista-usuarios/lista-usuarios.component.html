@@ -18,17 +18,13 @@
     </div>
 
     <!-- Sistema de notificaciones mejorado -->
-    <div *ngIf="notification" class="alert alert-{{ notification.type }} shadow-sm mb-4">
-      <div class="d-flex align-items-center">
-        <!-- Iconos según tipo de notificación -->
-        <i *ngIf="notification.type === 'danger'" class="fas fa-exclamation-triangle me-2 fs-5"></i>
-        <i *ngIf="notification.type === 'success'" class="fas fa-check-circle me-2 fs-5"></i>
-        <i *ngIf="notification.type === 'warning'" class="fas fa-exclamation-circle me-2 fs-5"></i>
-        
-        <div class="flex-grow-1">{{ notification.message }}</div>
-        
-        <button type="button" class="btn-close" aria-label="Cerrar" (click)="closeNotification()"></button>
-      </div>
+    <div *ngIf="notification" class="notification-banner alert alert-{{ notification.type }} text-center fade-in-out shadow-sm" role="alert">
+      <i class="bi" [ngClass]="{
+        'bi-check-circle-fill': notification.type === 'success',
+        'bi-exclamation-triangle-fill': notification.type === 'warning',
+        'bi-x-circle-fill': notification.type === 'danger'
+      }"></i>
+      {{ notification.message }}
     </div>
 
     <div *ngIf="error" class="alert alert-danger">

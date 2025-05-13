@@ -48,6 +48,35 @@ a:focus {
   background-color: var(--color-secundario) !important;
 }
 
+/* Estilo para las notificaciones en todo el sitio */
+.notification-banner {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1050;
+  min-width: 300px;
+  max-width: 400px;
+  border-radius: 0.375rem;
+  padding: 15px;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  border-left: 5px solid var(--color-primario);
+  animation: slideIn 0.3s ease-out, fadeOut 0.3s 1.7s ease-out forwards;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; visibility: hidden; }
+}
+
+.fade-in-out {
+  animation: slideIn 0.3s ease-out, fadeOut 0.3s 1.7s ease-out forwards;
+}
+
 .text-primario {
   color: var(--color-primario) !important;
 }
@@ -120,13 +149,3 @@ select:focus {
   color: var(--color-primario) !important;
 }
 
-/* Nota para cada componente:
-     Cada componente puede seguir utilizando sus propios estilos (en sus respectivos archivos CSS)
-     y utilizar estas variables (por ejemplo, var(--color-primario)) para mantener la coherencia de la paleta.
-     Bootstrap seguirá proveyendo las utilidades y clases de layout responsivo.
-  */
-
-/* Importante: 
-     Asegúrate de que Bootstrap esté correctamente importado en tu proyecto (por ejemplo, en angular.json o mediante @import)
-     para que sus clases sigan funcionando y complementando estos estilos globales.
-  */
