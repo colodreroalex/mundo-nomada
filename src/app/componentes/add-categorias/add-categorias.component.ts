@@ -49,7 +49,7 @@ export class AddCategoriaComponent {
       },
       error: (error) => {
         console.error(error);
-        this.notification = { message: 'Error al agregar la categoría. Intenta nuevamente.', type: 'danger' };
+        this.notification = { message: 'Error al agregar la categoría. Verifique que no exista e intente de nuevo.', type: 'danger' };
         setTimeout(() => {
           this.notification = null;
         }, 1000);

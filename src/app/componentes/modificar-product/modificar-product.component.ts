@@ -56,6 +56,18 @@ export class ModificarProductComponent {
       return;
     }
 
+    // Validación adicional para el precio
+    if (this.productoSeleccionado.precio <= 0) {
+      this.notification = { message: 'El precio debe ser mayor que 0.', type: 'warning' };
+      return;
+    }
+
+    // Validación adicional para el stock
+    if (this.productoSeleccionado.stock < 0) {
+      this.notification = { message: 'El stock no puede ser menor que 0.', type: 'warning' };
+      return;
+    }
+
     // Asegurar que los campos opcionales tengan un valor adecuado
     const productoModificado: Producto = {
       ...this.productoSeleccionado,
@@ -78,8 +90,23 @@ export class ModificarProductComponent {
       },
       error: (error) => {
         console.error('Error en la comunicación:', error);
-        this.notification = { message: 'Error en la comunicación con el servidor', type: 'danger' };
+        // Intentar extraer el mensaje de error específico
+        let errorMessage = 'Error en la comunicación con el servidor';
+        
+        if (error instanceof Error) {
+          // Si es un error de JavaScript normal, usamos su mensaje
+          errorMessage = error.message;
+        } else if (error.error && error.error.mensaje) {
+          // Si es un HttpErrorResponse con un mensaje específico
+          errorMessage = error.error.mensaje;
+        } else if (typeof error === 'string') {
+          // Si el error es directamente un string
+          errorMessage = error;
+        }
+        
+        this.notification = { message: errorMessage, type: 'danger' };
       }
     });
   }
 }
+

@@ -104,6 +104,7 @@ export class ProductosService {
         if (response && response.resultado === 'OK') {
           return response;
         } else {
+          // Si hay un mensaje de error específico del backend, lo usamos
           throw new Error(response?.mensaje || 'Error al modificar producto');
         }
       }),
@@ -119,7 +120,18 @@ export class ProductosService {
             return throwError(() => new Error(errObj.mensaje));
           }
         } catch {}
-        // Otro error
+        
+        // Si el error tiene statusText, intentamos usar ese mensaje
+        if (error.statusText && error.statusText !== 'Unknown Error') {
+          return throwError(() => new Error(`Error: ${error.statusText}`));
+        }
+        
+        // Si tenemos un mensaje en el objeto error directamente
+        if (error.message) {
+          return throwError(() => new Error(error.message));
+        }
+        
+        // Mensaje genérico como último recurso
         return throwError(() => new Error('Error al modificar producto. Verifica los datos e inténtalo de nuevo.'));
       })
     );

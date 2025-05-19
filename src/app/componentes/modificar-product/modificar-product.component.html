@@ -56,9 +56,12 @@
       </div>
       <div class="mb-3">
         <label class="form-label">Precio:</label>
-        <input type="number" class="form-control" [(ngModel)]="productoSeleccionado.precio" name="precio" required />
+        <input type="number" class="form-control" [(ngModel)]="productoSeleccionado.precio" name="precio" required min="0.01" #precioInput="ngModel" />
         <div *ngIf="form.submitted && !productoSeleccionado?.precio" class="text-danger">
           El precio es obligatorio.
+        </div>
+        <div *ngIf="precioInput.errors?.['min'] && (precioInput.dirty || precioInput.touched)" class="text-danger">
+          El precio debe ser mayor que 0.
         </div>
       </div>
       <div class="mb-3">
@@ -70,9 +73,12 @@
       </div>
       <div class="mb-3">
         <label class="form-label">Stock:</label>
-        <input type="number" class="form-control" [(ngModel)]="productoSeleccionado.stock" name="stock" required />
+        <input type="number" class="form-control" [(ngModel)]="productoSeleccionado.stock" name="stock" required min="0" #stockInput="ngModel" />
         <div *ngIf="form.submitted && (productoSeleccionado?.stock === null || productoSeleccionado?.stock === undefined)" class="text-danger">
           El stock es obligatorio.
+        </div>
+        <div *ngIf="stockInput.errors?.['min'] && (stockInput.dirty || stockInput.touched)" class="text-danger">
+          El stock no puede ser menor que 0.
         </div>
       </div>
       
